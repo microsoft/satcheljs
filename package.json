@@ -1,6 +1,6 @@
 {
   "name": "satcheljs",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Store implementation for functional reactive flux.",
   "main": "./dist/src/index.js",
   "scripts": {
@@ -16,5 +16,8 @@
     "jasmine": "^2.4.1",
     "typescript": "~1.8.9"
   },
-  "typings": "./dist/src/index.d.ts"
+  "typings": "./dist/src/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
