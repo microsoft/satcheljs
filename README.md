@@ -116,4 +116,4 @@ let updateFooAsync =
 updateFooAsync = action("updateFooAsync")(updateFooAsync);
 ```
 
-### License - MIT
+## License - MIT
