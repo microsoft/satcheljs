@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "6.1"
+  - "5.11"
+before_install:
+    # setting the path for phantom.js 2.0.0
+    - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
+    - npm config set spin false
+install:
+    - npm install
+script:
+    - npm test
