@@ -1,0 +1,18 @@
+{
+  "name": "satcheljs",
+  "version": "1.0.0",
+  "description": "Documentation site of SatchelJS",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gitbook-cli": "^2.3.0",
+    "rimraf": "^2.5.4"
+  },
+  "scripts": {
+    "prep": "node_modules/.bin/gitbook install",
+    "start": "npm run prep && node_modules/.bin/gitbook serve",
+    "build": "npm run prep && node_modules/.bin/gitbook build"
+  },
+  "author": "Ken Chau <kchau@microsoft.com>",
+  "license": "MIT"
+}
