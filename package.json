@@ -1,6 +1,6 @@
 {
   "name": "satcheljs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Store implementation for functional reactive flux.",
   "main": "./dist/src/index.js",
   "scripts": {
