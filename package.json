@@ -11,7 +11,7 @@
   "scripts": {
     "prep": "node_modules/.bin/gitbook install",
     "start": "npm run prep && node_modules/.bin/gitbook serve",
-    "build": "npm run prep && node_modules/.bin/gitbook build"
+    "build": "npm run prep && node_modules/.bin/gitbook build docs book"
   },
   "author": "Ken Chau <kchau@microsoft.com>",
   "license": "MIT"
