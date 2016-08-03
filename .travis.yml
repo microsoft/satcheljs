@@ -1,12 +1,19 @@
 language: node_js
 node_js:
-  - "6.1"
-  - "5.11"
+- '6.1'
+- '5.11'
 before_install:
-    # setting the path for phantom.js 2.0.0
-    - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
-    - npm config set spin false
+- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
+- npm config set spin false
 install:
-    - npm install
+- npm install
 script:
-    - npm test
+- npm test
+deploy:
+  provider: npm
+  email: kchau@microsoft.com
+  api_key:
+    secure: GWBNYOyyY2spHBdI8ySi+bSTy4x0VtQDAfuGA1OQbmlpDwZuMSRVuEwfx2A5lEyTzn9u0yp86Ju2doXqFdJ6twXmXN1AqnA2haRpqIxKpcAMxWGLRGem08Xiqc8ey3haxvnxVjsP4Jlq+EWDmtfYnSec11vUAggk7jFMt6IWTsTS+GKX6XQSxtD66EJ4kEASlEfRzNpg5dZY5NURtEr6Nf+sWaLoYxHfMhCu2a58MTIS2NEwA0dSQRTlNHThIzeyK4zkQRkaUPaX4J8aEG+YC/oHM7ZppB6yg1rsvLzNMgBU6zKWKrKHnAzeKG+XWY4QKBGwE8dtg9YZ3QB7e0NnYvj5Bp+sKHE9lY3r8BJofVguev1vzifZpCezxoDVjIL04nn7uiI/dPJvQ/IDLcm6/6puAjiert9unSX4ERSkQrRV6S4RlIZs/S6shSXAX2otanAHBkHbfKzgSU00q0X6lRJnFndSd47t/j1NqsYpmiwm/eQoIyoc/2ReyY86mc8xk1fY9U8d2FQFZ4MYBZbn+eUiNyft5+4oITswqu4nVNGNdD6uZLMAWU6LRNaCFjb/hkwvVWU0dMH8LMzW6vlWcEptEDfCWRKYKHmyDdJP4/vvCMWNXBX3moSUc1MZ6YGccGn5u91594sylpfzhkd6ezzUWeaU1QdeJhOF4lzDXpQ=
+  on:
+    tags: true
+    repo: Microsoft/satcheljs
