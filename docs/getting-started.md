@@ -52,7 +52,7 @@ let updateFoo =
 updateFoo = action("updateFoo")(updateFoo);
 ```
 
-Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn't support decorators on function expressions yet, but it will in 2.0.  At that point the syntax for creating an action will be simply:
+Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn't support decorators on function expressions yet, but it will [in the future](https://github.com/Microsoft/TypeScript/wiki/Roadmap).  At that point the syntax for creating an action will be simply:
 ```typescript
 let updateFoo =
 	@action("updateFoo")
@@ -73,7 +73,6 @@ updateFoo(2);
 
 Often actions will need to do some sort of asynchronous work (such as making a server request) and then update the state based on the result.
 Since the asynchronous callback happens outside of the context of the original action the callback itself must be an action too.
-(Again, this syntax will be simplified once Typescript 2.0 is available.)
 
 ```typescript
 let updateFooAsync =
