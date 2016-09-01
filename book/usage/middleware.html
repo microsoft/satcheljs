@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Getting Started · GitBook</title>
+        <title>Middleware · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,8 +57,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="async-actions.html" />
     
+    <link rel="prev" href="async-actions.html" />
     
 
     </head>
@@ -114,7 +114,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.2.1" data-path="getting-started.html">
+        <li class="chapter " data-level="1.2.1" data-path="getting-started.html">
             
                 <a href="getting-started.html">
             
@@ -140,7 +140,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="middleware.html">
+        <li class="chapter active" data-level="1.2.3" data-path="middleware.html">
             
                 <a href="middleware.html">
             
@@ -188,7 +188,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Getting Started</a>
+        <a href=".." >Middleware</a>
     </h1>
 </div>
 
@@ -203,35 +203,26 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="installation">Installation</h2><p>Install via NPM:</p><p><code>npm install satcheljs --save</code></p><p>In order to use Satchel with React, you&apos;ll also need MobX and the MobX React bindings:</p><p><code>npm install mobx --save</code></p><p><code>npm install mobx-react --save</code></p><h2 id="create-a-store-with-some-initial-state">Create a store with some initial state</h2><pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> MyStoreSchema {
-    foo: <span class="hljs-built_in">number</span>;
-    bar: <span class="hljs-built_in">string</span>;
-}
-
-<span class="hljs-keyword">var</span> myStore = createStore&lt;MyStoreSchema&gt;(
-    <span class="hljs-string">&quot;mystore&quot;</span>,
-    {
-        foo: <span class="hljs-number">1</span>,
-        bar: <span class="hljs-string">&quot;baz&quot;</span>
-    });</code></pre>
-<h2 id="create-a-component-that-consumes-your-state">Create a component that consumes your state</h2><p>Notice the @observer decorator on the component---this is what tells MobX to rerender the component if any of the data it relies on changes.</p><pre><code class="lang-typescript">@observer
-class ApplicationComponent extends React.Component&lt;any, any&gt; {
-    render() {
-        return (&lt;div&gt;foo is {myStore.foo}&lt;/div&gt;);
-    }
+                                <h2 id="middleware">Middleware</h2><p>While actions look and act like simple function calls, they actually go through Satchel&apos;s dispatch pipeline.
+Middleware allows you to hook into that pipeline in order to be notified of every action that is dispatched, and even modify or intercept the action.</p><h3 id="creating-middleware">Creating middleware</h3><p>Middleware is simply a function with the following signature:</p><pre><code class="lang-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sampleMiddleware</span>(<span class="hljs-params">next, action, actionType, args</span>)</span></code></pre>
+<p><code>next</code>:
+The next step in the dispatch pipeline.
+It is a function that takes <code>action</code>, <code>actionType</code>, and <code>args</code> as parameters.
+<strong>Every middleware should call <code>next</code> at some point</strong> (unless it wants to prevent the action from being executed).</p><p><code>action</code>:
+A callback that will actually execute the action.  This is a parameterless function.</p><p><code>actionType</code>:
+The name of the action.</p><p><code>args</code>:
+The arguments passed to the action.</p><h3 id="example">Example</h3><p>The following is a simple middleware that traces each action to the console:</p><pre><code class="lang-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traceMiddleware</span>(<span class="hljs-params">next, action, actionType, args</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Dispatching action: &quot;</span> + actionType);
+    next(action, actionType, args);
 }</code></pre>
-<h2 id="implement-an-action-to-update-the-store">Implement an action to update the store</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo =
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFoo</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
-        myStore.foo = newFoo;
-    };
-
-updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(updateFoo);</code></pre>
-<p>Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn&apos;t support decorators on function expressions yet, but it will <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap" target="_blank">in the future</a>.  At that point the syntax for creating an action will be simply:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo =
-    @action(<span class="hljs-string">&quot;updateFoo&quot;</span>)
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFoo</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
-        myStore.foo = newFoo;
-    };</code></pre>
-<h2 id="call-the-action">Call the action</h2><p>It&apos;s just a function:</p><pre><code class="lang-typescript">updateFoo(<span class="hljs-number">2</span>);</code></pre>
+<h3 id="installing-middleware">Installing middleware</h3><p>You tell Satchel to use your middleware by calling <code>applyMiddleware</code>.
+Calling <code>applyMiddleware</code> will <em>replace</em> any current middleware with the list of middleware you provide.</p><pre><code class="lang-typescript">applyMiddleware(traceMiddleware, middleware2, middleware3);</code></pre>
+<h3 id="existing-middleware">Existing middleware</h3><ul><li><a href="https://github.com/Microsoft/satcheljs-trace" target="_blank">satcheljs-trace</a> - Tracing middleware to log each action that gets dispatched.
+</li>
+<li><a href="https://github.com/Microsoft/satcheljs-stitch" target="_blank">satcheljs-stitch</a> - Event aggregation middleware that allows you to listen for and respond to specific actions.
+</li>
+<li><a href="https://github.com/Microsoft/satcheljs-react-devtools" target="_blank">satcheljs-react-devtools</a> - Accumulates some useful dev tools for tuning performance in a SatchelJS app.
+</li></ul>
 
                                 
                                 </section>
@@ -259,10 +250,10 @@ updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(updat
 
             
                 
-                
-                <a href="async-actions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Asynchronous Actions">
-                    <i class="fa fa-angle-right"></i>
+                <a href="async-actions.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Asynchronous Actions">
+                    <i class="fa fa-angle-left"></i>
                 </a>
+                
                 
             
         
@@ -271,7 +262,7 @@ updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(updat
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Getting Started","level":"1.2.1","depth":2,"next":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},"previous":{"title":"Usage","level":"1.2","depth":1,"ref":"","articles":[{"title":"Getting Started","level":"1.2.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},{"title":"Middleware","level":"1.2.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/getting-started.md","mtime":"2016-09-01T21:32:17.868Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-01T23:29:16.433Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Middleware","level":"1.2.3","depth":2,"previous":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/middleware.md","mtime":"2016-09-01T23:27:55.588Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-01T23:29:16.433Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
