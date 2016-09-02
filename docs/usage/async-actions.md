@@ -4,7 +4,7 @@ Often actions will need to do some sort of asynchronous work (such as making a s
 Since the asynchronous callback happens outside of the context of the original action the callback itself must be an action too.
 
 ```typescript
-let updateFooAsync =
+let updateFooAsync = action("updateFooAsync")(
 	function updateFooAsync(newFoo: number) {
 		// You can modify the state in the original action
 		myStore.loading = true;
@@ -17,7 +17,5 @@ let updateFooAsync =
 					myStore.loading = false;
 					myStore.foo = newFoo;
 				}));
-	};
-
-updateFooAsync = action("updateFooAsync")(updateFooAsync);
+	});
 ```

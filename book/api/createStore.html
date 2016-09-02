@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Asynchronous Actions · GitBook</title>
+        <title>createStore · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="middleware.html" />
+    <link rel="next" href="initializeStore.html" />
     
     
-    <link rel="prev" href="getting-started.html" />
+    <link rel="prev" href="applyMiddleware.html" />
     
 
     </head>
@@ -116,9 +116,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1" data-path="getting-started.html">
+        <li class="chapter " data-level="1.2.1" data-path="../usage/getting-started.html">
             
-                <a href="getting-started.html">
+                <a href="../usage/getting-started.html">
             
                     
                     Getting Started
@@ -129,9 +129,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.2" data-path="async-actions.html">
+        <li class="chapter " data-level="1.2.2" data-path="../usage/async-actions.html">
             
-                <a href="async-actions.html">
+                <a href="../usage/async-actions.html">
             
                     
                     Asynchronous Actions
@@ -142,9 +142,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="middleware.html">
+        <li class="chapter " data-level="1.2.3" data-path="../usage/middleware.html">
             
-                <a href="middleware.html">
+                <a href="../usage/middleware.html">
             
                     
                     Middleware
@@ -174,9 +174,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="../api/action.html">
+        <li class="chapter " data-level="1.3.1" data-path="action.html">
             
-                <a href="../api/action.html">
+                <a href="action.html">
             
                     
                     action
@@ -187,9 +187,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="../api/applyMiddleware.html">
+        <li class="chapter " data-level="1.3.2" data-path="applyMiddleware.html">
             
-                <a href="../api/applyMiddleware.html">
+                <a href="applyMiddleware.html">
             
                     
                     applyMiddleware
@@ -200,9 +200,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="../api/createStore.html">
+        <li class="chapter active" data-level="1.3.3" data-path="createStore.html">
             
-                <a href="../api/createStore.html">
+                <a href="createStore.html">
             
                     
                     createStore
@@ -213,9 +213,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="../api/initializeStore.html">
+        <li class="chapter " data-level="1.3.4" data-path="initializeStore.html">
             
-                <a href="../api/initializeStore.html">
+                <a href="initializeStore.html">
             
                     
                     initializeStore
@@ -226,9 +226,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="../api/rootStore.html">
+        <li class="chapter " data-level="1.3.5" data-path="rootStore.html">
             
-                <a href="../api/rootStore.html">
+                <a href="rootStore.html">
             
                     
                     rootStore
@@ -274,7 +274,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Asynchronous Actions</a>
+        <a href=".." >createStore</a>
     </h1>
 </div>
 
@@ -289,21 +289,31 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="asynchronous-actions">Asynchronous actions</h2><p>Often actions will need to do some sort of asynchronous work (such as making a server request) and then update the state based on the result.
-Since the asynchronous callback happens outside of the context of the original action the callback itself must be an action too.</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFooAsync = action(<span class="hljs-string">&quot;updateFooAsync&quot;</span>)(
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFooAsync</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
-        <span class="hljs-comment">// You can modify the state in the original action</span>
-        myStore.loading = <span class="hljs-literal">true</span>;
+                                <h1 id="createstore"><code>createStore</code></h1><p>Application state is contained in one or more Satchel stores.
+For a simple application it is possible to keep the entire state in a single store, but you may want to divide state into different domains.
+Also, <code>createStore</code> allows you to delay initialization of some portion of the store.
+This is useful if you want to load and initialize some portion of your application on demand.</p><h2 id="usage">Usage</h2><p><strong><code>createStore&lt;T&gt;(name, initialValue)</code></strong></p><ul><li><code>T</code> is an interface describing the shape of the store.
+</li>
+<li><code>name</code> is a unique identifier for the store.
+</li>
+<li><code>initialValue</code> is the initial state of the store.
+</li></ul>
+<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> MyStoreSchema {
+    foo: <span class="hljs-built_in">number</span>;
+    bar: <span class="hljs-built_in">string</span>;
+}
 
-        <span class="hljs-comment">// doSomethingAsync returns a promise</span>
-        doSomethingAsync().then(
-            action(<span class="hljs-string">&quot;doSomethingAsyncCallback&quot;</span>)(
-                () =&gt; {
-                    <span class="hljs-comment">// Modify the state again in the callback</span>
-                    myStore.loading = <span class="hljs-literal">false</span>;
-                    myStore.foo = newFoo;
-                }));
+<span class="hljs-keyword">var</span> myStore = createStore&lt;MyStoreSchema&gt;(
+    <span class="hljs-string">&quot;mystore&quot;</span>,
+    {
+        foo: <span class="hljs-number">1</span>,
+        bar: <span class="hljs-string">&quot;baz&quot;</span>
     });</code></pre>
+<h2 id="pitfalls">Pitfalls</h2><ul><li><p>MobX can only observe properties that actually exist when an object is made observable.
+For this reason, it is important to <strong>initialize all properties</strong>, even if you just initialize them to null.
+(It is advised that you avoid optional properties in your store interfaces.
+Then the Typescript compiler will give you an error if you forget to initialize anything.)</p></li>
+<li><p>For the same reason, if you want to use an object as a dictionary (i.e. to store and lookup values based on arbitrary keys) then you should initialize it as an <a href="https://mobxjs.github.io/mobx/refguide/map.html" target="_blank">ObservableMap</a>.</p></li></ul>
 
                                 
                                 </section>
@@ -331,12 +341,12 @@ Since the asynchronous callback happens outside of the context of the original a
 
             
                 
-                <a href="getting-started.html" class="navigation navigation-prev " aria-label="Previous page: Getting Started">
+                <a href="applyMiddleware.html" class="navigation navigation-prev " aria-label="Previous page: applyMiddleware">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="middleware.html" class="navigation navigation-next " aria-label="Next page: Middleware">
+                <a href="initializeStore.html" class="navigation navigation-next " aria-label="Next page: initializeStore">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -347,7 +357,7 @@ Since the asynchronous callback happens outside of the context of the original a
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"next":{"title":"Middleware","level":"1.2.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]},"previous":{"title":"Getting Started","level":"1.2.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/async-actions.md","mtime":"2016-09-02T18:02:08.677Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-02T20:04:15.296Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"createStore","level":"1.3.3","depth":2,"next":{"title":"initializeStore","level":"1.3.4","depth":2,"path":"api/initializeStore.md","ref":"api/initializeStore.md","articles":[]},"previous":{"title":"applyMiddleware","level":"1.3.2","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/createStore.md","mtime":"2016-09-02T19:49:50.088Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-02T20:04:15.296Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
