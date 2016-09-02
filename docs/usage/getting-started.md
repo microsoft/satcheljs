@@ -32,30 +32,26 @@ Notice the @observer decorator on the component---this is what tells MobX to rer
 ```typescript
 @observer
 class ApplicationComponent extends React.Component<any, any> {
-	render() {
-		return (<div>foo is {myStore.foo}</div>);
-	}
+    render() {
+        return (<div>foo is {myStore.foo}</div>);
+    }
 }
 ```
 
 ## Implement an action to update the store
 
 ```typescript
-let updateFoo =
-	function updateFoo(newFoo: number) {
-		myStore.foo = newFoo;
-	};
-
-updateFoo = action("updateFoo")(updateFoo);
+let updateFoo = action("updateFoo")(
+    function updateFoo(newFoo: number) {
+        myStore.foo = newFoo;
+    });
 ```
 
 Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn't support decorators on function expressions yet, but it will [in the future](https://github.com/Microsoft/TypeScript/wiki/Roadmap).  At that point the syntax for creating an action will be simply:
 ```typescript
-let updateFoo =
-	@action("updateFoo")
-	function updateFoo(newFoo: number) {
-		myStore.foo = newFoo;
-	};
+let updateFoo = @action("updateFoo") function updateFoo(newFoo: number) {
+    myStore.foo = newFoo;
+};
 ```
 
 ## Call the action
