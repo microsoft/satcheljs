@@ -158,6 +158,90 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../api/action.html">
+            
+                <a href="../api/action.html">
+            
+                    
+                    action
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../api/applyMiddleware.html">
+            
+                <a href="../api/applyMiddleware.html">
+            
+                    
+                    applyMiddleware
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../api/createStore.html">
+            
+                <a href="../api/createStore.html">
+            
+                    
+                    createStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../api/initializeStore.html">
+            
+                <a href="../api/initializeStore.html">
+            
+                    
+                    initializeStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../api/rootStore.html">
+            
+                <a href="../api/rootStore.html">
+            
+                    
+                    rootStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
 
     
 
@@ -220,17 +304,13 @@ class ApplicationComponent extends React.Component&lt;any, any&gt; {
         return (&lt;div&gt;foo is {myStore.foo}&lt;/div&gt;);
     }
 }</code></pre>
-<h2 id="implement-an-action-to-update-the-store">Implement an action to update the store</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo =
+<h2 id="implement-an-action-to-update-the-store">Implement an action to update the store</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFoo</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
         myStore.foo = newFoo;
-    };
-
-updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(updateFoo);</code></pre>
-<p>Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn&apos;t support decorators on function expressions yet, but it will <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap" target="_blank">in the future</a>.  At that point the syntax for creating an action will be simply:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo =
-    @action(<span class="hljs-string">&quot;updateFoo&quot;</span>)
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFoo</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
-        myStore.foo = newFoo;
-    };</code></pre>
+    });</code></pre>
+<p>Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn&apos;t support decorators on function expressions yet, but it will <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap" target="_blank">in the future</a>.  At that point the syntax for creating an action will be simply:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFoo = @action(<span class="hljs-string">&quot;updateFoo&quot;</span>) <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFoo</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
+    myStore.foo = newFoo;
+};</code></pre>
 <h2 id="call-the-action">Call the action</h2><p>It&apos;s just a function:</p><pre><code class="lang-typescript">updateFoo(<span class="hljs-number">2</span>);</code></pre>
 
                                 
@@ -271,7 +351,7 @@ updateFoo = action(<span class="hljs-string">&quot;updateFoo&quot;</span>)(updat
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Getting Started","level":"1.2.1","depth":2,"next":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},"previous":{"title":"Usage","level":"1.2","depth":1,"ref":"","articles":[{"title":"Getting Started","level":"1.2.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},{"title":"Middleware","level":"1.2.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/getting-started.md","mtime":"2016-09-01T21:32:17.868Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-01T23:29:16.433Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Getting Started","level":"1.2.1","depth":2,"next":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},"previous":{"title":"Usage","level":"1.2","depth":1,"ref":"","articles":[{"title":"Getting Started","level":"1.2.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},{"title":"Middleware","level":"1.2.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/getting-started.md","mtime":"2016-09-02T17:44:45.759Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-02T20:04:15.296Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

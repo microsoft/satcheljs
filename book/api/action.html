@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Asynchronous Actions · GitBook</title>
+        <title>action · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,10 +57,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="middleware.html" />
+    <link rel="next" href="applyMiddleware.html" />
     
-    
-    <link rel="prev" href="getting-started.html" />
     
 
     </head>
@@ -116,9 +114,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1" data-path="getting-started.html">
+        <li class="chapter " data-level="1.2.1" data-path="../usage/getting-started.html">
             
-                <a href="getting-started.html">
+                <a href="../usage/getting-started.html">
             
                     
                     Getting Started
@@ -129,9 +127,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.2" data-path="async-actions.html">
+        <li class="chapter " data-level="1.2.2" data-path="../usage/async-actions.html">
             
-                <a href="async-actions.html">
+                <a href="../usage/async-actions.html">
             
                     
                     Asynchronous Actions
@@ -142,9 +140,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="middleware.html">
+        <li class="chapter " data-level="1.2.3" data-path="../usage/middleware.html">
             
-                <a href="middleware.html">
+                <a href="../usage/middleware.html">
             
                     
                     Middleware
@@ -174,9 +172,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="../api/action.html">
+        <li class="chapter active" data-level="1.3.1" data-path="action.html">
             
-                <a href="../api/action.html">
+                <a href="action.html">
             
                     
                     action
@@ -187,9 +185,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="../api/applyMiddleware.html">
+        <li class="chapter " data-level="1.3.2" data-path="applyMiddleware.html">
             
-                <a href="../api/applyMiddleware.html">
+                <a href="applyMiddleware.html">
             
                     
                     applyMiddleware
@@ -200,9 +198,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="../api/createStore.html">
+        <li class="chapter " data-level="1.3.3" data-path="createStore.html">
             
-                <a href="../api/createStore.html">
+                <a href="createStore.html">
             
                     
                     createStore
@@ -213,9 +211,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="../api/initializeStore.html">
+        <li class="chapter " data-level="1.3.4" data-path="initializeStore.html">
             
-                <a href="../api/initializeStore.html">
+                <a href="initializeStore.html">
             
                     
                     initializeStore
@@ -226,9 +224,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="../api/rootStore.html">
+        <li class="chapter " data-level="1.3.5" data-path="rootStore.html">
             
-                <a href="../api/rootStore.html">
+                <a href="rootStore.html">
             
                     
                     rootStore
@@ -274,7 +272,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Asynchronous Actions</a>
+        <a href=".." >action</a>
     </h1>
 </div>
 
@@ -289,20 +287,15 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="asynchronous-actions">Asynchronous actions</h2><p>Often actions will need to do some sort of asynchronous work (such as making a server request) and then update the state based on the result.
-Since the asynchronous callback happens outside of the context of the original action the callback itself must be an action too.</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> updateFooAsync = action(<span class="hljs-string">&quot;updateFooAsync&quot;</span>)(
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateFooAsync</span>(<span class="hljs-params">newFoo: <span class="hljs-built_in">number</span></span>) </span>{
-        <span class="hljs-comment">// You can modify the state in the original action</span>
-        myStore.loading = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-comment">// doSomethingAsync returns a promise</span>
-        doSomethingAsync().then(
-            action(<span class="hljs-string">&quot;doSomethingAsyncCallback&quot;</span>)(
-                () =&gt; {
-                    <span class="hljs-comment">// Modify the state again in the callback</span>
-                    myStore.loading = <span class="hljs-literal">false</span>;
-                    myStore.foo = newFoo;
-                }));
+                                <h1 id="action"><code>action</code></h1><p>The action decorator turns a function into an action.
+An action is anything that modifies the state of the appication.
+An action doesn&apos;t <em>have</em> to modify state (it could have some other side effect such as making a server request) but typically it will also update the UI state in order to indicate to the user that something has happened.</p><p>SatchelJS will throw an error if data in its store is modified outside of an action.</p><h2 id="usage">Usage</h2><p><strong><code>action(name)(fn)</code></strong></p><ul><li><code>name</code> is a string that identifies the action.  Typically it should be the same as the name of the function.
+</li>
+<li><code>fn</code> is the function to convert to an action.  It can take any parameter as arguments and should return either <code>void</code> or a <code>Promise</code> (if it does some async work).
+</li></ul>
+<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> setValue = action(<span class="hljs-string">&quot;setValue&quot;</span>)(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValue</span>(<span class="hljs-params">newValue: <span class="hljs-built_in">number</span></span>) </span>{
+        someStore.value = newValue;
     });</code></pre>
 
                                 
@@ -331,12 +324,8 @@ Since the asynchronous callback happens outside of the context of the original a
 
             
                 
-                <a href="getting-started.html" class="navigation navigation-prev " aria-label="Previous page: Getting Started">
-                    <i class="fa fa-angle-left"></i>
-                </a>
                 
-                
-                <a href="middleware.html" class="navigation navigation-next " aria-label="Next page: Middleware">
+                <a href="applyMiddleware.html" class="navigation navigation-next navigation-unique" aria-label="Next page: applyMiddleware">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -347,7 +336,7 @@ Since the asynchronous callback happens outside of the context of the original a
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Asynchronous Actions","level":"1.2.2","depth":2,"next":{"title":"Middleware","level":"1.2.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]},"previous":{"title":"Getting Started","level":"1.2.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"usage/async-actions.md","mtime":"2016-09-02T18:02:08.677Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-02T20:04:15.296Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"action","level":"1.3.1","depth":2,"next":{"title":"applyMiddleware","level":"1.3.2","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},"previous":{"title":"API","level":"1.3","depth":1,"ref":"","articles":[{"title":"action","level":"1.3.1","depth":2,"path":"api/action.md","ref":"api/action.md","articles":[]},{"title":"applyMiddleware","level":"1.3.2","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},{"title":"createStore","level":"1.3.3","depth":2,"path":"api/createStore.md","ref":"api/createStore.md","articles":[]},{"title":"initializeStore","level":"1.3.4","depth":2,"path":"api/initializeStore.md","ref":"api/initializeStore.md","articles":[]},{"title":"rootStore","level":"1.3.5","depth":2,"path":"api/rootStore.md","ref":"api/rootStore.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/action.md","mtime":"2016-09-02T17:59:43.828Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-02T20:04:15.296Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
