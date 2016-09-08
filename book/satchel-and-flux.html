@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Introduction · GitBook</title>
+        <title>Satchel and Flux · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,8 +57,8 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="satchel-and-flux.html" />
     
+    <link rel="prev" href="./" />
     
 
     </head>
@@ -87,7 +87,7 @@
         
         
     
-        <li class="chapter active" data-level="1.1" data-path="./">
+        <li class="chapter " data-level="1.1" data-path="./">
             
                 <a href="./">
             
@@ -100,7 +100,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" data-path="satchel-and-flux.html">
+        <li class="chapter active" data-level="1.2" data-path="satchel-and-flux.html">
             
                 <a href="satchel-and-flux.html">
             
@@ -285,7 +285,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >Introduction</a>
+        <a href="." >Satchel and Flux</a>
     </h1>
 </div>
 
@@ -300,21 +300,38 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <p><a href="https://travis-ci.org/Microsoft/satcheljs" target="_blank"><img alt="Build Status" src="https://travis-ci.org/Microsoft/satcheljs.svg?branch=master"></a></p><h1 id="satchel">Satchel</h1><p>Satchel is a data store based on the <a href="http://facebook.github.io/react/blog/2014/05/06/flux.html" target="_blank">Flux architecture</a>.  It is characterized by exposing an observable state that makes view updates painless and efficient.</p><h2 id="influences">Influences</h2><p>Satchel is an attempt to synthesize the best of several dataflow patterns typically used to drive a React-based UI.  In particular:</p><ul><li><a href="http://facebook.github.io/react/blog/2014/05/06/flux.html" target="_blank">Flux</a> is not a library itself, but is a dataflow pattern conceived for use with React.  In Flux, dataflow is unidirectional, and the only way to modify state is by dispatching actions through a central dispatcher.
-</li>
-<li><a href="http://redux.js.org/index.html" target="_blank">Redux</a> is an implementation of Flux that consolidates stores into a single state tree and attempts to simplify state changes by making all mutations via pure functions called reducers.  Ultimately, however, we found that reducers and immutable state were difficult to reason about, particularly in a large, interconnected app.
-</li>
-<li><a href="http://mobxjs.github.io/mobx/index.html" target="_blank">MobX</a> provides a seamless way to make state observable, and allows React to listen to state changes and rerender in a very performant way.  Satchel uses MobX under the covers to allow React components to observe the data they depend on.
-</li></ul>
-<h2 id="advantages">Advantages</h2><p>There are a number of advantages to using Satchel to maintain your application state.  (Each of the frameworks above has some, but not all, of these qualities.)</p><ul><li>Satchel enables a very <strong>performant UI</strong>, only rerendering the minimal amount necessary.  MobX makes UI updates very efficient by automatically detecting specifically what components need to rerender for a given state change.
-</li>
-<li>Satchel&apos;s datastore allows for <strong>isomorphic JavaScript</strong> by making it feasible to render on the server and then serialize and pass the application state down to the client.
-</li>
-<li>Satchel supports <strong>middleware</strong> that can act on each action that is dispatched.  (For example, for tracing or performance instrumentation.)
-</li>
-<li>Satchel requires <strong>minimal boilerplate</strong> code.
-</li></ul>
-<h2 id="license---mit">License - MIT</h2>
+                                <h1 id="satchel-and-flux">Satchel and Flux</h1><p>Satchel is an opinionated implementation of Flux.
+For an introduction to Flux as a pattern and the reasoning behind it, you can see <a href="https://facebook.github.io/flux/docs/overview.html" target="_blank">Facebook&apos;s overview</a>.
+Satchel&apos;s version of Flux is a little bit different, but it&apos;s still focused on making a large application performant and easy to comprehend, develop, and test.</p><h2 id="unidirectional-data-flow">Unidirectional Data Flow</h2><p>One of the key tenants of Flux is that data only flows in one direction.
+Satchel&apos;s data flow looks like this:</p><p><img src="dataflow.png" alt="Unidirectional dataflow" align="center"></p><p>Application state lives in the store.
+When data in the store is changed, the view is rerendered to reflect it.
+The view executes actions, and only actions can modify the store.
+If you&apos;re familiar with traditional Flux you may notice that there&apos;s no dispatcher in the diagram.
+Satchel still contains a dispatcher - every time you execute an action you are actually dispatching it - but that&apos;s completely transparent to the action&apos;s caller.</p><p>Let&apos;s look at each of these entities in more detail.</p><h2 id="the-store">The Store</h2><p>The Satchel store contains the entirety of the application state.
+The store is just data; unlike some implementations of Flux it doesn&apos;t contain business logic.
+For convenience <code>createStore</code> can create multiple store objects, but internally they are rooted into a single state object.</p><p><img src="state-tree.png" alt="State tree" align="center"></p><p>The root store (and therefore the entire store underneath it) is a MobX observable - this is what allows views to update automatically when the store changes.
+For the most part you can interact with the store just like any other javascript object, but it is worth <a href="https://mobxjs.github.io/mobx/index.html" target="_blank">understanding how MobX works</a> in order to take advantage of all it has to offer (and to be aware of some pitfalls).</p><p>It is recommended that the state be a strict tree of simple JavaScript types (objects, arrays, and primitives).
+This makes it easy to serialize and restore the store, which is necessary for an isomorphic web app and makes possible other dev tooling.</p><h2 id="views">Views</h2><p>The view is the UI layer of an application.
+While Satchel could work with any view technology, it was built with React in mind.
+The view layer consists of React components tagged with MobX&apos;s <code>@observer</code> decorator.
+By making a component an observer it will automatically detect changes in the data it depends on and update itself.</p><p>In a Satchel app components are only responsible for rendering the UI.
+They should not contain any state (that belongs in the store) and they should not contain any business logic (that belongs in actions).
+Most or all views should be able to be written as <a href="https://facebook.github.io/react/docs/reusable-components.html#stateless-functions" target="_blank">stateless functional components</a>.
+Given the state of the store and the props provided to it, a component should always render the same way.</p><h2 id="actions">Actions</h2><p>Actions are the business logic of an application.
+In a Satchel application, actions are simply functions that modify the store or have other side effects.
+Typically actions are executed in response to some user-initiated event in the UI, but they may also be executed by external entities such as server notifications or timer callbacks.
+One action can call another, so it is possible to compose actions and organize code in whatever way makes sense for your application.</p><p>Internally, all actions go through Satchel&apos;s dispatch pipeline.
+This gives any <a href="usage/middleware.html">middleware</a> an opportunity to respond to the action.
+Moreover, the entire dispatch process is wrapped in a <a href="https://mobxjs.github.io/mobx/refguide/transaction.html" target="_blank">MobX transaction</a> which means any UI updates are deferred until all state changes (due to actions or even middleware) are complete.</p><h2 id="motivations">Motivations</h2><ul><li><p><strong>Separation of concerns.</strong>
+The store is only concerned with containing the app state; the view is only concerned with rendering the UI; the actions implement the business logic of the application.</p></li>
+<li><p><strong>Code should be easy to understand and reason about.</strong>
+Flux&apos;s unidirectional data flow achieves this by avoiding the complicated and confusing interactions between app state and view that other patterns promote.</p></li>
+<li><p><strong>Testability.</strong>
+Both the view and actions are, at their core, simply functions that take some inputs and produce a result, which are easy to test.</p></li>
+<li><p><strong>Minimal boilerplate.</strong>
+Traditional Flux requires a lot of boilerplate code for views to subscribe to store updates, but MobX makes that unnecessary.
+And actions are simply function calls - there is no need to construct, dispatch, and process action objects as in other Flux implementations.</p></li></ul>
+
                                 
                                 </section>
                             
@@ -341,10 +358,10 @@
 
             
                 
-                
-                <a href="satchel-and-flux.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Satchel and Flux">
-                    <i class="fa fa-angle-right"></i>
+                <a href="./" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
                 </a>
+                
                 
             
         
@@ -353,7 +370,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Satchel and Flux","level":"1.2","depth":1,"path":"satchel-and-flux.md","ref":"satchel-and-flux.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2016-08-31T20:17:47.211Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-08T21:17:59.297Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Satchel and Flux","level":"1.2","depth":1,"next":{"title":"Usage","level":"1.3","depth":1,"ref":"","articles":[{"title":"Getting Started","level":"1.3.1","depth":2,"path":"usage/getting-started.md","ref":"usage/getting-started.md","articles":[]},{"title":"Asynchronous Actions","level":"1.3.2","depth":2,"path":"usage/async-actions.md","ref":"usage/async-actions.md","articles":[]},{"title":"Middleware","level":"1.3.3","depth":2,"path":"usage/middleware.md","ref":"usage/middleware.md","articles":[]}]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"satchel-and-flux.md","mtime":"2016-09-08T21:15:33.794Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-08T21:17:59.297Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
