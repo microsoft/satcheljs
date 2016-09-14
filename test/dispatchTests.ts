@@ -29,8 +29,9 @@ describe("dispatch", () => {
         let originalAction = () => {};
         let originalActionType = "testAction";
         let originalArguments: IArguments = <IArguments>{};
-        dispatch(originalAction, originalActionType, originalArguments);
-        expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments);
+        let options = 1;
+        dispatch(originalAction, originalActionType, originalArguments, options);
+        expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
     });
 
     it("changing state outside of an action causes an exception", () => {
@@ -65,9 +66,9 @@ describe("dispatch", () => {
                 next(action, actionType, null);
             });
 
-        dispatch(() => { rootStore.set("foo", 2); }, null, null);
+        dispatch(() => { rootStore.set("foo", 2); }, null, null, null);
 
         // Autorun should have executed exactly one more time
         expect(count).toBe(2);
-    });
+    }); 
 });
