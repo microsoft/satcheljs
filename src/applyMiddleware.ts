@@ -17,10 +17,10 @@ function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction)
     return (action, actionType, args, options) => middleware(next, action, actionType, args, options);
 }
 
-export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments, options: any) {
-    internalDispatchWithMiddleware(action, actionType, args, options);
+export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  middlewareOptions: { [key: string]: any }) {
+    internalDispatchWithMiddleware(action, actionType, args, middlewareOptions);
 }
 
-function finalDispatch(action: ActionFunction, actionType: string, args: IArguments, options: any) {
+function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  middlewareOptions: { [key: string]: any }) {
     return action();
 }

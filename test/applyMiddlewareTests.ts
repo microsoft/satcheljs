@@ -14,9 +14,9 @@ describe("applyMiddleware", () => {
         let middlewareCalled = false;
 
         applyMiddleware(
-            (next, action, actionType) => {
+            (next, action, actionType, middleWareOptions) => {
                 middlewareCalled = true;
-                next(action, actionType, null);
+                next(action, actionType, null, middleWareOptions);
             });
 
         dispatchWithMiddleware(() => { actionCalled = true; }, null, null, null);
@@ -29,15 +29,15 @@ describe("applyMiddleware", () => {
         var middleware1Called = false;
 
         applyMiddleware(
-            (next, action, actionType) => {
+            (next, action, actionType, middleWareOptions) => {
                 expect(middleware1Called).toBeFalsy();
                 middleware0Called = true;
-                next(action, actionType, null);
+                next(action, actionType, null, middleWareOptions);
             },
-            (next, action, actionType) => {
+            (next, action, actionType, middleWareOptions) => {
                 expect(middleware0Called).toBeTruthy();
                 middleware1Called = true;
-                next(action, actionType, null);
+                next(action, actionType, null, middleWareOptions);
             });
 
         dispatchWithMiddleware(() => { }, null, null, null);
@@ -48,41 +48,19 @@ describe("applyMiddleware", () => {
         let originalAction = () => {};
         let originalActionType = "testAction";
         let originalArguments = <IArguments>{};
+        let originalOptions = {a:1};
 
         var passedAction: ActionFunction;
         var passedActionType: string;
         var passedArguments: IArguments;
+        var passedOptions: { [key: string]: any };
 
         applyMiddleware(
-            (next, action, actionType, args) => {
+            (next, action, actionType, args, middleWareOptions) => {
                 passedAction = action;
                 passedActionType = actionType;
                 passedArguments = args;
-            });
-
-        dispatchWithMiddleware(originalAction, originalActionType, originalArguments, null);
-        expect(passedAction).toBe(originalAction);
-        expect(passedActionType).toBe(originalActionType);
-        expect(passedArguments).toBe(originalArguments);
-    });
-
-    it("Passes action parameters to middleware with options", () => {
-        let originalAction = () => {};
-        let originalActionType = "testAction";
-        let originalArguments = <IArguments>{};
-        let originalOptions = "originalOptions";
-
-        var passedAction: ActionFunction;
-        var passedActionType: string;
-        var passedArguments: IArguments;
-        var passedOptions: string;
-
-        applyMiddleware(
-            (next, action, actionType, args, options) => {
-                passedAction = action;
-                passedActionType = actionType;
-                passedArguments = args;
-                passedOptions = options;
+                passedOptions = middleWareOptions;
             });
 
         dispatchWithMiddleware(originalAction, originalActionType, originalArguments, originalOptions);
@@ -98,8 +76,8 @@ describe("applyMiddleware", () => {
         let receivedReturnValue: Promise<any> | void;
 
         applyMiddleware(
-            (next, action, actionType, args) => {
-                receivedReturnValue = next(action, actionType, args)
+            (next, action, actionType, args, middleWareOptions) => {
+                receivedReturnValue = next(action, actionType, args, middleWareOptions)
             });
 
         dispatchWithMiddleware(originalAction, null, null, null);

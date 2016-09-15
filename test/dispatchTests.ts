@@ -29,7 +29,7 @@ describe("dispatch", () => {
         let originalAction = () => {};
         let originalActionType = "testAction";
         let originalArguments: IArguments = <IArguments>{};
-        let options = 1;
+        let options = {a:1};
         dispatch(originalAction, originalActionType, originalArguments, options);
         expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
     });
@@ -61,9 +61,9 @@ describe("dispatch", () => {
 
         // Change the state twice, once in middleware and once in the action
         applyMiddlewareImports.default(
-            (next, action, actionType) => {
+            (next, action, actionType, middleWareOptions) => {
                 rootStore.set("foo", 1);
-                next(action, actionType, null);
+                next(action, actionType, null, middleWareOptions);
             });
 
         dispatch(() => { rootStore.set("foo", 2); }, null, null, null);
