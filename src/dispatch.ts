@@ -5,13 +5,13 @@ import { dispatchWithMiddleware } from './applyMiddleware';
 
 var inDispatch: number = 0;
 
-export default function dispatch(action: ActionFunction, actionType: string, args: IArguments,  middlewareOptions: { [key: string]: any }): void {
+export default function dispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: { [key: string]: any }): void {
     inDispatch++;
 
     mobxAction(
         actionType ? actionType : "(anonymous action)",
         () => {
-            dispatchWithMiddleware(action, actionType, args, middlewareOptions);
+            dispatchWithMiddleware(action, actionType, args, actionContext);
         })();
 
     inDispatch--;

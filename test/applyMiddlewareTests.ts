@@ -14,9 +14,9 @@ describe("applyMiddleware", () => {
         let middlewareCalled = false;
 
         applyMiddleware(
-            (next, action, actionType, middleWareOptions) => {
+            (next, action, actionType, actionContext) => {
                 middlewareCalled = true;
-                next(action, actionType, null, middleWareOptions);
+                next(action, actionType, null, actionContext);
             });
 
         dispatchWithMiddleware(() => { actionCalled = true; }, null, null, null);
@@ -29,15 +29,15 @@ describe("applyMiddleware", () => {
         var middleware1Called = false;
 
         applyMiddleware(
-            (next, action, actionType, middleWareOptions) => {
+            (next, action, actionType, actionContext) => {
                 expect(middleware1Called).toBeFalsy();
                 middleware0Called = true;
-                next(action, actionType, null, middleWareOptions);
+                next(action, actionType, null, actionContext);
             },
-            (next, action, actionType, middleWareOptions) => {
+            (next, action, actionType, actionContext) => {
                 expect(middleware0Called).toBeTruthy();
                 middleware1Called = true;
-                next(action, actionType, null, middleWareOptions);
+                next(action, actionType, null, actionContext);
             });
 
         dispatchWithMiddleware(() => { }, null, null, null);
@@ -56,11 +56,11 @@ describe("applyMiddleware", () => {
         var passedOptions: { [key: string]: any };
 
         applyMiddleware(
-            (next, action, actionType, args, middleWareOptions) => {
+            (next, action, actionType, args, actionContext) => {
                 passedAction = action;
                 passedActionType = actionType;
                 passedArguments = args;
-                passedOptions = middleWareOptions;
+                passedOptions = actionContext;
             });
 
         dispatchWithMiddleware(originalAction, originalActionType, originalArguments, originalOptions);
@@ -76,8 +76,8 @@ describe("applyMiddleware", () => {
         let receivedReturnValue: Promise<any> | void;
 
         applyMiddleware(
-            (next, action, actionType, args, middleWareOptions) => {
-                receivedReturnValue = next(action, actionType, args, middleWareOptions)
+            (next, action, actionType, args, actionContext) => {
+                receivedReturnValue = next(action, actionType, args, actionContext)
             });
 
         dispatchWithMiddleware(originalAction, null, null, null);

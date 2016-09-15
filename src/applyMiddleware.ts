@@ -14,13 +14,13 @@ export default function applyMiddleware(...middleware: Middleware[]) {
 }
 
 function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction): DispatchFunction {
-    return (action, actionType, args, options) => middleware(next, action, actionType, args, options);
+    return (action, actionType, args, actionContext) => middleware(next, action, actionType, args, actionContext);
 }
 
-export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  middlewareOptions: { [key: string]: any }) {
-    internalDispatchWithMiddleware(action, actionType, args, middlewareOptions);
+export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  actionContext: { [key: string]: any }) {
+    internalDispatchWithMiddleware(action, actionType, args, actionContext);
 }
 
-function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  middlewareOptions: { [key: string]: any }) {
+function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: { [key: string]: any }) {
     return action();
 }

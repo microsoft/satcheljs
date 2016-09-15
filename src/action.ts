@@ -4,7 +4,7 @@ export interface RawAction {
     (... args: any[]): Promise<any> | void;
 }
 
-export default function action(actionType: string, middlewareOptions?: any) {
+export default function action(actionType: string, actionContext?: { [key: string]: any }) {
     return function action<T extends RawAction>(target: T): T {
         let decoratedTarget = <T>function() {
             let returnValue: any;
@@ -14,7 +14,7 @@ export default function action(actionType: string, middlewareOptions?: any) {
                 () => { returnValue = target.apply(undefined, passedArguments); },
                 actionType,
                 arguments,
-                middlewareOptions);
+                actionContext);
 
             return returnValue;
         };

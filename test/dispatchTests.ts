@@ -61,9 +61,9 @@ describe("dispatch", () => {
 
         // Change the state twice, once in middleware and once in the action
         applyMiddlewareImports.default(
-            (next, action, actionType, middleWareOptions) => {
+            (next, action, actionType, actionContext) => {
                 rootStore.set("foo", 1);
-                next(action, actionType, null, middleWareOptions);
+                next(action, actionType, null, actionContext);
             });
 
         dispatch(() => { rootStore.set("foo", 2); }, null, null, null);
