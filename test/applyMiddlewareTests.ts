@@ -2,7 +2,7 @@ import 'jasmine';
 
 import { default as applyMiddleware, dispatchWithMiddleware } from '../src/applyMiddleware';
 import ActionFunction from '../src/ActionFunction';
-
+import ActionContext from '../src/ActionContext';
 
 describe("applyMiddleware", () => {
     beforeEach(() => {
@@ -53,7 +53,7 @@ describe("applyMiddleware", () => {
         var passedAction: ActionFunction;
         var passedActionType: string;
         var passedArguments: IArguments;
-        var passedOptions: { [key: string]: any };
+        var passedOptions: ActionContext;
 
         applyMiddleware(
             (next, action, actionType, args, actionContext) => {
