@@ -1,6 +1,6 @@
 {
   "name": "satcheljs",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Store implementation for functional reactive flux.",
   "main": "./dist/src/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "mobx": "~2.2.2"
   },
   "devDependencies": {
-    "jasmine": "^2.4.1",
+    "jasmine": "~2.4.1",
     "typescript": "~1.8.9"
   },
   "typings": "./dist/src/index.d.ts",

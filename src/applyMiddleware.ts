@@ -1,3 +1,4 @@
+import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
 import Middleware from './Middleware';
@@ -14,13 +15,13 @@ export default function applyMiddleware(...middleware: Middleware[]) {
 }
 
 function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction): DispatchFunction {
-    return (action, actionType, args) => middleware(next, action, actionType, args);
+    return (action, actionType, args, actionContext) => middleware(next, action, actionType, args, actionContext);
 }
 
-export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments) {
-    internalDispatchWithMiddleware(action, actionType, args);
+export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {
+    internalDispatchWithMiddleware(action, actionType, args, actionContext);
 }
 
-function finalDispatch(action: ActionFunction, actionType: string, args: IArguments) {
+function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {
     return action();
 }

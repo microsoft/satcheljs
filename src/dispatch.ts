@@ -1,17 +1,18 @@
 import {useStrict, spy, action as mobxAction} from 'mobx';
+import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
 import { dispatchWithMiddleware } from './applyMiddleware';
 
 var inDispatch: number = 0;
 
-export default function dispatch(action: ActionFunction, actionType: string, args: IArguments): void {
+export default function dispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext): void {
     inDispatch++;
 
     mobxAction(
         actionType ? actionType : "(anonymous action)",
         () => {
-            dispatchWithMiddleware(action, actionType, args);
+            dispatchWithMiddleware(action, actionType, args, actionContext);
         })();
 
     inDispatch--;
