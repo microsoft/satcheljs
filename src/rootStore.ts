@@ -1,4 +1,4 @@
-import { map, ObservableMap } from 'mobx';
+import { ObservableMap } from 'mobx';
+import { getGlobalContext } from './globalContext';
 
-var rootStore: ObservableMap<any> = map({});
-export default rootStore;
+export default getGlobalContext().rootStore;
