@@ -3,11 +3,10 @@ import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
 import { dispatchWithMiddleware } from './applyMiddleware';
-
-var inDispatch: number = 0;
+import globalContext from './globalContext';
 
 export default function dispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext): void {
-    inDispatch++;
+    globalContext.inDispatch++;
 
     mobxAction(
         actionType ? actionType : "(anonymous action)",
@@ -15,14 +14,14 @@ export default function dispatch(action: ActionFunction, actionType: string, arg
             dispatchWithMiddleware(action, actionType, args, actionContext);
         })();
 
-    inDispatch--;
+    globalContext.inDispatch--;
 }
 
 // Guard against state changes happening outside of SatchelJS actions
 useStrict(true);
 
 spy((change) => {
-    if (!inDispatch && change.type == "action") {
+    if (!globalContext.inDispatch && change.type == "action") {
         throw new Error('The state may only be changed by a SatchelJS action.');
     }
 });

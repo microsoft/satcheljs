@@ -7,7 +7,3 @@ export { default as ActionContext } from './ActionContext';
 export { default as DispatchFunction } from './DispatchFunction';
 export { default as createStore } from './createStore';
 export { default as action } from './action';
-
-
-import initialize from './initialize';
-initialize();
