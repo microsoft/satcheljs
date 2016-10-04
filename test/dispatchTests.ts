@@ -6,7 +6,6 @@ import initializeState from '../src/initializeState';
 import dispatch from '../src/dispatch';
 import * as applyMiddlewareImports from '../src/applyMiddleware';
 
-
 var backupConsoleError = console.error;
 
 describe("dispatch", () => {
@@ -70,5 +69,5 @@ describe("dispatch", () => {
 
         // Autorun should have executed exactly one more time
         expect(count).toBe(2);
-    }); 
+    });
 });

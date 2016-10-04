@@ -2,7 +2,8 @@ import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
 import Middleware from './Middleware';
-import globalContext from './globalContext';
+import { getGlobalContext } from './globalContext';
+
 
 export default function applyMiddleware(...middleware: Middleware[]) {
     var next: DispatchFunction = finalDispatch;
@@ -10,7 +11,7 @@ export default function applyMiddleware(...middleware: Middleware[]) {
         next = applyMiddlewareInternal(middleware[i], next);
     }
 
-    globalContext.dispatchWithMiddleware = next;
+    getGlobalContext().dispatchWithMiddleware = next;
 }
 
 function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction): DispatchFunction {
@@ -18,11 +19,11 @@ function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction)
 }
 
 export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {
-    if (!globalContext.dispatchWithMiddleware) {
-        globalContext.dispatchWithMiddleware = finalDispatch;
+    if (!getGlobalContext().dispatchWithMiddleware) {
+        getGlobalContext().dispatchWithMiddleware = finalDispatch;
     }
 
-    globalContext.dispatchWithMiddleware(action, actionType, args, actionContext);
+    getGlobalContext().dispatchWithMiddleware(action, actionType, args, actionContext);
 }
 
 function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {

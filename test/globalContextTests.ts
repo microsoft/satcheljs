@@ -1,16 +1,29 @@
 import 'jasmine';
-import * as GlobalContext from '../src/globalContext';
+import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion }from '../src/globalContext';
+
+declare var global: any;
+
+var backupConsoleError = console.error;
 
 describe("globalContext", () => {
     beforeEach(() => {
-        GlobalContext.__resetGlobalState();
+        __resetGlobalContext();
+    });
+
+    beforeAll(() => {
+        // Some of these tests cause MobX to write to console.error, so we need to supress that output
+        console.error = (message) => null;
+    });
+
+    afterAll(() => {
+        console.error = backupConsoleError;
     });
 
     it("will throw error if the wrong schema version is detected", () => {
-        GlobalContext.default.schemaVersion = -999;
+        getGlobalContext().schemaVersion = -999;
 
         let checker = function() {
-            GlobalContext.ensureGlobalContextSchemaVersion();
+            ensureGlobalContextSchemaVersion();
         };
 
         expect(checker).toThrow();

@@ -16,8 +16,8 @@ declare var global: {
     __satchelGlobalContext: GlobalContext;
 };
 
-// A reset global state function to be used INTERNALLY by SatchelJS tests and for initialization ONLY
-export function __resetGlobalState() {
+// A reset global context function to be used INTERNALLY by SatchelJS tests and for initialization ONLY
+export function __resetGlobalContext() {
     global.__satchelGlobalContext = {
         schemaVersion: schemaVersion,
         inDispatch: 0,
@@ -32,13 +32,13 @@ export function ensureGlobalContextSchemaVersion() {
     }
 }
 
-export default (function() {
-    // Side Effects: actually initialize the global context if it is undefined
-    if (!global.__satchelGlobalContext) {
-        __resetGlobalState();
-    } else {
-        ensureGlobalContextSchemaVersion();
-    }
-
+export function getGlobalContext() {
     return global.__satchelGlobalContext;
-})();
+};
+
+// Side Effects: actually initialize the global context if it is undefined
+if (!global.__satchelGlobalContext) {
+    __resetGlobalContext();
+} else {
+    ensureGlobalContextSchemaVersion();
+}
