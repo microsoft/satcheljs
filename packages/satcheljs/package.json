@@ -1,0 +1,23 @@
+{
+  "name": "satcheljs",
+  "version": "2.1.0",
+  "description": "Store implementation for functional reactive flux.",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "build": "node_modules/.bin/tsc",
+    "test": "npm run build && jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
+  },
+  "author": "Scott Mikula <smikula@microsoft.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mobx": "~2.2.2"
+  },
+  "devDependencies": {
+    "jasmine": "~2.4.1",
+    "typescript": "~1.8.9"
+  },
+  "typings": "./dist/src/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}
