@@ -9,12 +9,11 @@ install:
 - npm install
 script:
 - | 
-  if [ -z ${TRAVIS_TAG+x} ]; then
+  if [ -n "$TRAVIS_TAG" ]; then
     npm run build
     npm run publish-all
-  else if [ -z ${TRAVIS_PULL_REQUEST+x} ]; then bash npm run test; fi
-    npm test
   fi
+- if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash npm run test; fi
 env:
   # NPM_AUTH_TOKEN
   - secure: "fMjzpXGOsVLoh5MuXZuQIhwZlutj0ML7GL4MiRvW2HBOzF4bXxANDxvpa75djUwYHPbcGuz9v5NZmLLnDzhT+Z1vjiY87ktGl2bwogrndHhN3a2CxGjGVN80GC9miUdN0Y1VYz00WjX32XNpJcBjpEC4PuitjNB2VV8i81SRzI0T4FY/lmQXi/p/BkSwPZQyq3rMXw9DoaLL18Y3jI18IaKn6OK8NF7eSWEuMlnUQH4itzqtggpNW4ly0I193QLyyciw7Flkb7QcpxEHVORZgUWAbl0+AxL9LT7DoXfuBrFHrvNlBqqYIaUnMIsgiqf+6tiLj3GCaRyfgg94HTwPc1xtsX8vXT2oCIp0DGl51OFWVxApmbOXp0VpXK7Vd/2XE8RNtbucYe9oMES20xDKBtwurUq7IEvyXpU6Q5iNd93uRR13GgtqLD+upH3J99cNgkOl7yazGbwbeEKpJAaTesfymIoeJsHZognN5eqLRNWcDR2T/6rLJe4GGTgsefl6RsEHgJEffch3Dn2QohmwD8kNVPT4pUnrUUggngxO1FTgkot+S/LulLtHN8vdLoDxkoeOMpABV5fszglP50x+yZiy19AM7ViR7+SZ5idLT++x8MPkfaJMVCKmsHywsZIdT6+AXZLkyyGEuhLsepdSOTB9EyzQJ5iXy8kYQbs7QkM="
