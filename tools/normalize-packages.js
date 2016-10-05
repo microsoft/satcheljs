@@ -12,6 +12,7 @@ packages.forEach((package) => {
     console.log(`normalizing ${package}...`);
     normalizePackageJson(package, packages);
     normalizeTsConfigJson(package, packages);
+    normalizeJasmineJson(package, packages);
 });
 
 function readPackageJson(package) {
@@ -41,7 +42,7 @@ function normalizePackageJson(package, packages) {
         "copy-project-files": "node ../../tools/copy-project-files.js",
         "build": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js",
         "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
-        "test": "npm run build && jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
+        "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
     };
 
     fs.writeFileSync(packageJsonFilePath, JSON.stringify(packageJson, null, 2));
@@ -50,12 +51,20 @@ function normalizePackageJson(package, packages) {
 function normalizeTsConfigJson(package, packages) {
     var tsConfigJsonFilePath = path.join(packagePath, package, 'tsconfig.json');
     var content = fs.readFileSync(tsConfigJsonFilePath);
-    var packageJson = readPackageJson(package);
     var json = JSON.parse(content);
 
     json.compilerOptions.paths = {"*": ["*", "dist/*"]};
     json.compilerOptions.baseUrl = "../../";
-    json.compilerOptions.include = ['src/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts']
+    json.compilerOptions.rootDir = ".";
+    json.include = ['lib/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts'];
     json.compilerOptions.outDir = `../../dist/${package}`;
     fs.writeFileSync(tsConfigJsonFilePath, JSON.stringify(json, null, 2));
+}
+
+function normalizeJasmineJson(package, packages) {
+    var jasmineJsonFilePath = path.join(packagePath, package, 'jasmine.json');
+    var content = fs.readFileSync(jasmineJsonFilePath);
+    var json = JSON.parse(content);
+    json.spec_dir = `../../dist/${package}/test`;
+    fs.writeFileSync(jasmineJsonFilePath, JSON.stringify(json, null, 2));
 }

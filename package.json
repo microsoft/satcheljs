@@ -4,10 +4,11 @@
   "description": "Store implementation for functional reactive flux.",
   "scripts": {
     "clean": "rimraf dist",
+    "link-all": "node tools/npm-link.js",
     "publish-all": "node tools/publish-all.js",
     "normalize": "node tools/normalize-packages.js",
     "build": "npm run clean && npm run normalize && node tools/build-all.js",
-    "test": "npm run clean && npm run normalize && node tools/test-all.js"
+    "test": "npm run build && npm run link-all && node tools/test-all.js"
   },
   "devDependencies": {
     "glob": "^7.0.6",

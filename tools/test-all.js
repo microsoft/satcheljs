@@ -7,7 +7,6 @@ var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''))
 
 packages.forEach((package) => {
     console.log(`test ${package}...`);
-
     try {
         var results = exec(`npm test`, { stdio: 'inherit', cwd: path.join(packagePath, package) });
     } catch (err) {

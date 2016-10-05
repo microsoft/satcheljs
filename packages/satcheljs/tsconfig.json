@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "outDir": "../../dist/satcheljs/lib",
+    "outDir": "../../dist/satcheljs",
     "sourceMap": false,
     "declaration": true,
     "removeComments": false,
@@ -13,10 +13,12 @@
         "*",
         "dist/*"
       ]
-    }
+    },
+    "rootDir": "."
   },
   "include": [
-    "src/**/*.ts",
-    "typings/**/*.ts"
+    "lib/**/*.ts",
+    "test/**/*.ts",
+    "typings/**/*.d.ts"
   ]
 }
