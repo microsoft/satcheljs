@@ -6,13 +6,6 @@ var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''))
 var exec = require('child_process').execSync;
 var copy = require('./copy');
 
-var registry = process.argv[2];
-
-if (!registry) {
-    console.error("Registry not specified!");
-    process.exit(1);
-}
-
 var npmrc = path.resolve(__dirname, '../npmrc-publish-only');
 
 packages.forEach((package) => {
@@ -21,6 +14,7 @@ packages.forEach((package) => {
     var cwd = path.resolve(__dirname, '../dist', package);
     var pkgNpmrc = path.join(cwd, '.npmrc');
 
+    console.log(`Copy ${npmrc} to ${pkgNpmrc}`);
     copy(npmrc, pkgNpmrc);
 
     if (process.env['NPM_AUTH_TOKEN']) {
@@ -28,6 +22,7 @@ packages.forEach((package) => {
     }
 
     try {
+        console.log(`Publishing to registry`);
         var results = exec(`npm publish`, {cwd: cwd });
     } catch (err) {
         console.error(`Build error ${err.message}`);

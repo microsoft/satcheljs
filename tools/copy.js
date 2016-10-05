@@ -4,5 +4,5 @@ const path = require('path');
 
 module.exports = function copy(src, dst) {
     mkdirp.sync(path.dirname(dst));
-    fs.createReadStream(src).pipe(fs.createWriteStream(dst));    
+    fs.writeFileSync(dst, fs.readFileSync(src));    
 }
