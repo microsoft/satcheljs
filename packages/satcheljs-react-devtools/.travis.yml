@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- '6.1'
+- '5.11'
+before_install:
+- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
+- npm config set spin false
+install:
+- npm install
+script:
+- npm test
+deploy:
+  provider: npm
+  email: kchau@microsoft.com
+  skip_cleanup: true
+  api_key:
+    secure: BG1kSQWD5Aq3nt0hgm+53T8UX1R/mYqQGNGr8ezQ9QTrqLueKaFlD3pIdmq1r2TDDTsBmQt4hqDAFx2hAX+toyV9ehMDJZqfUTKyhjqJ6n19MMM4ZUadBQ7/GL9eRWXXgjdCgl+koGxeDz105GNS4rpXLVWMuIH1igtKceJIBncY+fhJsIb981MNFE+RuyPRYuIpbgkq3vLMK+a3iu3SS1Vt9EvIwzPeuoidNxAd7GN157d8JxI7B5qs3jPotnikBwpjnsA4h5fZbQAgjmyItvzj0bLXp+GwgoxD48OzS3Nu0HV0g2BTS6Kf8dq80VwWXWM7dQqVRakj8aULqWmyQZTv04oN1oDOUeJXFwF6dtRNAT58BAIRofSpZ5zwJKWbqZg1Q9n9XHGhWVJcch+TxQ1a/u+1ii++eO988i2HZotCZXYvwqfYazgS9yOouosHVUjGP9sl19Gs3Ffi1pqb3yo0xTXRlWRVUFmEjeQK8YJr/PWUgHqSr0KLi9+ozD2GUtCclam6UviBh9oPpXSqgQxxCy+ncaOJuYQD739zK7t/GWEwb1nQcrQI28OZ/+b6kETcih54rRYqpndLTvYuKrHhVO2AA9gfQKz6zu3id4pa2tE5yscjX6Zqk4vdlilo+ANPrOMJzQ1oOejTH4tJQKCmpXSMPiNAGCSN4zGtnYw=
+  on:
+    tags: true
+    repo: Microsoft/satcheljs-react-devtools

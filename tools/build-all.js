@@ -1,19 +1,22 @@
 var fs = require('fs');
 var path = require('path');
 var packagePath = path.resolve(__dirname, '../packages');
-var packages = fs.readdirSync(packagePath);
 var exec = require('child_process').execSync;
+var collectPackages = require('./collect-packages');
+var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''));
 
 packages.forEach((package) => {
     console.log(`building ${package}...`);
 
     try {
-        var results = exec(`npm run build`, {cwd: path.join(packagePath, package) });
+        var results = exec(`npm run build`, { stdio: 'inherit', cwd: path.join(packagePath, package) });
     } catch (err) {
-        console.error(`Build error ${err.message}`);
-        process.exit(1);
+        console.error(`Errors in compile`);
+        console.error(err.message);
     }
-
-    console.log(results.toString());
+    
+    if (results) {
+        console.log(results.toString());
+    }
 });
 

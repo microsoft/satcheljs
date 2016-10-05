@@ -1,10 +1,12 @@
 var fs = require('fs');
 var path = require('path');
 var packagePath = path.resolve(__dirname, '../packages');
-var packages = fs.readdirSync(packagePath);
 var exec = require('child_process').execSync;
+var collectPackages = require('./collect-packages');
 
 var mainPackageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json')));
+
+var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''));
 
 packages.forEach((package) => {
     console.log(`normalizing ${package}...`);
@@ -38,7 +40,8 @@ function normalizePackageJson(package, packages) {
     packageJson.scripts = {
         "copy-project-files": "node ../../tools/copy-project-files.js",
         "build": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js",
-        "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w"
+        "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
+        "test": "npm run build && jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
     };
 
     fs.writeFileSync(packageJsonFilePath, JSON.stringify(packageJson, null, 2));
@@ -50,19 +53,9 @@ function normalizeTsConfigJson(package, packages) {
     var packageJson = readPackageJson(package);
     var json = JSON.parse(content);
 
-    json.compilerOptions.paths = {};
-
-    Object.keys(packageJson.dependencies).forEach((dep) => {
-        if (packages.indexOf(dep) > -1) {
-            json.compilerOptions.paths[`${dep}/lib/*`] = [`../${dep}/lib/*`];
-        }
-    });
-
-    if (Object.keys(json.compilerOptions.paths).length == 0) {
-        json.compilerOptions.outDir = `../../dist/${package}/lib`;
-    } else {
-        json.compilerOptions.outDir = `../../dist/`;
-    }
-
+    json.compilerOptions.paths = {"*": ["*", "dist/*"]};
+    json.compilerOptions.baseUrl = "../../";
+    json.compilerOptions.include = ['src/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts']
+    json.compilerOptions.outDir = `../../dist/${package}`;
     fs.writeFileSync(tsConfigJsonFilePath, JSON.stringify(json, null, 2));
 }

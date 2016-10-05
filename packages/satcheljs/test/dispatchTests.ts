@@ -1,10 +1,10 @@
 import 'jasmine';
 import {action as mobxAction, autorun, _} from 'mobx';
 
-import rootStore from '../src/rootStore';
-import initializeState from '../src/initializeState';
-import dispatch from '../src/dispatch';
-import * as applyMiddlewareImports from '../src/applyMiddleware';
+import rootStore from '../lib/rootStore';
+import initializeState from '../lib/initializeState';
+import dispatch from '../lib/dispatch';
+import * as applyMiddlewareImports from '../lib/applyMiddleware';
 
 var backupConsoleError = console.error;
 

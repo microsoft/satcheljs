@@ -3,26 +3,26 @@
   "version": "2.2.0",
   "description": "Store implementation for functional reactive flux.",
   "scripts": {
+    "clean": "rimraf dist",
     "publish-all": "node tools/publish-all.js",
     "normalize": "node tools/normalize-packages.js",
-    "build": "npm run normalize && node tools/build-all.js"
+    "build": "npm run clean && npm run normalize && node tools/build-all.js",
+    "test": "npm run clean && npm run normalize && node tools/test-all.js"
   },
   "devDependencies": {
     "glob": "^7.0.6",
+    "jasmine": "~2.4.1",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.5.4",
-    "typescript": "~2.0.0"
+    "toposort": "~1.0.0",
+    "typescript": "~2.0.3"
   },
   "dependencies": {
-    "mobx-react": "~3.5.6",
-    "office-ui-fabric-react": "~0.52.0",
-    "owa-core": "^1.2.0",
-    "owa-service": "^2.3.0",
-    "owa-session-store": "^1.1.0",
-    "owa-url": "^1.0.1",
-    "react": "~15.3.1",
-    "react-dom": "~15.3.1",
-    "satcheljs": "^2.0.0",
-    "typescript": "^2.0.2"
+    "mobx": "~2.2.2",
+    "mobx-react": "^3.3.0",
+    "mobx-react-devtools": "^4.2.0",
+    "react": "^15.3.2",
+    "react-addons-perf": "^15.3.2",
+    "react-dom": "^15.3.2"
   }
 }

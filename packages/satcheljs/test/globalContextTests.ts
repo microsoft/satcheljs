@@ -1,5 +1,5 @@
 import 'jasmine';
-import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion }from '../src/globalContext';
+import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion } from '../lib/globalContext';
 
 declare var global: any;
 

@@ -1,6 +1,6 @@
 import 'jasmine';
 import { isObservableMap } from 'mobx';
-import rootStore from '../src/rootStore';
+import rootStore from '../lib/rootStore';
 
 describe("rootStore", () => {
     it("is an ObservableMap", () => {

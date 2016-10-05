@@ -1,6 +1,6 @@
 import 'jasmine';
-import action from '../src/action';
-import * as dispatchImports from '../src/dispatch';
+import action from '../lib/action';
+import * as dispatchImports from '../lib/dispatch';
 
 describe("action", () => {
     it("wraps the function call in a dispatch", () => {

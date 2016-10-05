@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var glob = require('glob');
-var mkdirp = require('mkdirp');
+var copy = require('./copy');
 
 var outputPath = path.resolve(__dirname, '../dist');
 var cwd = process.cwd();
@@ -15,11 +15,13 @@ if (!fs.existsSync(path.join(outputPath, packageName))) {
     fs.mkdirSync(path.join(outputPath, packageName));
 }
 
-fs.createReadStream(path.join(cwd, 'package.json'))
-  .pipe(fs.createWriteStream(path.join(outputPath, packageName, 'package.json')));
-
-glob.sync('lib/**/*.@(scss|css)').forEach((f) => {
+let copyFn = (f) => {
     var outfile = path.join(outputPath, packageName, f);
-    mkdirp.sync(path.dirname(outfile));
-    fs.writeFileSync(outfile, fs.readFileSync(f));
-});
+    copy(path.join(cwd, f), outfile);
+};
+
+glob.sync('lib/**/*.@(scss|css)').forEach(copyFn);
+glob.sync('@(README|readme)*.*').forEach(copyFn);
+glob.sync('@(license|LICENSE)*').forEach(copyFn);
+glob.sync('package.json').forEach(copyFn);
+glob.sync('.npmignore').forEach(copyFn);
