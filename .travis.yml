@@ -9,11 +9,11 @@ install:
 - npm install
 script:
 - | 
-  if [ "$TRAVIS_TAG" != "false" ]; then
+  if [ -z ${TRAVIS_TAG+x} ]; then
     npm run build
     npm run publish-all
-  else if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash npm run test; fi
-    npm run test
+  else if [ -z ${TRAVIS_PULL_REQUEST+x} ]; then bash npm run test; fi
+    npm test
   fi
 env:
   # NPM_AUTH_TOKEN
