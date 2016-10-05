@@ -8,13 +8,13 @@ before_install:
 install:
 - npm install
 script:
-- npm test
-deploy:
-  provider: npm
-  email: kchau@microsoft.com
-  skip_cleanup: true
-  api_key:
-    secure: GWBNYOyyY2spHBdI8ySi+bSTy4x0VtQDAfuGA1OQbmlpDwZuMSRVuEwfx2A5lEyTzn9u0yp86Ju2doXqFdJ6twXmXN1AqnA2haRpqIxKpcAMxWGLRGem08Xiqc8ey3haxvnxVjsP4Jlq+EWDmtfYnSec11vUAggk7jFMt6IWTsTS+GKX6XQSxtD66EJ4kEASlEfRzNpg5dZY5NURtEr6Nf+sWaLoYxHfMhCu2a58MTIS2NEwA0dSQRTlNHThIzeyK4zkQRkaUPaX4J8aEG+YC/oHM7ZppB6yg1rsvLzNMgBU6zKWKrKHnAzeKG+XWY4QKBGwE8dtg9YZ3QB7e0NnYvj5Bp+sKHE9lY3r8BJofVguev1vzifZpCezxoDVjIL04nn7uiI/dPJvQ/IDLcm6/6puAjiert9unSX4ERSkQrRV6S4RlIZs/S6shSXAX2otanAHBkHbfKzgSU00q0X6lRJnFndSd47t/j1NqsYpmiwm/eQoIyoc/2ReyY86mc8xk1fY9U8d2FQFZ4MYBZbn+eUiNyft5+4oITswqu4nVNGNdD6uZLMAWU6LRNaCFjb/hkwvVWU0dMH8LMzW6vlWcEptEDfCWRKYKHmyDdJP4/vvCMWNXBX3moSUc1MZ6YGccGn5u91594sylpfzhkd6ezzUWeaU1QdeJhOF4lzDXpQ=
-  on:
-    tags: true
-    repo: Microsoft/satcheljs
+- | 
+  if [ -z ${TRAVIS_TAG+x} ]; then
+    npm run build
+    npm run publish-all
+  else if [ -z ${TRAVIS_PULL_REQUEST+x} ]; then bash npm run test; fi
+    npm test
+  fi
+env:
+  # NPM_AUTH_TOKEN
+  - secure: "fMjzpXGOsVLoh5MuXZuQIhwZlutj0ML7GL4MiRvW2HBOzF4bXxANDxvpa75djUwYHPbcGuz9v5NZmLLnDzhT+Z1vjiY87ktGl2bwogrndHhN3a2CxGjGVN80GC9miUdN0Y1VYz00WjX32XNpJcBjpEC4PuitjNB2VV8i81SRzI0T4FY/lmQXi/p/BkSwPZQyq3rMXw9DoaLL18Y3jI18IaKn6OK8NF7eSWEuMlnUQH4itzqtggpNW4ly0I193QLyyciw7Flkb7QcpxEHVORZgUWAbl0+AxL9LT7DoXfuBrFHrvNlBqqYIaUnMIsgiqf+6tiLj3GCaRyfgg94HTwPc1xtsX8vXT2oCIp0DGl51OFWVxApmbOXp0VpXK7Vd/2XE8RNtbucYe9oMES20xDKBtwurUq7IEvyXpU6Q5iNd93uRR13GgtqLD+upH3J99cNgkOl7yazGbwbeEKpJAaTesfymIoeJsHZognN5eqLRNWcDR2T/6rLJe4GGTgsefl6RsEHgJEffch3Dn2QohmwD8kNVPT4pUnrUUggngxO1FTgkot+S/LulLtHN8vdLoDxkoeOMpABV5fszglP50x+yZiy19AM7ViR7+SZ5idLT++x8MPkfaJMVCKmsHywsZIdT6+AXZLkyyGEuhLsepdSOTB9EyzQJ5iXy8kYQbs7QkM="
