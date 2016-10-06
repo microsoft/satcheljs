@@ -21,10 +21,6 @@ packages.forEach((package) => {
         fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
     }
 
-    if (process.env['TEST_VAR']) {
-        console.log(`Tested decryption of secret: ${process.env['TEST_VAR']}`)
-    }
-
     try {
         console.log(`Publishing to registry`);
         var results = exec(`npm publish`, {cwd: cwd });
