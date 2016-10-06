@@ -18,7 +18,11 @@ packages.forEach((package) => {
     copy(npmrc, pkgNpmrc);
 
     if (process.env['NPM_AUTH_TOKEN']) {
-        fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n_auth=" + process.env['NPM_AUTH_TOKEN'] + "\n");
+        fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
+    }
+
+    if (process.env['TEST_VAR']) {
+        console.log(`Tested decryption of secret: ${process.env['TEST_VAR']}`)
     }
 
     try {
