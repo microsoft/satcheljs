@@ -12,7 +12,7 @@ export default function action(actionType: string, actionContext?: ActionContext
             let passedArguments = arguments;
 
             dispatch(
-                () => { returnValue = target.apply(undefined, passedArguments); },
+                () => { returnValue = target.apply(undefined, passedArguments); return returnValue; },
                 actionType,
                 arguments,
                 actionContext);
