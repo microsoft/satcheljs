@@ -1,4 +1,4 @@
-import {Reaction, IObservableValue, isObservable} from 'mobx';
+import {Reaction, Atom, IObservableValue, isObservableArray, isObservable} from 'mobx';
 
 export interface SelectorFunction {
     [key: string]: () => any;
@@ -7,7 +7,7 @@ export interface SelectorFunction {
 /**
  * Decorator for action functions. Selects a subset from the state tree for the action.
  */
-export default function select(selector: SelectorFunction) {
+export default function select<StateShape>(selector: SelectorFunction) {
     return function decorator<T extends Function>(target: T): T {
         let _this = this;
 
@@ -17,13 +17,42 @@ export default function select(selector: SelectorFunction) {
 
             Object.keys(selector).forEach(key => {
                 reaction.track(selector[key]);
-                let observable: IObservableValue<any> = <any>reaction.observing[reaction.observing.length - 1];
 
-                Object.defineProperty(state, key, {
-                    get: observable.get.bind(observable),
-                    set: observable.set.bind(observable)
-                });
+                let observable = reaction.observing[reaction.observing.length - 1];
+
+                if ((<any>observable).get) {
+                    let value: IObservableValue<any> = <any>observable;
+
+                    Object.defineProperty(state, key, {
+                        get: value.get.bind(observable),
+                        set: value.set.bind(observable)
+                    });
+                } else if (observable instanceof Atom) {
+                    let parent: any[] = reaction.observing.length > 2 && <any>reaction.observing[reaction.observing.length - 2];
+                    if (parent && isObservableArray(parent)) {
+                        // Handle the case where this is an element of an array
+                        let atom: Atom = observable;
+                        let index = parent.indexOf(atom);
+
+                        Object.defineProperty(state, key, {
+                            get: () => selector[key](),
+                            set: (value) => parent[index] = value
+                        });
+                    } else {
+                        // If not an array, then all we can provide is a getter
+                        Object.defineProperty(state, key, {
+                            get: () => selector[key]()
+                        });
+                    }
+                } else {
+                    // If this is not an observable, then just create a getter
+                    Object.defineProperty(state, key, {
+                        get: () => selector[key]()
+                    });
+                }
             });
+
+            reaction.dispose();
 
             [].push.call(arguments, state);
             return target.apply(_this, arguments);
