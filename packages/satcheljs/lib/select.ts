@@ -7,7 +7,7 @@ export interface SelectorFunction {
 /**
  * Decorator for action functions. Selects a subset from the state tree for the action.
  */
-export default function select<StateShape>(selector: SelectorFunction) {
+export default function select(selector: SelectorFunction) {
     return function decorator<T extends Function>(target: T): T {
         let _this = this;
 
