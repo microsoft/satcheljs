@@ -13,7 +13,7 @@ export default function select<StateShape>(selector: SelectorFunction) {
 
         let returnValue: any = function() {
             let state = {};
-            let reaction = new Reaction('something', null);
+            let reaction = new Reaction('__SELECT__', null);
 
             Object.keys(selector).forEach(key => {
                 reaction.track(selector[key]);
