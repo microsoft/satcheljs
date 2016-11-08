@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-snapshots",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Adds snapshotting capability to SatchelJS",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "mobx": "~2.2.2",
-    "satcheljs": "2.2.0"
+    "satcheljs": "2.3.0"
   },
   "devDependencies": {
     "jasmine": "^2.4.1",
