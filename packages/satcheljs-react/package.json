@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-react",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "SatchelJS hooks for React applications.",
   "main": "./lib/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "mobx": "~2.2.2",
     "mobx-react": "^3.3.0",
     "react": "^15.3.2",
-    "satcheljs": "2.3.0"
+    "satcheljs": "2.4.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
