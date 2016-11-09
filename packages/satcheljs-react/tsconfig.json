@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "outDir": "../../dist/satcheljs-react-devtools",
+    "sourceMap": false,
+    "declaration": true,
+    "removeComments": false,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "baseUrl": "../../",
+    "paths": {
+      "*": [
+        "*",
+        "dist/*"
+      ]
+    },
+    "rootDir": "."
+  },
+  "include": [
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "typings/**/*.d.ts"
+  ]
+}

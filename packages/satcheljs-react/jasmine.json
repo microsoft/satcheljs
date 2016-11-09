@@ -1,0 +1,8 @@
+{
+  "spec_dir": "../../dist/satcheljs-react-devtools/test",
+  "spec_files": [
+    "**/*.js"
+  ],
+  "stopSpecOnExpectationFailure": false,
+  "random": false
+}
