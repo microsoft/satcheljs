@@ -4,44 +4,45 @@ export interface SelectorFunction {
     [key: string]: () => any;
 }
 
-export function createCursorFromSelector(selector: SelectorFunction) {
-    let state = {};
+export function createCursorFromSelector(selector: SelectorFunction, state?: any) {
+    state = state || {};
     let reaction = new Reaction('__SELECT__', null);
 
     Object.keys(selector).forEach(key => {
-        reaction.track(selector[key]);
+        if (typeof state[key] === typeof undefined) {
+            reaction.track(selector[key]);
+            let observable = reaction.observing[reaction.observing.length - 1];
 
-        let observable = reaction.observing[reaction.observing.length - 1];
-
-        if ((<any>observable).get) {
-            let value: IObservableValue<any> = <any>observable;
-
-            Object.defineProperty(state, key, {
-                get: value.get.bind(observable),
-                set: value.set.bind(observable)
-            });
-        } else if (observable instanceof Atom) {
-            let parent: any[] = reaction.observing.length > 2 && <any>reaction.observing[reaction.observing.length - 2];
-            if (parent && isObservableArray(parent)) {
-                // Handle the case where this is an element of an array
-                let atom: Atom = observable;
-                let index = parent.indexOf(atom);
+            if ((<any>observable).get) {
+                let value: IObservableValue<any> = <any>observable;
 
                 Object.defineProperty(state, key, {
-                    get: () => selector[key](),
-                    set: (value) => parent[index] = value
+                    get: value.get.bind(observable),
+                    set: value.set.bind(observable)
                 });
+            } else if (observable instanceof Atom) {
+                let parent: any[] = reaction.observing.length > 2 && <any>reaction.observing[reaction.observing.length - 2];
+                if (parent && isObservableArray(parent)) {
+                    // Handle the case where this is an element of an array
+                    let atom: Atom = observable;
+                    let index = parent.indexOf(atom);
+
+                    Object.defineProperty(state, key, {
+                        get: () => selector[key](),
+                        set: (value) => parent[index] = value
+                    });
+                } else {
+                    // If not an array, then all we can provide is a getter
+                    Object.defineProperty(state, key, {
+                        get: () => selector[key]()
+                    });
+                }
             } else {
-                // If not an array, then all we can provide is a getter
+                // If this is not an observable, then just create a getter
                 Object.defineProperty(state, key, {
                     get: () => selector[key]()
                 });
             }
-        } else {
-            // If this is not an observable, then just create a getter
-            Object.defineProperty(state, key, {
-                get: () => selector[key]()
-            });
         }
     });
 

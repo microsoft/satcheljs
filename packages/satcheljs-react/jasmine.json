@@ -1,5 +1,5 @@
 {
-  "spec_dir": "../../dist/satcheljs-react-devtools/test",
+  "spec_dir": "../../dist/satcheljs-react/test",
   "spec_files": [
     "**/*.js"
   ],
