@@ -3,10 +3,11 @@
     "target": "es5",
     "module": "commonjs",
     "jsx": "react",
-    "outDir": "../../dist/satcheljs-react-devtools",
-    "sourceMap": false,
+    "outDir": "../../dist/satcheljs-react",
+    "sourceMap": true,
     "declaration": true,
     "removeComments": false,
+    "experimentalDecorators": true,
     "noImplicitAny": true,
     "baseUrl": "../../",
     "paths": {

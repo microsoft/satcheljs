@@ -23,7 +23,9 @@
   ],
   "include": [
     "lib/**/*.ts",
+    "lib/**/*.tsx",
     "test/**/*.ts",
+    "test/**/*.tsx",
     "typings/**/*.d.ts"
   ]
 }

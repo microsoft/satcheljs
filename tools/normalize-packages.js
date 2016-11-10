@@ -56,7 +56,7 @@ function normalizeTsConfigJson(package, packages) {
     json.compilerOptions.paths = {"*": ["*", "dist/*"]};
     json.compilerOptions.baseUrl = "../../";
     json.compilerOptions.rootDir = ".";
-    json.include = ['lib/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts'];
+    json.include = ['lib/**/*.ts', 'lib/**/*.tsx', 'test/**/*.ts', 'test/**/*.tsx', 'typings/**/*.d.ts'];
     json.compilerOptions.outDir = `../../dist/${package}`;
     fs.writeFileSync(tsConfigJsonFilePath, JSON.stringify(json, null, 2));
 }

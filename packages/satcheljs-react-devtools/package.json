@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-react-devtools",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Dev tooling for React apps using SatchelJS.",
   "main": "./lib/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "react": "^15.3.2",
     "react-addons-perf": "^15.3.2",
     "react-dom": "^15.3.2",
-    "satcheljs": "2.3.0"
+    "satcheljs": "2.4.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
