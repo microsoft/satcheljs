@@ -4,7 +4,7 @@ export interface SelectorFunction {
     [key: string]: () => any;
 }
 
-export function createCursorFromSelector(selector: SelectorFunction, state?: any) {
+function createCursorFromSelector(selector: SelectorFunction, state?: any) {
     state = state || {};
     let reaction = new Reaction('__SELECT__', null);
 
