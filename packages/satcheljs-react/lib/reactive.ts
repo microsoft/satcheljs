@@ -13,7 +13,7 @@ function setPropAccessors(props: any, selector: SelectorFunction) {
 
         if (typeof props[key] === typeof undefined) {
             Object.defineProperty(props, key, {
-                get: getter
+                get: () => getter.call(null, props)
             });
         }
     });

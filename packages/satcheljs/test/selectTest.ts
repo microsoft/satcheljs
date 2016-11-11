@@ -157,4 +157,23 @@ describe("select", () => {
 
         expect(fooStore.obj.k).toBe('newValue');
     });
+
+    it("propagates action params to the selector function", () => {
+        let fooStore: any = createStore('foo', {
+            id0: 'value',
+            array0: ['a', 'b', 'c']
+        });
+
+        let readAction = action("read")((id: string, arrayIndex: number, state?: any) => {
+            expect(state.value).toBe('value');
+            expect(state.arrayValue).toBe('c');
+        });
+
+        let newAction = select({
+            value: (id, arrayIndex) => fooStore[id],
+            arrayValue: (id, arrayIndex) => fooStore.array0[arrayIndex]
+        })(readAction);
+
+        newAction('id0', 2);
+    });
 });
