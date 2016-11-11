@@ -88,4 +88,22 @@ describe("reactive decorator", () => {
         let comp = new TestComponent({hello: 'world'});
         comp.render();
     });
+
+    it("injects props as param to the selector functions", () => {
+        let store: any = createStore("testStore", {
+            id0: "value"
+        });
+
+        let TestComponent = reactive({
+            foo: (p) => store[p.id]
+        })((props: any) => {
+            let {foo} = props;
+            expect(foo).toBe('value');
+            return <div>{foo}</div>;
+        });
+
+        // Reactive stateless component are converted to classical components by @observer
+        let comp = new TestComponent({id: 'id0'});
+        comp.render();
+    });
 });
