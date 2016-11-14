@@ -50,21 +50,21 @@ function createNewFunctionalComponent(target: React.StatelessComponent<any>, sel
  * Reactive decorator
  */
 export default function reactive(selector?: SelectorFunction) {
-    return function(target: React.ReactType) {
-        let newComponent: ReactiveTarget;
+    return function<T extends React.ReactType>(target: T) {
+        let newComponent: any;
 
         if ((target as any).prototype instanceof React.Component) {
             newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selector);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         }
-        
+
         if (target instanceof Function) {
             newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selector));
             newComponent.nonReactiveStatelessComponent = target as React.StatelessComponent<any>;
             return newComponent;
         }
 
-        return newComponent;
+        return <T>newComponent;
     }
 }

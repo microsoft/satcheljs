@@ -106,4 +106,22 @@ describe("reactive decorator", () => {
         let comp = new TestComponent({id: 'id0'});
         comp.render();
     });
+
+    it("decorates over component classes with public members", () => {
+        @reactive()
+        class TestComponent extends React.Component<any, any> {
+            foo: string
+
+            bar() {}
+
+            render() {
+                let {foo} = this.props;
+                expect(foo).toBe('somevalue');
+                return <div>{foo}</div>;
+            }
+        }
+
+        let comp = new TestComponent({foo: 'somevalue'});
+        comp.render();
+    })
 });
