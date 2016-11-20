@@ -8,15 +8,23 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
 };
 
 function setPropAccessors(props: any, selector: SelectorFunction) {
+    let newProps: any= {};
+
+    Object.keys(this.props).forEach(key => {
+        newProps[key] = props[key];
+    });
+
     Object.keys(selector).forEach(key => {
         let getter = selector[key];
 
-        if (typeof props[key] === typeof undefined) {
-            Object.defineProperty(props, key, {
-                get: () => getter.call(null, props)
+        if (typeof newProps[key] === typeof undefined) {
+            Object.defineProperty(newProps, key, {
+                get: () => getter.call(null, newProps)
             });
         }
     });
+
+    return newProps;
 }
 
 function createNewConstructor(target: React.ComponentClass<any>, selector: SelectorFunction) {
@@ -26,8 +34,8 @@ function createNewConstructor(target: React.ComponentClass<any>, selector: Selec
 
     var original = target;
     var newTarget : any = function (props?: any) {
-        setPropAccessors(props, selector);
-        return original.call(this, props)
+        let newProps = setPropAccessors(props, selector);
+        return original.call(this, newProps);
     }
 
     // copy prototype so intanceof operator still works
@@ -41,8 +49,8 @@ function createNewFunctionalComponent(target: React.StatelessComponent<any>, sel
     }
 
     return function(props: any) {
-        setPropAccessors(props, selector);
-        return target.call(target, props);
+        let newProps = setPropAccessors(props, selector);
+        return target.call(target, newProps);
     };
 }
 

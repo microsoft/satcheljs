@@ -14,7 +14,7 @@
   "dependencies": {
     "mobx": "~2.2.2",
     "mobx-react": "^3.3.0",
-    "react": "^15.3.2",
+    "react": "^15.4.0",
     "satcheljs": "2.5.1"
   },
   "devDependencies": {
