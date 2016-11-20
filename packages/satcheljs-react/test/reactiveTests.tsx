@@ -91,6 +91,23 @@ describe("reactive decorator", () => {
         expect(store.foo).toBeNull();
     });
 
+     it("creates a mountable functional component", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let Wrapped = reactive({
+            foo: () => store.foo
+        })((props: any) => {
+            let {foo, hello} = props;
+            expect(foo).toBe('value');
+            expect(hello).toBe('world');
+            return <div className="testClass">{foo}</div>;
+        });
+
+        expect(mount(<Wrapped hello="world" />).find('.testClass').length).toBe(1);
+    });
+
     it("injects subtree as props for functional components", () => {
         let store = createStore("testStore", {
             foo: "value"
