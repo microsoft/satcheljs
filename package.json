@@ -11,12 +11,19 @@
     "test": "npm run build && npm run link-all && node tools/test-all.js"
   },
   "devDependencies": {
+    "@types/enzyme": "^2.5.38",
+    "@types/jsdom": "^2.0.29",
+    "@types/node": "^6.0.48",
     "@types/react": "~0.14.49",
-    "@types/react-dom": "~0.14.18",
     "@types/react-addons-perf": "~0.14.17",
+    "@types/react-addons-test-utils": "^0.14.15",
+    "@types/react-dom": "~0.14.18",
+    "enzyme": "~2.6.0",
     "glob": "^7.0.6",
     "jasmine": "~2.4.1",
+    "jsdom": "~9.8.3",
     "mkdirp": "^0.5.1",
+    "react-addons-test-utils": "^15.4.0",
     "rimraf": "^2.5.4",
     "toposort": "~1.0.0",
     "typescript": "~2.0.3"

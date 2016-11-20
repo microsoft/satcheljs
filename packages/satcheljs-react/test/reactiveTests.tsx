@@ -1,11 +1,32 @@
+import './setupJsdom';
 import 'jasmine';
 import {createStore, action} from 'satcheljs';
 import * as React from 'react';
 import reactive from '../lib/reactive';
+import {mount} from 'enzyme';
 
 let sequenceOfEvents: any[];
 
 describe("reactive decorator", () => {
+    it("creates a mountable classical component", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let Wrapped = reactive({
+            foo: () => store.foo
+        })(class extends React.Component<any, any> {
+            render() {
+                let {foo, hello} = this.props;
+                expect(foo).toBe(store.foo);
+                expect(hello).toBe('world');
+                return <div className="testClass">{foo}</div>;
+            }
+        });
+
+        expect(mount(<Wrapped hello="world" />).find('.testClass').length).toBe(1);
+    });
+
     it("injects subtree as props for classical components", () => {
         let store = createStore("testStore", {
             foo: "value"

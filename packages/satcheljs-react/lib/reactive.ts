@@ -8,7 +8,7 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
 };
 
 function setPropAccessors(props: any, selector: SelectorFunction) {
-    let newProps: any= {};
+    let newProps: any = {};
 
     Object.keys(props).forEach(key => {
         newProps[key] = props[key];
@@ -19,6 +19,7 @@ function setPropAccessors(props: any, selector: SelectorFunction) {
 
         if (typeof newProps[key] === typeof undefined) {
             Object.defineProperty(newProps, key, {
+                enumerable: true,
                 get: () => getter.call(null, newProps)
             });
         }
@@ -27,21 +28,23 @@ function setPropAccessors(props: any, selector: SelectorFunction) {
     return newProps;
 }
 
-function createNewConstructor(target: React.ComponentClass<any>, selector: SelectorFunction) {
+function createNewConstructor(target: React.ComponentClass<any>, selector: SelectorFunction): React.ComponentClass<any> | React.Component<any, any> {
     if (!selector) {
         return target;
     }
 
     var original = target;
 
-    var newTarget = class extends original {
+    return class extends React.Component<any, any> {
+        public wrappedElement: any;
         render() {
             let newProps = setPropAccessors(this.props, selector);
+            newProps.ref = (element: any) => {
+                this.wrappedElement = element;
+            };
             return React.createElement(original, newProps);
         }
     }
-
-    return newTarget;
 }
 
 function createNewFunctionalComponent(target: React.StatelessComponent<any>, selector: SelectorFunction) {
