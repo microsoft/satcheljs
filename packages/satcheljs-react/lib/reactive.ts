@@ -10,7 +10,7 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
 function setPropAccessors(props: any, selector: SelectorFunction) {
     let newProps: any= {};
 
-    Object.keys(this.props).forEach(key => {
+    Object.keys(props).forEach(key => {
         newProps[key] = props[key];
     });
 
@@ -33,13 +33,14 @@ function createNewConstructor(target: React.ComponentClass<any>, selector: Selec
     }
 
     var original = target;
-    var newTarget : any = function (props?: any) {
-        let newProps = setPropAccessors(props, selector);
-        return original.call(this, newProps);
+
+    var newTarget = class extends original {
+        render() {
+            let newProps = setPropAccessors(this.props, selector);
+            return React.createElement(original, newProps);
+        }
     }
 
-    // copy prototype so intanceof operator still works
-    newTarget.prototype = original.prototype;
     return newTarget;
 }
 

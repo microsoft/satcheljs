@@ -11,6 +11,9 @@
     "test": "npm run build && npm run link-all && node tools/test-all.js"
   },
   "devDependencies": {
+    "@types/react": "~0.14.49",
+    "@types/react-dom": "~0.14.18",
+    "@types/react-addons-perf": "~0.14.17",
     "glob": "^7.0.6",
     "jasmine": "~2.4.1",
     "mkdirp": "^0.5.1",
