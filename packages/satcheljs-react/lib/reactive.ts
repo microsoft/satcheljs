@@ -37,12 +37,10 @@ function setPropAccessors(props: any, selector: SelectorFunction) {
     return newProps;
 }
 
-function createNewConstructor(target: React.ComponentClass<any>, selector: SelectorFunction): React.ComponentClass<any> | React.Component<any, any> {
+function createNewConstructor(original: React.ComponentClass<any>, selector: SelectorFunction): React.ComponentClass<any> | React.Component<any, any> {
     if (!selector) {
-        return target;
+        return original;
     }
-
-    var original = target;
 
     return class extends React.Component<any, any> {
         public wrappedElement: any;
@@ -56,14 +54,14 @@ function createNewConstructor(target: React.ComponentClass<any>, selector: Selec
     }
 }
 
-function createNewFunctionalComponent(target: React.StatelessComponent<any>, selector: SelectorFunction) {
+function createNewFunctionalComponent(original: React.StatelessComponent<any>, selector: SelectorFunction) {
     if (!selector) {
-        return target;
+        return original;
     }
 
     return function(props: any) {
         let newProps = setPropAccessors(props, selector);
-        return target.call(target, newProps);
+        return original.call(original, newProps);
     };
 }
 
