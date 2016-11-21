@@ -4,10 +4,31 @@ import {createStore, action} from 'satcheljs';
 import * as React from 'react';
 import reactive from '../lib/reactive';
 import {mount} from 'enzyme';
+import {isObservable} from 'mobx';
 
 let sequenceOfEvents: any[];
 
 describe("reactive decorator", () => {
+    it("passes through to @observer if no args are passed", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let TestComponent = reactive(
+            class extends React.Component<any, any> {
+                componentWillMount() {}
+                render() {
+                    return <div>{store.foo}</div>;
+                }
+            });
+
+        let component = new TestComponent({hello: 'world'});
+        component.componentWillMount();
+        component.render();
+
+        expect(isObservable(component.render)).toBeTruthy();
+    });
+
     it("creates a mountable classical component", () => {
         let store = createStore("testStore", {
             foo: "value"

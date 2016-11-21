@@ -7,6 +7,15 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveStatelessComponent?: React.StatelessComponent<any>
 };
 
+var DummyComponentClass = React.createClass<any, any>({
+    render() {
+        return null;
+    }
+});
+
+var ReactClassComponentPrototype = Object.getPrototypeOf(Object.getPrototypeOf(new DummyComponentClass()));
+var ReactComponentPrototype = React.Component.prototype
+
 function setPropAccessors(props: any, selector: SelectorFunction) {
     let newProps: any = {};
 
@@ -61,18 +70,25 @@ function createNewFunctionalComponent(target: React.StatelessComponent<any>, sel
 /**
  * Reactive decorator
  */
-export default function reactive(selector?: SelectorFunction) {
+export default function reactive(selector?: SelectorFunction | React.ComponentClass<any>): any {
+    let componentClass = selector as React.ComponentClass<any>;
+
+    // this check only applies to ES6 React Class Components
+    if (componentClass && componentClass.prototype && componentClass.prototype.isReactComponent) {
+        return observer(selector as React.ComponentClass<any>);
+    }
+
     return function<T extends React.ReactType>(target: T) {
         let newComponent: any;
 
         if ((target as any).prototype instanceof React.Component) {
-            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selector);
+            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selector as SelectorFunction);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         }
 
         if (target instanceof Function) {
-            newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selector));
+            newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selector as SelectorFunction));
             newComponent.nonReactiveStatelessComponent = target as React.StatelessComponent<any>;
             return newComponent;
         }
