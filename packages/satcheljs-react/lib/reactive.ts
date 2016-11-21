@@ -7,15 +7,6 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveStatelessComponent?: React.StatelessComponent<any>
 };
 
-var DummyComponentClass = React.createClass<any, any>({
-    render() {
-        return null;
-    }
-});
-
-var ReactClassComponentPrototype = Object.getPrototypeOf(Object.getPrototypeOf(new DummyComponentClass()));
-var ReactComponentPrototype = React.Component.prototype
-
 function setPropAccessors(props: any, selector: SelectorFunction) {
     let newProps: any = {};
 
@@ -43,13 +34,8 @@ function createNewConstructor(original: React.ComponentClass<any>, selector: Sel
     }
 
     return class extends React.Component<any, any> {
-        public wrappedElement: any;
         render() {
-            let newProps = setPropAccessors(this.props, selector);
-            newProps.ref = (element: any) => {
-                this.wrappedElement = element;
-            };
-            return React.createElement(original, newProps);
+            return React.createElement(original, setPropAccessors(this.props, selector));
         }
     }
 }
