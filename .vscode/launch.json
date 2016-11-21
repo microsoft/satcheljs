@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/jasmine/bin/jasmine.js",
             "args": ["JASMINE_CONFIG_PATH=jasmine.json", "--verbose"],
-            "cwd": "${workspaceRoot}/packages/satcheljs",
+            "cwd": "${workspaceRoot}/packages/satcheljs-react",
             "outFiles": [],
             "sourceMaps": true
         },

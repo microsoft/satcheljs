@@ -1,11 +1,53 @@
+import './setupJsdom';
 import 'jasmine';
 import {createStore, action} from 'satcheljs';
 import * as React from 'react';
 import reactive from '../lib/reactive';
+import {mount} from 'enzyme';
+import {isObservable} from 'mobx';
 
 let sequenceOfEvents: any[];
 
 describe("reactive decorator", () => {
+    it("passes through to @observer if no args are passed", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let TestComponent = reactive(
+            class extends React.Component<any, any> {
+                componentWillMount() {}
+                render() {
+                    return <div>{store.foo}</div>;
+                }
+            });
+
+        let component = new TestComponent({hello: 'world'});
+        component.componentWillMount();
+        component.render();
+
+        expect(isObservable(component.render)).toBeTruthy();
+    });
+
+    it("creates a mountable classical component", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let Wrapped = reactive({
+            foo: () => store.foo
+        })(class extends React.Component<any, any> {
+            render() {
+                let {foo, hello} = this.props;
+                expect(foo).toBe(store.foo);
+                expect(hello).toBe('world');
+                return <div className="testClass">{foo}</div>;
+            }
+        });
+
+        expect(mount(<Wrapped hello="world" />).find('.testClass').length).toBe(1);
+    });
+
     it("injects subtree as props for classical components", () => {
         let store = createStore("testStore", {
             foo: "value"
@@ -68,6 +110,23 @@ describe("reactive decorator", () => {
         comp.render();
 
         expect(store.foo).toBeNull();
+    });
+
+     it("creates a mountable functional component", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let Wrapped = reactive({
+            foo: () => store.foo
+        })((props: any) => {
+            let {foo, hello} = props;
+            expect(foo).toBe('value');
+            expect(hello).toBe('world');
+            return <div className="testClass">{foo}</div>;
+        });
+
+        expect(mount(<Wrapped hello="world" />).find('.testClass').length).toBe(1);
     });
 
     it("injects subtree as props for functional components", () => {
