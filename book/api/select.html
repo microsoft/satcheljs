@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>rootStore · GitBook</title>
+        <title>select · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,10 +57,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="select.html" />
     
-    
-    <link rel="prev" href="initializeStore.html" />
+    <link rel="prev" href="rootStore.html" />
     
 
     </head>
@@ -239,7 +237,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.5" data-path="rootStore.html">
+        <li class="chapter " data-level="1.4.5" data-path="rootStore.html">
             
                 <a href="rootStore.html">
             
@@ -252,7 +250,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.6" data-path="select.html">
+        <li class="chapter active" data-level="1.4.6" data-path="select.html">
             
                 <a href="select.html">
             
@@ -332,7 +330,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >rootStore</a>
+        <a href=".." >select</a>
     </h1>
 </div>
 
@@ -347,11 +345,59 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="rootstore"><code>rootStore</code></h1><p>An <a href="https://mobxjs.github.io/mobx/refguide/map.html" target="_blank">ObservableMap</a> which is Satchel&apos;s root store object.</p><p>Satchel allows you to create multiple stores via <code>createStore</code>.
-Internally, all of these stores are stored on a root store object.
-The root store is an ObservableMap where each store is indexed by the <code>name</code> provided when creating it.
-Typically you should only act on the store objects returned from <code>createStore</code>, but <code>rootStore</code> is exposed for cases where you might need access to the entire Satchel store at once.
-For example, you could serialize <code>rootStore</code> to JSON and later restore it via <code>initializeStore</code>.</p>
+                                <h1 id="select"><code>select</code></h1><p>When developing an application with a state tree, it is often desirable to scope an action to certain sub-parts of the state tree. When an action is focused on
+a subtree, the action becomes more readable and easier to test.</p><p>The select functional decorator can be used in conjunction with the <code>action</code> function decorator. The selected state passed into the function is actually read and write enabled, 
+so it enables the developer to update sub-part of the state tree as well.</p><h2 id="usage">Usage</h2><p><strong><code>select(selector)(fn)</code></strong></p><ul><li><code>selector</code> is an object where the keys are strings and the values are small accessor (or cursor) into the state tree. 
+</li>
+<li><code>fn</code> is the function to convert to an action.  It can take any parameter as arguments and should return either <code>void</code> or a <code>Promise</code> (if it does some async work).
+</li></ul>
+<h2 id="examples">Examples</h2><h3 id="simple-example">Simple Example</h3><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> store = createStore(<span class="hljs-string">&quot;myStore&quot;</span>, {
+    key: <span class="hljs-string">&apos;oldValue&apos;</span>
+});
+
+<span class="hljs-keyword">let</span> setValue = action(<span class="hljs-string">&quot;setValue&quot;</span>)(
+    select({
+        myKey: () =&gt; store.key 
+    })(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValue</span>(<span class="hljs-params">newValue: <span class="hljs-built_in">string</span>, state?: <span class="hljs-built_in">any</span></span>) </span>{
+        state.myKey = newValue;
+    }));
+
+setValue(<span class="hljs-string">&quot;newValue&quot;</span>); <span class="hljs-comment">// After this, store.key would contain the &apos;newValue&apos; string</span></code></pre>
+<h3 id="accessing-function-arguments-inside-selector">Accessing function arguments inside selector</h3><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> store = createStore(<span class="hljs-string">&quot;myStore&quot;</span>, {
+    someArray: [<span class="hljs-string">&apos;first&apos;</span>, <span class="hljs-string">&apos;second&apos;</span>, <span class="hljs-string">&apos;third&apos;</span>]
+});
+
+<span class="hljs-keyword">let</span> setValue = action(<span class="hljs-string">&quot;setValue&quot;</span>)(
+    select({
+        myItem: (index: <span class="hljs-built_in">number</span>) =&gt; store.someArray[index] 
+    })(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValue</span>(<span class="hljs-params">index: <span class="hljs-built_in">number</span>, newValue: <span class="hljs-built_in">string</span>, state?: <span class="hljs-built_in">any</span></span>) </span>{
+        state.myItem = newValue;
+    }));
+
+setValue(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;newValue&quot;</span>); <span class="hljs-comment">// After this, store.someArray[1] would contain the &apos;newValue&apos; string</span></code></pre>
+<h3 id="write-a-test-for-an-action-function">Write a test for an action function</h3><pre><code class="lang-typescript"><span class="hljs-comment">/**
+ * setValue.ts
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> action(<span class="hljs-string">&quot;setValue&quot;</span>)(
+    select({
+        myKey: () =&gt; store.key 
+    })(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValue</span>(<span class="hljs-params">newValue: <span class="hljs-built_in">string</span>, state?: <span class="hljs-built_in">any</span></span>) </span>{
+        state.myKey = newValue;
+    }));
+
+<span class="hljs-comment">/**
+ * setValue.spec.ts
+ */</span>
+<span class="hljs-keyword">import</span> setValue from <span class="hljs-string">&quot;../actions/setValue&quot;</span>;
+
+describe(<span class="hljs-string">&quot;a jasmine test&quot;</span>, () =&gt; {
+    it(<span class="hljs-string">&quot;should be able to test actions&quot;</span>, () =&gt; {
+        <span class="hljs-keyword">let</span> state = { key: <span class="hljs-string">&apos;oldValue&apos;</span> };
+        setValue(<span class="hljs-string">&apos;newValue&apos;</span>, state);
+        expect(state.key).toBe(<span class="hljs-string">&apos;newValue&apos;</span>);
+    });
+});</code></pre>
+
                                 
                                 </section>
                             
@@ -378,14 +424,10 @@ For example, you could serialize <code>rootStore</code> to JSON and later restor
 
             
                 
-                <a href="initializeStore.html" class="navigation navigation-prev " aria-label="Previous page: initializeStore">
+                <a href="rootStore.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: rootStore">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="select.html" class="navigation navigation-next " aria-label="Next page: select">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -394,7 +436,7 @@ For example, you could serialize <code>rootStore</code> to JSON and later restor
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"rootStore","level":"1.4.5","depth":2,"next":{"title":"select","level":"1.4.6","depth":2,"path":"api/select.md","ref":"api/select.md","articles":[]},"previous":{"title":"initializeStore","level":"1.4.4","depth":2,"path":"api/initializeStore.md","ref":"api/initializeStore.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/rootStore.md","mtime":"2016-11-22T06:58:23.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-11-22T07:41:42.455Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"select","level":"1.4.6","depth":2,"next":{"title":"satcheljs-react API","level":"1.5","depth":1,"ref":"","articles":[{"title":"@reactive","level":"1.5.1","depth":2,"path":"api/satcheljs-react/reactive.md","ref":"api/satcheljs-react/reactive.md","articles":[]}]},"previous":{"title":"rootStore","level":"1.4.5","depth":2,"path":"api/rootStore.md","ref":"api/rootStore.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/select.md","mtime":"2016-11-22T07:19:30.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-11-22T07:41:42.455Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
