@@ -16,7 +16,7 @@ describe("dispatch", () => {
 
     beforeAll(() => {
         // Some of these tests cause MobX to write to console.error, so we need to supress that output
-        console.error = (message) => null;
+        console.error = (message: any): void => null;
     });
 
     afterAll(() => {

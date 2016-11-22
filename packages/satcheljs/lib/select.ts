@@ -1,4 +1,5 @@
 import {Reaction, Atom, IObservableValue, isObservableArray, isObservable} from 'mobx';
+import {getOriginalTarget} from './functionInternals';
 
 export interface SelectorFunction {
     [key: string]: (...args: any[]) => any;
@@ -22,6 +23,7 @@ function createCursorFromSelector(selector: SelectorFunction, args?: any) {
                 let value: IObservableValue<any> = <any>observable;
 
                 Object.defineProperty(state, key, {
+                    enumerable: true,
                     get: value.get.bind(observable),
                     set: value.set.bind(observable)
                 });
@@ -33,18 +35,21 @@ function createCursorFromSelector(selector: SelectorFunction, args?: any) {
                     let index = parent.indexOf(atom);
 
                     Object.defineProperty(state, key, {
+                        enumerable: true,
                         get: () => selector[key].apply(null, args),
                         set: (value) => parent[index] = value
                     });
                 } else {
                     // If not an array, then all we can provide is a getter
                     Object.defineProperty(state, key, {
+                        enumerable: true,
                         get: () => selector[key].apply(null, args)
                     });
                 }
             } else {
                 // If this is not an observable, then just create a getter
                 Object.defineProperty(state, key, {
+                    enumerable: true,
                     get: () => selector[key].apply(null, args)
                 });
             }
@@ -62,11 +67,24 @@ function createCursorFromSelector(selector: SelectorFunction, args?: any) {
 export default function select(selector: SelectorFunction) {
     return function decorator<T extends Function>(target: T): T {
         let _this = this;
+        let argumentPosition = target.length - 1;
+        let actionTarget = getOriginalTarget(target);
 
+        if (actionTarget) {
+            argumentPosition = actionTarget.length - 1;            
+        }
+        
         let returnValue: any = function() {
             let state = createCursorFromSelector(selector, arguments);
-            [].push.call(arguments, state);
-            return target.apply(_this, arguments);
+            let args = Array.prototype.slice.call(arguments);
+
+            for (var i = args.length; i < argumentPosition; i++) {
+                args[i] = undefined;
+            }
+
+            args[argumentPosition] = state;
+
+            return target.apply(_this, args);
         }
 
         return <T>returnValue;

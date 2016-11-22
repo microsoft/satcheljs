@@ -1,5 +1,6 @@
 import ActionContext from './ActionContext';
 import dispatch from './dispatch';
+import {setOriginalTarget} from './functionInternals';
 
 export interface RawAction {
     (... args: any[]): Promise<any> | void;
@@ -19,6 +20,8 @@ export default function action(actionType: string, actionContext?: ActionContext
 
             return returnValue;
         };
+
+        setOriginalTarget(decoratedTarget, target);
 
         return decoratedTarget;
     }
