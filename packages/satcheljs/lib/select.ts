@@ -77,12 +77,12 @@ export default function select(selector: SelectorFunction) {
         let returnValue: any = function() {
             let state = createCursorFromSelector(selector, arguments);
             let args = Array.prototype.slice.call(arguments);
-
-            for (var i = args.length; i < argumentPosition; i++) {
-                args[i] = undefined;
+            if (typeof args[argumentPosition] === typeof undefined) {
+                for (var i = args.length; i < argumentPosition; i++) {
+                    args[i] = undefined;
+                }
+                args[argumentPosition] = state;
             }
-
-            args[argumentPosition] = state;
 
             return target.apply(_this, args);
         }

@@ -184,7 +184,7 @@ describe("select", () => {
 
         let someAction = action("someAction")((required: string, optional?: string, state?: any) => {
             expect(state.key).toBe('value');
-            expect(state.optional).not.toBeDefined();
+            expect(optional).not.toBeDefined();
             expect(required).toBe('required value');
         });
 
@@ -193,5 +193,46 @@ describe("select", () => {
         })(someAction);
 
         newAction('required value');
+    });
+
+    it("can handle having action be the outer decorator", () => {
+        let fooStore: any = createStore('foo', {
+            key: 'value'
+        });
+
+        let functionIsCalled = false;
+
+        let someAction = select({
+            key: () => fooStore.key
+        })((required: string, optional?: string, state?: any) => {
+            expect(state.key).toBe('value');
+            expect(optional).not.toBeDefined();
+            expect(required).toBe('required value');
+            functionIsCalled = true;
+        });
+
+        let newAction = action("action")(someAction);
+
+        newAction('required value');
+
+        expect(functionIsCalled).toBeTruthy();
+    });
+
+    it("allows tests to passthrough state param", () => {
+        let fooStore: any = createStore('foo', {
+            key: 'value'
+        });
+
+        let someAction = select({
+            key: () => fooStore.key
+        })((required: string, optional?: string, state?: any) => {
+            expect(state.key).toBe('testValue');
+            expect(optional).toBe('optional');
+            expect(required).toBe('required value');
+        });
+
+        let newAction = action("action")(someAction);
+
+        newAction('required value', 'optional', {key: 'testValue'});
     });
 });
