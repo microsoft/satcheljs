@@ -164,7 +164,7 @@ describe("select", () => {
             array0: ['a', 'b', 'c']
         });
 
-        let readAction = action("read")((id: string, arrayIndex: number, state?: any) => {
+        let readAction = action("read")(function readAction(id: string, arrayIndex: number, state?: any) {
             expect(state.value).toBe('value');
             expect(state.arrayValue).toBe('c');
         });
@@ -175,5 +175,23 @@ describe("select", () => {
         })(readAction);
 
         newAction('id0', 2);
+    });
+
+    it("places state at the right argument position even if the wrapped function has optional arguments before state", () => {
+        let fooStore: any = createStore('foo', {
+            key: 'value'
+        });
+
+        let someAction = action("someAction")((required: string, optional?: string, state?: any) => {
+            expect(state.key).toBe('value');
+            expect(state.optional).not.toBeDefined();
+            expect(required).toBe('required value');
+        });
+
+        let newAction = select({
+            key: () => fooStore.key
+        })(someAction);
+
+        newAction('required value');
     });
 });

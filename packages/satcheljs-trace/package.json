@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-trace",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Tracing middleware for SatchelJS.",
   "main": "./lib/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Scott Mikula <smikula@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "satcheljs": "2.6.0"
+    "satcheljs": "2.6.1"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
