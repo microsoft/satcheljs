@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-react",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "SatchelJS hooks for React applications.",
   "main": "./lib/index.js",
   "scripts": {
@@ -15,11 +15,15 @@
     "mobx": "~2.2.2",
     "mobx-react": "^3.3.0",
     "react": "^15.4.0",
-    "satcheljs": "2.6.2"
+    "satcheljs": "2.6.3"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
     "typescript": "~1.8.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/satcheljs"
   },
   "typings": "./lib/index.d.ts",
   "publishConfig": {
