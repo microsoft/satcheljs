@@ -18,6 +18,10 @@
     "jasmine": "~2.4.1",
     "typescript": "~1.8.9"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/satcheljs"
+  },
   "typings": "./lib/index.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
