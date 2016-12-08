@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-react-devtools",
-  "version": "2.6.3",
+  "version": "2.7.0",
   "description": "Dev tooling for React apps using SatchelJS.",
   "main": "./lib/index.js",
   "scripts": {
@@ -12,13 +12,13 @@
   "author": "Scott Mikula <smikula@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "mobx": "~2.2.2",
-    "mobx-react": "^3.3.0",
-    "mobx-react-devtools": "^4.2.0",
+    "mobx": "~2.6.5",
+    "mobx-react": "~4.0.3",
+    "mobx-react-devtools": "~4.2.10",
     "react": "^15.4.0",
     "react-addons-perf": "^15.4.0",
     "react-dom": "^15.4.0",
-    "satcheljs": "2.6.3"
+    "satcheljs": "2.7.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",

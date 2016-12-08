@@ -1,15 +1,15 @@
 import {Reaction, Atom, IObservableValue, isObservableArray, isObservable} from 'mobx';
 import {getOriginalTarget} from './functionInternals';
 
-export interface SelectorFunction {
-    [key: string]: (...args: any[]) => any;
+export type SelectorFunction<T> = {
+    [key in keyof T]?: (...args: any[]) => T[key];
 }
 
-function createCursorFromSelector(selector: SelectorFunction, args?: any) {
+function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) {
     let state: any = {};
     let reaction = new Reaction('__SELECT__', null);
 
-    Object.keys(selector).forEach(key => {
+    Object.keys(selector).forEach((key: keyof T) => {
         if (typeof state[key] === typeof undefined) {
             if (args && args.length > 0) {
                 reaction.track(() => selector[key].apply(null, args));
@@ -64,8 +64,8 @@ function createCursorFromSelector(selector: SelectorFunction, args?: any) {
 /**
  * Decorator for action functions. Selects a subset from the state tree for the action.
  */
-export default function select(selector: SelectorFunction) {
-    return function decorator<T extends Function>(target: T): T {
+export default function select<T>(selector: SelectorFunction<T>) {
+    return function decorator<Target extends Function>(target: Target): Target {
         let _this = this;
         let argumentPosition = target.length - 1;
         let actionTarget = getOriginalTarget(target);
@@ -75,7 +75,7 @@ export default function select(selector: SelectorFunction) {
         }
         
         let returnValue: any = function() {
-            let state = createCursorFromSelector(selector, arguments);
+            let state = createCursorFromSelector<T>(selector, arguments);
             let args = Array.prototype.slice.call(arguments);
             if (typeof args[argumentPosition] === typeof undefined) {
                 for (var i = args.length; i < argumentPosition; i++) {
@@ -87,6 +87,6 @@ export default function select(selector: SelectorFunction) {
             return target.apply(_this, args);
         }
 
-        return <T>returnValue;
+        return <Target>returnValue;
     }
 }

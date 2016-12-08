@@ -170,8 +170,8 @@ describe("select", () => {
         });
 
         let newAction = select({
-            value: (id, arrayIndex) => fooStore[id],
-            arrayValue: (id, arrayIndex) => fooStore.array0[arrayIndex]
+            value: (id: string, arrayIndex: number) => fooStore[id],
+            arrayValue: (id: string, arrayIndex: number) => fooStore.array0[arrayIndex]
         })(readAction);
 
         newAction('id0', 2);
@@ -234,5 +234,28 @@ describe("select", () => {
         let newAction = action("action")(someAction);
 
         newAction('required value', 'optional', {key: 'testValue'});
+    });
+
+    it("can use new TS 2.1 mapped types to describe selector functions", () => {
+        let fooStore = createStore('foo', {
+            k: 'v',
+        });
+
+        interface ActionState {
+            key: string
+        };
+
+        let updateAction = action("update")((state?: ActionState) => {
+            expect(state.key).toBe(fooStore.k);
+            state.key = 'newValue';
+        });
+
+        let newAction = select<ActionState>({
+            key: () => fooStore.k,
+        })(updateAction);
+
+        newAction();
+
+        expect(fooStore.k).toBe('newValue');
     });
 });

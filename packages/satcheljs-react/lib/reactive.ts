@@ -7,14 +7,14 @@ export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveStatelessComponent?: React.StatelessComponent<any>
 };
 
-function setPropAccessors(props: any, selector: SelectorFunction) {
+function setPropAccessors<T>(props: any, selector: SelectorFunction<T>) {
     let newProps: any = {};
 
     Object.keys(props).forEach(key => {
         newProps[key] = props[key];
     });
 
-    Object.keys(selector).forEach(key => {
+    Object.keys(selector).forEach((key: keyof T) => {
         let getter = selector[key];
 
         if (typeof newProps[key] === typeof undefined) {
@@ -28,7 +28,7 @@ function setPropAccessors(props: any, selector: SelectorFunction) {
     return newProps;
 }
 
-function createNewConstructor(original: React.ComponentClass<any>, selector: SelectorFunction): React.ComponentClass<any> | React.Component<any, any> {
+function createNewConstructor<T>(original: React.ComponentClass<any>, selector: SelectorFunction<T>): React.ComponentClass<any> | React.Component<any, any> {
     if (!selector) {
         return original;
     }
@@ -40,7 +40,7 @@ function createNewConstructor(original: React.ComponentClass<any>, selector: Sel
     }
 }
 
-function createNewFunctionalComponent(original: React.StatelessComponent<any>, selector: SelectorFunction) {
+function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>, selector: SelectorFunction<T>) {
     if (!selector) {
         return original;
     }
@@ -54,25 +54,25 @@ function createNewFunctionalComponent(original: React.StatelessComponent<any>, s
 /**
  * Reactive decorator
  */
-export default function reactive(selector?: SelectorFunction | React.ComponentClass<any>): any {
-    let componentClass = selector as React.ComponentClass<any>;
+export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<T> | React.ComponentClass<any>): any {
+    let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
 
     // this check only applies to ES6 React Class Components
     if (componentClass && componentClass.prototype && componentClass.prototype.isReactComponent) {
-        return observer(selector as React.ComponentClass<any>);
+        return observer(componentClass);
     }
 
-    return function<T extends React.ReactType>(target: T) {
+    return function<Target extends React.ReactType>(target: Target) {
         let newComponent: any;
 
         if ((target as any).prototype instanceof React.Component) {
-            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selector as SelectorFunction);
+            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selectorOrComponentClass as SelectorFunction<T>);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         }
 
         if (target instanceof Function) {
-            newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selector as SelectorFunction));
+            newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selectorOrComponentClass as SelectorFunction<T>));
             newComponent.nonReactiveStatelessComponent = target as React.StatelessComponent<any>;
             return newComponent;
         }
