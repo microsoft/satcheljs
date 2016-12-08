@@ -17,7 +17,7 @@
   "author": "Ken Chau <kchau@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "mobx": "~2.2.2",
+    "mobx": "~2.6.5",
     "satcheljs": "2.6.3"
   },
   "devDependencies": {
