@@ -3,6 +3,7 @@ import {map, ObservableMap} from 'mobx';
 import action from '../lib/action';
 import select from '../lib/select';
 import createStore from '../lib/createStore';
+import {initializeTestMode, resetTestMode} from '../lib/testMode';
 
 describe("select", () => {
     it("creates a state scoped to subset of state tree", () => {
@@ -242,8 +243,8 @@ describe("select", () => {
         });
 
         interface ActionState {
-            key: string
-        };
+            key: string;
+        }
 
         let updateAction = action("update")((state?: ActionState) => {
             expect(state.key).toBe(fooStore.k);
@@ -257,5 +258,36 @@ describe("select", () => {
         newAction();
 
         expect(fooStore.k).toBe('newValue');
+    });
+
+    it("does not execute the selector function in test mode", () => {
+        initializeTestMode();
+
+        let fooSelector = jasmine.createSpy(null);
+        let actionSpy = jasmine.createSpy('action');
+
+        select({
+            foo: fooSelector
+        })(actionSpy)();
+
+        expect(fooSelector).not.toHaveBeenCalled();
+        expect(actionSpy).toHaveBeenCalled();
+
+        resetTestMode();
+    });
+
+    it("does execute the selector function after test mode has been cleared", () => {
+        initializeTestMode();
+        resetTestMode();
+
+        let fooSelector = jasmine.createSpy(null);
+        let actionSpy = jasmine.createSpy('action');
+
+        select({
+            foo: fooSelector
+        })(actionSpy)();
+
+        expect(fooSelector).toHaveBeenCalled();
+        expect(actionSpy).toHaveBeenCalled();
     });
 });

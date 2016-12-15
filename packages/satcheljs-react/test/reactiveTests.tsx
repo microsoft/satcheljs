@@ -1,9 +1,9 @@
 import './setupJsdom';
 import 'jasmine';
-import {createStore, action} from 'satcheljs';
+import {createStore, initializeTestMode, resetTestMode} from 'satcheljs';
 import * as React from 'react';
 import reactive from '../lib/reactive';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {isObservable} from 'mobx';
 
 let sequenceOfEvents: any[];
@@ -205,5 +205,42 @@ describe("reactive decorator", () => {
                 return <div>{foo}</div>;
             }
         }
+    });
+
+    fit("does not execute the selector function in test mode", () => {
+        initializeTestMode();
+
+        let fooSelector = jasmine.createSpy(null);
+        let TestComponent = reactive({
+            foo: fooSelector
+        })(class extends React.Component<any, any> {
+            render() {
+                return <div></div>;
+            }
+        });
+
+        shallow(<TestComponent />);
+
+        expect(fooSelector).not.toHaveBeenCalled();
+
+        resetTestMode();
+    });
+
+    fit("does execute the selector function after test mode has been cleared", () => {
+        initializeTestMode();
+        resetTestMode();
+
+        let fooSelector = jasmine.createSpy(null);
+        let TestComponent = reactive({
+            foo: fooSelector
+        })(class extends React.Component<any, any> {
+            render() {
+                return <div></div>;
+            }
+        });
+
+        shallow(<TestComponent />);
+
+        expect(fooSelector).toHaveBeenCalled();
     });
 });

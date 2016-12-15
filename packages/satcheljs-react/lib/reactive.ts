@@ -1,6 +1,7 @@
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {SelectorFunction} from 'satcheljs/lib/select';
+import {getGlobalContext} from 'satcheljs/lib/globalContext';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveComponent?: React.ComponentClass<any>,
@@ -51,6 +52,14 @@ function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>
     };
 }
 
+function isReactComponent(target: any) {
+    return target.prototype instanceof React.Component;
+}
+
+function isFunction(target: any) {
+    return target instanceof Function;
+}
+
 /**
  * Reactive decorator
  */
@@ -63,15 +72,23 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
     }
 
     return function<Target extends React.ReactType>(target: Target) {
+        if (getGlobalContext().testMode) {
+            if (isReactComponent(target)) {
+                return observer(target as React.ComponentClass<any>);
+            } else if (isFunction(target)) {
+                return observer(target as React.StatelessComponent<any>);
+            }
+
+            return target;
+        }
+
         let newComponent: any;
 
-        if ((target as any).prototype instanceof React.Component) {
+        if (isReactComponent(target)) {
             newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selectorOrComponentClass as SelectorFunction<T>);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
-        }
-
-        if (target instanceof Function) {
+        } else if (isFunction(target)) {
             newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selectorOrComponentClass as SelectorFunction<T>));
             newComponent.nonReactiveStatelessComponent = target as React.StatelessComponent<any>;
             return newComponent;
