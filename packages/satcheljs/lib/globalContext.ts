@@ -2,14 +2,15 @@ import { map, ObservableMap } from 'mobx';
 import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 
-const schemaVersion = 1;
+const schemaVersion = 2;
 
 // Interfaces for Global Context
 export interface GlobalContext {
     schemaVersion: number;
     inDispatch: number;
     rootStore: ObservableMap<any>;
-    dispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void
+    dispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void;
+    testMode: boolean;
 }
 
 declare var global: {
@@ -22,7 +23,8 @@ export function __resetGlobalContext() {
         schemaVersion: schemaVersion,
         inDispatch: 0,
         rootStore: map({}),
-        dispatchWithMiddleware: null
+        dispatchWithMiddleware: null,
+        testMode: false
     };
 }
 

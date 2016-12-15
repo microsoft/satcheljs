@@ -1,5 +1,6 @@
-import {Reaction, Atom, IObservableValue, isObservableArray, isObservable} from 'mobx';
+import {Reaction, Atom, IObservableValue, isObservableArray} from 'mobx';
 import {getOriginalTarget} from './functionInternals';
+import {getGlobalContext} from './globalContext';
 
 export type SelectorFunction<T> = {
     [key in keyof T]?: (...args: any[]) => T[key];
@@ -19,7 +20,7 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
 
             let observable = reaction.observing[reaction.observing.length - 1];
 
-            if ((<any>observable).get) {
+            if (observable && (<any>observable).get) {
                 let value: IObservableValue<any> = <any>observable;
 
                 Object.defineProperty(state, key, {
@@ -27,7 +28,7 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
                     get: value.get.bind(observable),
                     set: value.set.bind(observable)
                 });
-            } else if (observable instanceof Atom) {
+            } else if (observable && observable instanceof Atom) {
                 let parent: any[] = reaction.observing.length > 2 && <any>reaction.observing[reaction.observing.length - 2];
                 if (parent && isObservableArray(parent)) {
                     // Handle the case where this is an element of an array
@@ -66,7 +67,13 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
  */
 export default function select<T>(selector: SelectorFunction<T>) {
     return function decorator<Target extends Function>(target: Target): Target {
-        let _this = this;
+        // do not execute the selector function in test mode, simply returning
+        // the target that was passed in
+        if (getGlobalContext().testMode) {
+            return target;
+        }
+
+        let context = this;
         let argumentPosition = target.length - 1;
         let actionTarget = getOriginalTarget(target);
 
@@ -84,7 +91,7 @@ export default function select<T>(selector: SelectorFunction<T>) {
                 args[argumentPosition] = state;
             }
 
-            return target.apply(_this, args);
+            return target.apply(context, args);
         }
 
         return <Target>returnValue;

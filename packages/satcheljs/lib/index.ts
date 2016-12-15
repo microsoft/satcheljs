@@ -7,4 +7,4 @@ export { default as ActionContext } from './ActionContext';
 export { default as DispatchFunction } from './DispatchFunction';
 export { default as createStore } from './createStore';
 export { default as action } from './action';
-export { default as select, SelectorFunction } from './select';
+export { default as select, SelectorFunction } from './select';export { initializeTestMode, resetTestMode } from './testMode';
