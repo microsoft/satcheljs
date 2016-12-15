@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-snapshots",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "description": "Adds snapshotting capability to SatchelJS",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -12,13 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://outlookweb.visualstudio.com/DefaultCollection/Outlook%20Web/_git/satcheljs-snapshots"
+    "url": "https://github.com/microsoft/satcheljs"
   },
   "author": "Ken Chau <kchau@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "mobx": "~2.2.2",
-    "satcheljs": "2.6.2"
+    "mobx": "~2.6.5",
+    "satcheljs": "2.7.0"
   },
   "devDependencies": {
     "jasmine": "^2.4.1",

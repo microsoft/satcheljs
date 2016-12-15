@@ -1,6 +1,6 @@
 {
   "name": "satcheljs",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "description": "Store implementation for functional reactive flux.",
   "main": "./lib/index.js",
   "scripts": {
@@ -12,11 +12,15 @@
   "author": "Scott Mikula <smikula@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "mobx": "~2.2.2"
+    "mobx": "~2.6.5"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
     "typescript": "~1.8.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/satcheljs"
   },
   "typings": "./lib/index.d.ts",
   "publishConfig": {

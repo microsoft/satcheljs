@@ -154,7 +154,7 @@ describe("reactive decorator", () => {
         });
 
         let TestComponent = reactive({
-            foo: (p) => store[p.id]
+            foo: (p: any) => store[p.id]
         })((props: any) => {
             let {foo} = props;
             expect(foo).toBe('value');
@@ -167,7 +167,7 @@ describe("reactive decorator", () => {
     });
 
     it("decorates over component classes with public members", () => {
-        @reactive()
+        @reactive
         class TestComponent extends React.Component<any, any> {
             foo: string
 
@@ -182,5 +182,28 @@ describe("reactive decorator", () => {
 
         let comp = new TestComponent({foo: 'somevalue'});
         comp.render();
-    })
+    });
+
+    it("allows for type checking for generic decorator with TS 2.1", () => {
+        let store = createStore("testStore", {
+            foo: "value",
+            dontuse: 2
+        });
+
+        interface Props {
+            foo: string;
+            bar: string;
+        }
+
+        @reactive<Props>({
+            foo: () => store.foo
+        })
+        class TestComponent extends React.Component<Props, any> {
+            render() {
+                let {foo, bar} = this.props;
+                expect(foo).toBe('value');
+                return <div>{foo}</div>;
+            }
+        }
+    });
 });

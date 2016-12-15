@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-stitch",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "description": "Event aggregation middleware for SatchelJS.",
   "main": "./lib/index.js",
   "scripts": {
@@ -12,11 +12,15 @@
   "author": "Scott Mikula <smikula@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "satcheljs": "2.6.2"
+    "satcheljs": "2.7.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
     "typescript": "~1.8.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/satcheljs"
   },
   "typings": "./lib/index.d.ts",
   "publishConfig": {
