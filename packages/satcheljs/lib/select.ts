@@ -78,9 +78,9 @@ export default function select<T>(selector: SelectorFunction<T>) {
         let actionTarget = getOriginalTarget(target);
 
         if (actionTarget) {
-            argumentPosition = actionTarget.length - 1;            
+            argumentPosition = actionTarget.length - 1;
         }
-        
+
         let returnValue: any = function() {
             let state = createCursorFromSelector<T>(selector, arguments);
             let args = Array.prototype.slice.call(arguments);
