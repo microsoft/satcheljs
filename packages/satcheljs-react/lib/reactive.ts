@@ -39,7 +39,7 @@ function createNewConstructor<T>(original: React.ComponentClass<any>, selector: 
         render() {
             return React.createElement(original, setPropAccessors(this.props, selector));
         }
-    }
+    };
 }
 
 function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>, selector: SelectorFunction<T>) {
@@ -54,7 +54,7 @@ function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>
 }
 
 function isReactComponent(target: any) {
-    return target.prototype instanceof React.Component;
+    return target && target.prototype && target.prototype.isReactComponent;
 }
 
 function isFunction(target: any) {
@@ -65,10 +65,9 @@ function isFunction(target: any) {
  * Reactive decorator
  */
 export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<T> | React.ComponentClass<any>): any {
-    let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
-
     // this check only applies to ES6 React Class Components
-    if (componentClass && componentClass.prototype && componentClass.prototype.isReactComponent) {
+    if (isReactComponent(selectorOrComponentClass)) {
+        let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
         return observer(componentClass);
     }
 
@@ -96,5 +95,5 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
         }
 
         return <T>newComponent;
-    }
+    };
 }
