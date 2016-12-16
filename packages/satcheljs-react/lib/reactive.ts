@@ -1,7 +1,8 @@
-import {observer} from 'mobx-react';
 import * as React from 'react';
+
 import {SelectorFunction} from 'satcheljs/lib/select';
 import {getGlobalContext} from 'satcheljs/lib/globalContext';
+import {observer} from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveComponent?: React.ComponentClass<any>,
@@ -85,7 +86,7 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
         let newComponent: any;
 
         if (isReactComponent(target)) {
-            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selectorOrComponentClass as SelectorFunction<T>);
+            newComponent = observer(createNewConstructor(target as React.ComponentClass<any>, selectorOrComponentClass as SelectorFunction<T>) as React.ComponentClass<any>);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         } else if (isFunction(target)) {

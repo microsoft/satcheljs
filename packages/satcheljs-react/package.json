@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
-    "typescript": "~1.8.9"
+    "typescript": "~2.1.4"
   },
   "repository": {
     "type": "git",
