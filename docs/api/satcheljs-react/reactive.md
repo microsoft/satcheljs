@@ -66,6 +66,7 @@ class Foo extends React.Component {
 ### Write a test for an action function
 ```typescript
 import Foo from "../components/Foo";
+import {initializeTestMode, resetTestMode} from "satcheljs";
 import {shallow} from 'enzyme';
 
 describe("an enzyme test", () => {
