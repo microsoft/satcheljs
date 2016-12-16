@@ -1,7 +1,8 @@
-import {observer} from 'mobx-react';
 import * as React from 'react';
+
 import {SelectorFunction} from 'satcheljs/lib/select';
 import {getGlobalContext} from 'satcheljs/lib/globalContext';
+import {observer} from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
     nonReactiveComponent?: React.ComponentClass<any>,
@@ -38,7 +39,7 @@ function createNewConstructor<T>(original: React.ComponentClass<any>, selector: 
         render() {
             return React.createElement(original, setPropAccessors(this.props, selector));
         }
-    }
+    };
 }
 
 function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>, selector: SelectorFunction<T>) {
@@ -53,7 +54,7 @@ function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>
 }
 
 function isReactComponent(target: any) {
-    return target.prototype instanceof React.Component;
+    return target && target.prototype && target.prototype.isReactComponent;
 }
 
 function isFunction(target: any) {
@@ -64,10 +65,9 @@ function isFunction(target: any) {
  * Reactive decorator
  */
 export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<T> | React.ComponentClass<any>): any {
-    let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
-
     // this check only applies to ES6 React Class Components
-    if (componentClass && componentClass.prototype && componentClass.prototype.isReactComponent) {
+    if (isReactComponent(selectorOrComponentClass)) {
+        let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
         return observer(componentClass);
     }
 
@@ -85,7 +85,7 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
         let newComponent: any;
 
         if (isReactComponent(target)) {
-            newComponent = createNewConstructor(observer(target as React.ComponentClass<any>), selectorOrComponentClass as SelectorFunction<T>);
+            newComponent = observer(createNewConstructor(target as React.ComponentClass<any>, selectorOrComponentClass as SelectorFunction<T>) as React.ComponentClass<any>);
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         } else if (isFunction(target)) {
@@ -95,5 +95,5 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
         }
 
         return <T>newComponent;
-    }
+    };
 }

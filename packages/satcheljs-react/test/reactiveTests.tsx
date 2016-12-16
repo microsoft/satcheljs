@@ -1,14 +1,44 @@
 import './setupJsdom';
 import 'jasmine';
-import {createStore, initializeTestMode, resetTestMode} from 'satcheljs';
+
 import * as React from 'react';
-import reactive from '../lib/reactive';
+
+import {action, createStore, initializeTestMode, resetTestMode} from 'satcheljs';
 import {mount, shallow} from 'enzyme';
+
 import {isObservable} from 'mobx';
+import reactive from '../lib/reactive';
 
 let sequenceOfEvents: any[];
 
 describe("reactive decorator", () => {
+    it("observes changes from store", () => {
+        let store = createStore("testStore", {
+            foo: "value"
+        });
+
+        let renderSpy = jasmine.createSpy(null);
+
+        let Wrapped = reactive({
+            foo: () => store.foo
+        })(class extends React.Component<any, any> {
+            render() {
+                let {foo} = this.props;
+                renderSpy();
+                return <div className="testClass">{foo}</div>;
+            }
+        });
+
+        let wrapper = mount(<Wrapped />);
+
+        action('dummy')(() => {
+            store.foo = 'hello';
+        })();
+
+        expect(renderSpy).toHaveBeenCalledTimes(2);
+        expect(wrapper.find('.testClass').text()).toBe('hello');
+    });
+
     it("passes through to @observer if no args are passed", () => {
         let store = createStore("testStore", {
             foo: "value"
@@ -169,7 +199,7 @@ describe("reactive decorator", () => {
     it("decorates over component classes with public members", () => {
         @reactive
         class TestComponent extends React.Component<any, any> {
-            foo: string
+            foo: string;
 
             bar() {}
 
@@ -207,7 +237,7 @@ describe("reactive decorator", () => {
         }
     });
 
-    fit("does not execute the selector function in test mode", () => {
+    it("does not execute the selector function in test mode", () => {
         initializeTestMode();
 
         let fooSelector = jasmine.createSpy(null);
@@ -226,7 +256,7 @@ describe("reactive decorator", () => {
         resetTestMode();
     });
 
-    fit("does execute the selector function after test mode has been cleared", () => {
+    it("does execute the selector function after test mode has been cleared", () => {
         initializeTestMode();
         resetTestMode();
 
