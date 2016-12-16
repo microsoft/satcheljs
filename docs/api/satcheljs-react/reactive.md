@@ -69,6 +69,14 @@ import Foo from "../components/Foo";
 import {shallow} from 'enzyme';
 
 describe("an enzyme test", () => {
+    beforeAll(() => {
+        initializeTestMode(); // this disables any calls to selector functions during test
+    });
+
+    afterAll(() => {
+        resetTestMode(); // this turns off the test mode for selectors
+    });
+    
     it("should be able to do shallow render tests", () => {
         let item = {
             name: 'myName'

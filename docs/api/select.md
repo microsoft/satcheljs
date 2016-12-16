@@ -63,8 +63,17 @@ export default action("setValue")(
  * setValue.spec.ts
  */
 import setValue from "../actions/setValue";
+import {initializeTestMode, resetTestMode} from "satcheljs";
 
 describe("a jasmine test", () => {
+    beforeAll(() => {
+        initializeTestMode(); // this disables any calls to selector functions during test
+    });
+
+    afterAll(() => {
+        resetTestMode(); // this turns off the test mode for selectors
+    });
+    
     it("should be able to test actions", () => {
         let state = { key: 'oldValue' };
         setValue('newValue', state);
