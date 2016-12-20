@@ -85,7 +85,13 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
         let newComponent: any;
 
         if (isReactComponent(target)) {
-            newComponent = observer(createNewConstructor(target as React.ComponentClass<any>, selectorOrComponentClass as SelectorFunction<T>) as React.ComponentClass<any>);
+            // Double layer of observer here so that mobx will flow down the observation
+            newComponent = observer(
+                createNewConstructor(
+                    observer(target as React.ComponentClass<any>),
+                    selectorOrComponentClass as SelectorFunction<T>
+                ) as React.ComponentClass<any>
+            );
             newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
             return newComponent;
         } else if (isFunction(target)) {
