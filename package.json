@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-suite",
-  "version": "2.8.2",
+  "version": "2.9.0",
   "description": "Store implementation for functional reactive flux.",
   "scripts": {
     "clean": "rimraf dist",

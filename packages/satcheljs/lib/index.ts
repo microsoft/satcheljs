@@ -8,4 +8,5 @@ export { default as DispatchFunction } from './DispatchFunction';
 export { default as createStore } from './createStore';
 export { default as action } from './action';
 export { default as select, SelectorFunction } from './select';
+export { default as createUndo, UndoResult, CreateUndoReturnValue} from './createUndo';
 export { initializeTestMode, resetTestMode } from './testMode';
