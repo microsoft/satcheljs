@@ -367,4 +367,15 @@ describe('createUndo', () => {
 
         expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
     });
+
+    it('throws if an undo instance is called twice', () => {
+
+        let object = map({key: 2});
+        let undoableAction = action('updateMap')(() => { object.set('key', 5) });
+
+        let undoResult = createUndo('updateMap')(undoableAction);
+        undoResult();
+
+        expect(undoResult).toThrow();
+    });
 });

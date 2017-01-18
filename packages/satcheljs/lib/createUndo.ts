@@ -109,9 +109,9 @@ function spyOnChanges(event: any) {
         case 'delete':
             undoStep = {
                 verify: () => !modifiedObject.has(event.name),
-                    objectName: modifiedObject.$mobx.name,
-                    propertyName: event.name,
-                    undo: () => { modifiedObject.set(event.name, event.oldValue); }
+                objectName: modifiedObject.$mobx.name,
+                propertyName: event.name,
+                undo: () => { modifiedObject.set(event.name, event.oldValue); }
             }
             break;
         default:
@@ -119,7 +119,7 @@ function spyOnChanges(event: any) {
             return;
     }
 
-    undoWindows.forEach(window => window.steps.push(undoStep));
+    undoWindows.forEach(undoWindow => undoWindow.steps.push(undoStep));
 }
 
 export interface UndoResult<T> {
@@ -140,20 +140,25 @@ function trackUndo<T>(
         try {
             let returnValue: T = action();
 
-            let window : UndoWindow = undoWindows[undoWindows.length - 1];
+            let undoWindow : UndoWindow = undoWindows[undoWindows.length - 1];
+            let undoPreviouslyExecuted = false;
 
             // Reverse the steps, as changes made later in the action may depend on changes earlier in the action
-            window.steps.reverse();
+            undoWindow.steps.reverse();
 
             let undo: UndoResult<T> = satcheljsAction(`undo-${actionName}`)(() => {
+                if (undoPreviouslyExecuted) {
+                    throw `This instance of undo-${actionName} has already been executed`;
+                }
                 if (undoVerifiesChanges) {
-                    window.steps.forEach(step => {
+                    undoWindow.steps.forEach(step => {
                         if (!step.verify()) {
                             throw `Property "${step.propertyName} on store object "${step.objectName} changed since action was performed.`
                         }
                     })
                 }
-                window.steps.forEach(step => step.undo());
+                undoWindow.steps.forEach(step => step.undo());
+                undoPreviouslyExecuted = true;
             });
 
             undo.actionReturnValue = returnValue;
@@ -166,7 +171,7 @@ function trackUndo<T>(
 }
 
 /**
- * Creates a method to undo all store changes done by a supplied action
+ * Creates a function to undo all store changes done by a supplied action
  * @param {string} actionName is the name of the action being tracked. The returned undo action will be given the name undo-<actionName>.
  * @param {boolean} undoVerifiesChanges indicates whether the returned undo action will verify no subsequent changes have been made to
  *      objects being tracked since the original action has been performed. If true and changes have since been made to modified objects,
