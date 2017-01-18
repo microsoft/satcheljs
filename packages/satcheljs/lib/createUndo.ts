@@ -123,8 +123,8 @@ function spyOnChanges(event: any) {
 }
 
 export interface UndoResult<T> {
-    actionReturnValue: T;
-    undo: () => void;
+    actionReturnValue?: T;
+    (): void;
 }
 
 export type CreateUndoReturnValue<T> = (action: () => T | void) => UndoResult<T>;
@@ -145,7 +145,7 @@ function trackUndo<T>(
             // Reverse the steps, as changes made later in the action may depend on changes earlier in the action
             window.steps.reverse();
 
-            let undo = satcheljsAction(`undo-${actionName}`)(() => {
+            let undo: UndoResult<T> = satcheljsAction(`undo-${actionName}`)(() => {
                 if (undoVerifiesChanges) {
                     window.steps.forEach(step => {
                         if (!step.verify()) {
@@ -156,10 +156,9 @@ function trackUndo<T>(
                 window.steps.forEach(step => step.undo());
             });
 
-            return {
-                actionReturnValue: returnValue,
-                undo: undo,
-            }
+            undo.actionReturnValue = returnValue;
+
+            return undo;
         } finally {
             undoWindows.pop();
             disposeSpy();

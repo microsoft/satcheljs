@@ -31,7 +31,7 @@ describe('createUndo', () => {
 
             expect(array[index]).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(array[index]).toBe(oldValue);
         });
@@ -48,7 +48,7 @@ describe('createUndo', () => {
 
             expect(object.get(index)).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.get(index)).toBe(oldValue);
         });
@@ -64,7 +64,7 @@ describe('createUndo', () => {
 
             expect(object.key).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.key).toBe(oldValue);
         });
@@ -77,7 +77,7 @@ describe('createUndo', () => {
 
             expect(object.slice(0)).toEqual([1, 2, 'a', 6]);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.slice(0)).toEqual([1, 2, 3, 4, 5, 6]);
         });
@@ -93,7 +93,7 @@ describe('createUndo', () => {
 
             expect(object.get(index)).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.has(index)).toBeFalsy;
         });
@@ -109,7 +109,7 @@ describe('createUndo', () => {
 
             expect(object[index]).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(Object.getOwnPropertyNames(object)).not.toContain(index);
         });
@@ -125,7 +125,7 @@ describe('createUndo', () => {
 
             expect(object.has(index)).toBeFalsy;
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.get(index)).toBe(oldValue);
         });
@@ -147,7 +147,7 @@ describe('createUndo', () => {
 
             expect(array[index]).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(array[index]).toBe(oldValue);
         });
@@ -164,7 +164,7 @@ describe('createUndo', () => {
 
             expect(object.get(index)).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.get(index)).toBe(oldValue);
         });
@@ -180,7 +180,7 @@ describe('createUndo', () => {
 
             expect(object.key).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.key).toBe(oldValue);
         });
@@ -193,7 +193,7 @@ describe('createUndo', () => {
 
             expect(object.slice(0)).toEqual([1, 2, 'a', 6]);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.slice(0)).toEqual([1, 2, 3, 4, 5, 6]);
         });
@@ -209,7 +209,7 @@ describe('createUndo', () => {
 
             expect(object.get(index)).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.has(index)).toBeFalsy;
         });
@@ -225,7 +225,7 @@ describe('createUndo', () => {
 
             expect(object[index]).toBe(newValue);
 
-            undoResult.undo();
+            undoResult();
 
             expect(Object.getOwnPropertyNames(object)).not.toContain(index);
         });
@@ -241,7 +241,7 @@ describe('createUndo', () => {
 
             expect(object.has(index)).toBeFalsy;
 
-            undoResult.undo();
+            undoResult();
 
             expect(object.get(index)).toBe(oldValue);
         });
@@ -262,7 +262,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('updateArray', true)(undoableAction);
             action('updateArray-again')(() => { array[index] = 100 })();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an update to a map', () => {
@@ -276,7 +276,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('updateMap', true)(undoableAction);
             action('updateMap-again')(() => { object.set(index, 100) })();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an update to an object', () => {
@@ -289,7 +289,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('updateObject', true)(undoableAction);
             action('updateObject-again')(() => { object.key = 100 })();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an array splice', () => {
@@ -299,7 +299,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('spliceArray', true)(undoableAction);
             action('spliceArray-again')(() => { object[2] = 100 })();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an add to a map', () => {
@@ -312,7 +312,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('addMap', true)(undoableAction);
             action('addMap-again')(() => {object.set(index, 100);})();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an add to an object', () => {
@@ -325,7 +325,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('addObject', true)(undoableAction);
             action('addMap-again')(() => {object[index] = 100;})();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes a delete to a map', () => {
@@ -338,7 +338,7 @@ describe('createUndo', () => {
             let undoResult = createUndo('deleteMap', true)(undoableAction);
             action('deleteMap-again')(() => {object.set(index, 100);})();
 
-            expect(undoResult.undo).toThrow();
+            expect(undoResult).toThrow();
         });
     });
 });
