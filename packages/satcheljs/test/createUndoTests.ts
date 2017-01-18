@@ -378,4 +378,33 @@ describe('createUndo', () => {
 
         expect(undoResult).toThrow();
     });
+
+    it('handles nested undo windows called out of order', () => {
+        let array = observable([1, 2, 3, 4, 5]);
+
+        let innerUndo;
+        let outerUndo = createUndo('outerUndo')(action('outerUndo')(() => {
+            array[0] = 0;
+
+            expect(array.slice(0)).toEqual([0, 2, 3, 4, 5]);
+
+            innerUndo = createUndo('innerUndo')(action('innerUndo')(() => {
+                array[1] = 0;
+            }));
+
+            array[2] = 0;
+
+            expect(array.slice(0)).toEqual([0, 0, 0, 4, 5]);
+
+        }));
+
+        outerUndo();
+
+        expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
+
+        innerUndo();
+
+        expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
+
+    });
 });
