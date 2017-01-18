@@ -1,8 +1,8 @@
-import { spy } from 'mobx';
+import { Lambda, spy } from 'mobx';
 import satcheljsAction from './action';
 
 let spyRefCount = 0;
-let spyDisposer = null;
+let spyDisposer: Lambda = null;
 
 function initializeSpy() {
     if (spyRefCount === 0) {
@@ -33,9 +33,9 @@ interface UndoWindow {
 // We may have nested "undo" actions, so we need to track those windows separately
 let undoWindows: UndoWindow[] = [];
 
-function spyOnChanges(event) {
+function spyOnChanges(event: any) {
     let undoStep: UndoStep;
-    let { modifiedObject } = event;
+    let modifiedObject = event.object;
 
     switch(event.type) {
         case 'update':
@@ -61,7 +61,7 @@ function spyOnChanges(event) {
                     verify: () => modifiedObject[event.name] === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { modifiedObject[event.name] = event.oldValue); }
+                    undo: () => { modifiedObject[event.name] = event.oldValue; }
                 };
             }
             break;
@@ -111,7 +111,7 @@ function spyOnChanges(event) {
                 verify: () => !modifiedObject.has(event.name),
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { modifiedObject[event.name] = event.oldValue; }
+                    undo: () => { modifiedObject.set(event.name, event.oldValue); }
             }
             break;
         default:
@@ -127,7 +127,7 @@ export interface UndoResult<T> {
     undo: () => void;
 }
 
-export type CreateUndoReturnValue<T> = (action: () => T) => UndoResult<T>;
+export type CreateUndoReturnValue<T> = (action: () => T | void) => UndoResult<T>;
 
 function trackUndo<T>(
     actionName: string,

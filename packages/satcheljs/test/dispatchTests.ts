@@ -5,6 +5,7 @@ import rootStore from '../lib/rootStore';
 import initializeState from '../lib/initializeState';
 import dispatch from '../lib/dispatch';
 import * as applyMiddlewareImports from '../lib/applyMiddleware';
+import { __resetGlobalContext } from '../lib/globalContext'
 
 var backupConsoleError = console.error;
 
@@ -12,6 +13,7 @@ describe("dispatch", () => {
     beforeEach(() => {
         _.resetGlobalState();
         initializeState({});
+        __resetGlobalContext();
     });
 
     beforeAll(() => {
