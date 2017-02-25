@@ -18,10 +18,13 @@ export default function dispatch(action: ActionFunction, actionType: string, arg
 }
 
 // Guard against state changes happening outside of SatchelJS actions
-useStrict(true);
+// unless explicitely disabled
+if (getGlobalContext().strictMode) {
+    useStrict(true);
+}
 
 spy((change) => {
-    if (!getGlobalContext().inDispatch && change.type == "action") {
+    if (getGlobalContext().strictMode && !getGlobalContext().inDispatch && change.type == "action") {
         throw new Error('The state may only be changed by a SatchelJS action.');
     }
 });
