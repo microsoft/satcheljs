@@ -11,6 +11,7 @@ export interface GlobalContext {
     rootStore: ObservableMap<any>;
     dispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void;
     testMode: boolean;
+    strictMode: boolean;
 }
 
 declare var global: {
@@ -24,7 +25,8 @@ export function __resetGlobalContext() {
         inDispatch: 0,
         rootStore: map({}),
         dispatchWithMiddleware: null,
-        testMode: false
+        testMode: false,
+        strictMode: true
     };
 }
 
