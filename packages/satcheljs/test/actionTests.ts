@@ -1,6 +1,7 @@
 import 'jasmine';
 import action from '../lib/action';
 import * as dispatchImports from '../lib/dispatch';
+import { getGlobalContext } from '../lib/globalContext';
 
 describe("action", () => {
     it("wraps the function call in a dispatch", () => {
@@ -48,5 +49,22 @@ describe("action", () => {
         let returnValue = testFunction();
 
         expect(returnValue).toBe(originalReturnValue);
+    });
+
+    it("can decorate a class method", () => {
+        let thisValue, inDispatchValue;
+        class TestClass {
+            @action("testMethod")
+            testMethod() {
+                thisValue = this;
+                inDispatchValue = getGlobalContext().inDispatch;
+            }
+        }
+
+        let testInstance = new TestClass();
+        testInstance.testMethod();
+
+        expect(thisValue).toBe(testInstance);
+        expect(inDispatchValue).toBe(1);
     });
 });

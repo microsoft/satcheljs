@@ -6,23 +6,50 @@ export interface RawAction {
     (... args: any[]): Promise<any> | void;
 }
 
-export default function action(actionType: string, actionContext?: ActionContext) {
-    return function action<T extends RawAction>(target: T): T {
-        let decoratedTarget = <T>function() {
-            let returnValue: any;
-            let passedArguments = arguments;
+export interface ActionFactory {
+    <T extends RawAction>(target: T): T;
+    <T extends RawAction>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<T>): void;
+}
 
-            dispatch(
-                () => { returnValue = target.apply(undefined, passedArguments); return returnValue; },
-                actionType,
-                arguments,
-                actionContext);
+export default function action(actionType: string, actionContext?: ActionContext): ActionFactory {
+    return function createAction(arg0: any, arg1: any, arg2: any) {
+        if (arguments.length == 1 && typeof arg0 == "function") {
+            return wrapFunctionInAction(arg0, actionType, actionContext);
+        } else {
+            decorateClassMethod(arg0, arg1, arg2, actionType, actionContext);
+        }
+    } as ActionFactory;
+}
 
-            return returnValue;
-        };
+function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string, actionContext: ActionContext): T {
+    let decoratedTarget = <T>function() {
+        let returnValue: any;
+        let passedArguments = arguments;
 
-        setOriginalTarget(decoratedTarget, target);
+        dispatch(
+            () => { returnValue = target.apply(this, passedArguments); return returnValue; },
+            actionType,
+            arguments,
+            actionContext);
 
-        return decoratedTarget;
+        return returnValue;
+    };
+
+    setOriginalTarget(decoratedTarget, target);
+
+    return decoratedTarget;
+}
+
+function decorateClassMethod<T extends RawAction>(
+    target: any,
+    propertyKey: string,
+    descriptor: TypedPropertyDescriptor<T>,
+    actionType: string,
+    actionContext: ActionContext)
+{
+    if (descriptor && typeof descriptor.value == "function") {
+        descriptor.value = wrapFunctionInAction(descriptor.value, actionType, actionContext);
+    } else {
+        throw new Error("The @action decorator can only apply to class methods.");
     }
 }
