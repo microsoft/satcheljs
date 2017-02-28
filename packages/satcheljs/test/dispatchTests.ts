@@ -1,11 +1,13 @@
 import 'jasmine';
-import {action as mobxAction, autorun, _} from 'mobx';
+import { action as mobxAction, autorun, _ } from 'mobx';
 
 import rootStore from '../lib/rootStore';
 import initializeState from '../lib/initializeState';
 import dispatch from '../lib/dispatch';
 import * as applyMiddlewareImports from '../lib/applyMiddleware';
 import { __resetGlobalContext } from '../lib/globalContext'
+import { useStrict } from '../lib/useStrict';
+import { getGlobalContext } from '../lib/globalContext';
 
 var backupConsoleError = console.error;
 
@@ -27,10 +29,10 @@ describe("dispatch", () => {
 
     it("calls dispatchWithMiddleware with same arguments", () => {
         spyOn(applyMiddlewareImports, "dispatchWithMiddleware");
-        let originalAction = () => {};
+        let originalAction = () => { };
         let originalActionType = "testAction";
         let originalArguments: IArguments = <IArguments>{};
-        let options = {a:1};
+        let options = { a: 1 };
         dispatch(originalAction, originalActionType, originalArguments, options);
         expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
     });
@@ -41,10 +43,26 @@ describe("dispatch", () => {
         expect(delegate).toThrow();
     });
 
-    it("changing state in a MobX action causes an exception", () => {
+    it("changing state in a MobX action in strict mode disabled does not cause an exception", () => {
+        useStrict(false);
         initializeState({ foo: 1 });
+
         var delegate = mobxAction(() => { rootStore.set("foo", 2); });
+        expect(delegate).not.toThrow();
+    });
+
+    it("changing state outside of an action causes an exception", () => {
+        initializeState({ foo: 1 });
+        var delegate = () => { rootStore.set("foo", 2); };
         expect(delegate).toThrow();
+    });
+
+    it("changing state in a MobX action in strict mode disabled does not cause an exception", () => {
+        useStrict(false);
+        initializeState({ foo: 1 });
+
+        var delegate = mobxAction(() => { rootStore.set("foo", 2); });
+        expect(delegate).not.toThrow();
     });
 
     it("executes middleware in the same transaction as the action", () => {
