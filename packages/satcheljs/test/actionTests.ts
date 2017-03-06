@@ -24,6 +24,15 @@ describe("action", () => {
         expect((<jasmine.Spy>dispatchImports.default).calls.argsFor(0)[2][0]).toBe("testArgument");
     });
 
+    it("sets the actionType as a property on the wrapped action", () => {
+        let testFunction = () => {};
+        let actionType = "testFunction";
+
+        let wrappedAction = action(actionType)(testFunction);
+
+        expect(wrappedAction.actionType).toBe(actionType)
+    });
+
     it("passes on the original arguments", () => {
         let passedArguments: IArguments;
 
@@ -66,5 +75,19 @@ describe("action", () => {
 
         expect(thisValue).toBe(testInstance);
         expect(inDispatchValue).toBe(1);
+    });
+
+    it("sets the actionType as a property on the wrapped class method", () => {
+        let actionType = "testFunction";
+
+        class TestClass {
+            @action(actionType)
+            testMethod() {
+            }
+        }
+
+        let testInstance = new TestClass();
+
+        expect((testInstance.testMethod as any).actionType).toBe(actionType);
     });
 });
