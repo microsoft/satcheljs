@@ -16,8 +16,8 @@ describe("reconcile", () => {
     });
 
     it("handles nested plain object type change", () => {
-        let source = {root: {foo: 1}};
-        let target = {root: "234"};
+        let source: any = {root: {foo: 1}};
+        let target: any = {root: "234"};
 
         action("reconcile")(() => {
             reconcile(source, target);
@@ -27,8 +27,8 @@ describe("reconcile", () => {
     });
 
     it("handles observable map changes in a value", () => {
-        let source = map({root: {foo: 1}});
-        let target = map({root: {foo: "234"}});
+        let source = map<any>({root: {foo: 1}});
+        let target = map<any>({root: {foo: "234"}});
 
         action("reconcile")(() => {
             reconcile(source, target);
@@ -51,8 +51,8 @@ describe("reconcile", () => {
     });
 
     it("handles nested observable map changes types", () => {
-        let source = map({root: {foo: 1}});
-        let target = map({root: "234"});
+        let source = map<any>({root: {foo: 1}});
+        let target = map<any>({root: "234"});
 
         action("reconcile")(() => {
             reconcile(source, target);
