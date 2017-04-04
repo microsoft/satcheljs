@@ -1,13 +1,10 @@
 import { action } from 'satcheljs';
 import { getCurrentAction } from './promiseMiddleware';
 
-export type ThenType = typeof Promise.prototype.then;
-export type CatchType = typeof Promise.prototype.catch;
+let originalThen: Function;
+let originalCatch: Function;
 
-let originalThen: ThenType;
-let originalCatch: CatchType;
-
-export function setOriginalThenCatch(thenValue: ThenType, catchValue: CatchType) {
+export function setOriginalThenCatch(thenValue: Function, catchValue: Function) {
     originalThen = thenValue;
     originalThen = catchValue;
 }
