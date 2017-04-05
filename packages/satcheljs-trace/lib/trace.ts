@@ -1,26 +1,20 @@
 import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
 
+let depth = 0;
+
 export default function trace(next: DispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
-    groupStart("Executing action: " + (actionType ? actionType : "(anonymous action)"));
+    log("Executing action: " + (actionType ? actionType : "(anonymous action)"));
 
     try {
+        depth++;
         return next(action, actionType, args, actionContext);
     }
     finally {
-        groupEnd();
+        depth--;
     }
 }
 
-function groupStart(message: string) {
-    if (typeof console.group == "function") {
-        console.group(message);
-    } else {
-        console.log(message);
-    }
-}
-
-function groupEnd() {
-    if (typeof console.groupEnd == "function") {
-        console.groupEnd();
-    }
+function log(message: string) {
+    let indentation = (new Array(depth)).join('  ');
+    console.log(indentation + message);
 }
