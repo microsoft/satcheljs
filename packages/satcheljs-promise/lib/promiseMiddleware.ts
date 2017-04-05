@@ -1,4 +1,5 @@
 import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import install from './install';
 
 let actionStack: string[] = [];
 
@@ -13,6 +14,8 @@ export function promiseMiddleware(
     args: IArguments,
     actionContext: ActionContext)
 {
+    install();
+
     try
     {
         actionStack.push(actionType);

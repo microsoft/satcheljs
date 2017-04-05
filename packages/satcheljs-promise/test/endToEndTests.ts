@@ -1,13 +1,8 @@
 import 'jasmine';
 import { action, applyMiddleware, createStore } from 'satcheljs';
 import { getCurrentAction, promiseMiddleware } from '../lib/promiseMiddleware';
-import { install } from '../lib/install';
 
 describe("promiseMiddleware", () => {
-
-    beforeAll(() => {
-        install();
-    });
 
     it("wraps callbacks in promises when applied", (done) => {
         // Arrange

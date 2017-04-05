@@ -1,7 +1,20 @@
 import 'jasmine';
 import { getCurrentAction, promiseMiddleware } from '../lib/promiseMiddleware';
+import * as install from '../lib/install';
 
 describe("promiseMiddleware", () => {
+
+    beforeEach(() => {
+        spyOn(install, "default");
+    });
+
+    it("calls install to monkeypatch Promise", () => {
+        // Act
+        promiseMiddleware(() => {}, null, null, null, null);
+
+        // Assert
+        expect(install.default).toHaveBeenCalled();
+    });
 
     it("calls next with arguments", () => {
         // Arrange
