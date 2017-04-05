@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "outDir": "../../dist/satcheljs-promise",
+    "sourceMap": false,
+    "declaration": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "paths": {
+      "*": [
+        "*",
+        "dist/*"
+      ]
+    },
+    "baseUrl": "../../",
+    "rootDir": "."
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "typings/**/*.d.ts"
+  ]
+}
