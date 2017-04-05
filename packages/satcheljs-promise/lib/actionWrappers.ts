@@ -6,7 +6,7 @@ let originalCatch: Function;
 
 export function setOriginalThenCatch(thenValue: Function, catchValue: Function) {
     originalThen = thenValue;
-    originalThen = catchValue;
+    originalCatch = catchValue;
 }
 
 export function wrappedThen(onFulfilled?: Function, onRejected?: Function) {
