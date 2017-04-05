@@ -21,7 +21,7 @@ describe("promiseMiddleware", () => {
             expect(store.testValue).toBe(newValue);
 
             // The action name should indicate that it was a promise's "then" callback
-            expect(store.currentAction).toBe("testAction->then");
+            expect(store.currentAction).toBe("testAction => then");
 
             // At this point there should be no current action
             expect(getCurrentAction()).toBe(null);

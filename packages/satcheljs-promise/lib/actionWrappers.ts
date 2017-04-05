@@ -28,7 +28,7 @@ function wrapInAction(callback: Function, callbackType: string) {
         return callback;
     }
 
-    let actionName = currentAction + "->" + callbackType
+    let actionName = currentAction + " => " + callbackType
     return function () {
         let returnValue;
         let args = arguments;
