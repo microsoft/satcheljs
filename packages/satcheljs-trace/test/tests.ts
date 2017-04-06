@@ -1,18 +1,10 @@
 import 'jasmine';
 import trace from '../lib/trace';
-import {ActionContext} from 'satcheljs';
-
-// Stub in console group methods for Node.js
-if (typeof console.group != "function") {
-    console.group = () => {};
-    console.groupEnd = () => {};
-}
-
+import { ActionContext } from 'satcheljs';
 
 describe("trace", () => {
     beforeEach(() => {
-        spyOn(console, "group");
-        spyOn(console, "groupEnd");
+        spyOn(console, "log");
     });
 
     it("calls next with arguments", () => {
@@ -65,8 +57,8 @@ describe("trace", () => {
             null,
             null);
 
-        expect(console.group).toHaveBeenCalledTimes(1);
-        expect((<jasmine.Spy>console.group).calls.argsFor(0)[0]).toMatch(/testAction/);
+        expect(console.log).toHaveBeenCalledTimes(1);
+        expect((<jasmine.Spy>console.log).calls.argsFor(0)[0]).toMatch(/testAction/);
     });
 
     it("logs anonymous actions", () => {
@@ -77,23 +69,32 @@ describe("trace", () => {
             null,
             null);
 
-        expect(console.group).toHaveBeenCalledTimes(1);
-        expect((<jasmine.Spy>console.group).calls.argsFor(0)[0]).toMatch(/anonymous action/);
+        expect(console.log).toHaveBeenCalledTimes(1);
+        expect((<jasmine.Spy>console.log).calls.argsFor(0)[0]).toMatch(/anonymous action/);
     });
 
-    it("calls groupEnd even after an exception", () => {
-        try {
-            trace(
-                (action, actionType, args, actionContext) => {
-                    throw new Error();
-                },
-                null,
-                "testAction",
-                null,
-                null);
-        }
+    it("indents nested actions", () => {
+        let next = () => {
+            trace(() => {}, null, "innerAction", null, null);
+        };
+
+        trace(next, null, "outerAction", null, null);
+
+        let logCalls = (<jasmine.Spy>console.log).calls;
+        expect(logCalls.argsFor(0)[0]).toBe("Executing action: outerAction");
+        expect(logCalls.argsFor(1)[0]).toMatch("  Executing action: innerAction");
+    });
+
+    it("indents correctly after an exception", () => {
+        let next = () => {
+            trace(() => { throw new Error(); }, null, "action2", null, null);
+        };
+
+        try { trace(next, null, "action1", null, null); }
         catch (ex) { }
 
-        expect(console.groupEnd).toHaveBeenCalledTimes(1);
+        trace(() => {}, null, "action3", null, null);
+
+        expect((<jasmine.Spy>console.log).calls.argsFor(2)[0]).toBe("Executing action: action3");
     });
 });
