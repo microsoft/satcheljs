@@ -15,6 +15,6 @@ export default function trace(next: DispatchFunction, action: ActionFunction, ac
 }
 
 function log(message: string) {
-    let indentation = (new Array(depth)).join('  ');
+    let indentation = (new Array(depth + 1)).join('  ');
     console.log(indentation + message);
 }
