@@ -1,1 +1,1 @@
-export { stitch, subscribe, raise } from './stitch';
+export { stitch, subscribe, raise, raiseAction } from './stitch';

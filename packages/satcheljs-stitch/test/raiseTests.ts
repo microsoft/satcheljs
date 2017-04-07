@@ -4,6 +4,10 @@ import { stitch, subscribe, raise } from '../lib/stitch';
 
 describe("raise", () => {
 
+    beforeEach(() => {
+        spyOn(console, "error");
+    });
+
     it("creates an action of the given type", () => {
         spyOn(satcheljsImports, "action").and.returnValue((rawAction: Function) => rawAction);
         raise("testAction");

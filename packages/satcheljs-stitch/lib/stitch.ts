@@ -28,6 +28,8 @@ export function subscribe<T extends ActionHandler>(actionType: string, callback:
 }
 
 export function raise<T extends ActionHandler>(actionType: string, callback?: (actionToExecute: T) => void) {
+    console.error("[satcheljs-stitch] The 'raise' API is deprecated.  Use 'raiseAction' instead.");
+
     // Create a no-op action to execute
     let actionToExecute = action(actionType)(() => {});
 
@@ -38,4 +40,9 @@ export function raise<T extends ActionHandler>(actionType: string, callback?: (a
         // No callback was provided, so just execute it with no arguments
         actionToExecute();
     }
+}
+
+export function raiseAction<T extends ActionHandler>(actionType: string): T {
+    // Create a no-op action to execute
+    return <T>action(actionType)(() => {});
 }
