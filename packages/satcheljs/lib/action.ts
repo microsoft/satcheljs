@@ -1,10 +1,7 @@
 import ActionContext from './ActionContext';
 import dispatch from './dispatch';
-import {setOriginalTarget} from './functionInternals';
-
-export interface RawAction {
-    (... args: any[]): Promise<any> | void;
-}
+import RawAction from './RawAction';
+import { setActionType, setOriginalTarget } from './functionInternals';
 
 export interface Action {
     actionType?: string;
@@ -41,6 +38,7 @@ function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string
     decoratedTarget.actionType = actionType;
 
     setOriginalTarget(decoratedTarget, target);
+    setActionType(decoratedTarget, actionType);
 
     return decoratedTarget;
 }
