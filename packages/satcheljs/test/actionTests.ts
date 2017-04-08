@@ -2,6 +2,7 @@ import 'jasmine';
 import action from '../lib/action';
 import * as dispatchImports from '../lib/dispatch';
 import { getGlobalContext } from '../lib/globalContext';
+import { getActionType } from '../lib/functionInternals';
 
 describe("action", () => {
     it("wraps the function call in a dispatch", () => {
@@ -30,7 +31,7 @@ describe("action", () => {
 
         let wrappedAction = action(actionType)(testFunction);
 
-        expect(wrappedAction.actionType).toBe(actionType)
+        expect(getActionType(wrappedAction)).toBe(actionType);
     });
 
     it("passes on the original arguments", () => {
@@ -88,6 +89,6 @@ describe("action", () => {
 
         let testInstance = new TestClass();
 
-        expect((testInstance.testMethod as any).actionType).toBe(actionType);
+        expect(getActionType(testInstance.testMethod)).toBe(actionType);
     });
 });
