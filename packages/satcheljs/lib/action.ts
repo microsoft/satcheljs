@@ -1,17 +1,10 @@
 import ActionContext from './ActionContext';
 import dispatch from './dispatch';
-import {setOriginalTarget} from './functionInternals';
-
-export interface RawAction {
-    (... args: any[]): Promise<any> | void;
-}
-
-export interface Action {
-    actionType?: string;
-}
+import RawAction from './RawAction';
+import { setActionType, setOriginalTarget } from './functionInternals';
 
 export interface ActionFactory {
-    <T extends RawAction>(target: T): T & Action;
+    <T extends RawAction>(target: T): T;
     <T extends RawAction>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<T>): void;
 }
 
@@ -25,8 +18,8 @@ export default function action(actionType: string, actionContext?: ActionContext
     } as ActionFactory;
 }
 
-function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string, actionContext: ActionContext): T & Action {
-    let decoratedTarget: T & Action = <T>function() {
+function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string, actionContext: ActionContext): T {
+    let decoratedTarget: T = <T>function() {
         let returnValue: any;
         let passedArguments = arguments;
 
@@ -38,9 +31,9 @@ function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string
 
         return returnValue;
     };
-    decoratedTarget.actionType = actionType;
 
     setOriginalTarget(decoratedTarget, target);
+    setActionType(decoratedTarget, actionType);
 
     return decoratedTarget;
 }
