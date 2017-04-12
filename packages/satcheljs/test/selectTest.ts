@@ -4,6 +4,7 @@ import action from '../lib/action';
 import select from '../lib/select';
 import createStore from '../lib/createStore';
 import {initializeTestMode, resetTestMode} from '../lib/testMode';
+import { getActionType } from '../lib/functionInternals';
 
 describe("select", () => {
     it("creates a state scoped to subset of state tree", () => {
@@ -289,5 +290,17 @@ describe("select", () => {
 
         expect(fooSelector).toHaveBeenCalled();
         expect(actionSpy).toHaveBeenCalled();
+    });
+
+    it("when wrapping an action, preserves the action type", () => {
+        // Arrange
+        let actionName = "testAction";
+        let testAction = action(actionName)(() => {});
+
+        // Act
+        let wrappedAction = select({})(testAction);
+
+        // Assert
+        expect(getActionType(wrappedAction)).toBe(actionName);
     });
 });

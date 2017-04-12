@@ -1,5 +1,5 @@
 import {Reaction, Atom, IObservableValue, isObservableArray} from 'mobx';
-import {getOriginalTarget} from './functionInternals';
+import {getOriginalTarget, getActionType, setActionType} from './functionInternals';
 import {getGlobalContext} from './globalContext';
 
 export type SelectorFunction<T> = {
@@ -94,6 +94,7 @@ export default function select<T>(selector: SelectorFunction<T>) {
             return target.apply(context, args);
         }
 
+        setActionType(returnValue, getActionType(<any>target));
         return <Target>returnValue;
     }
 }
