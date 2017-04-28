@@ -1,18 +1,18 @@
 {
   "name": "satcheljs-promise",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "SatchelJS middleware to treat promise callbacks as actions",
   "main": "./lib/index.js",
   "scripts": {
     "copy-project-files": "node ../../tools/copy-project-files.js",
     "build": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js",
     "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
-    "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
+    "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
   "author": "Scott Mikula <smikula@microsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "satcheljs": "2.13.0"
+    "satcheljs": "2.14.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",

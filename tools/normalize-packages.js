@@ -42,7 +42,7 @@ function normalizePackageJson(package, packages) {
         "copy-project-files": "node ../../tools/copy-project-files.js",
         "build": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js",
         "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
-        "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
+        "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
     };
 
     fs.writeFileSync(packageJsonFilePath, JSON.stringify(packageJson, null, 2));

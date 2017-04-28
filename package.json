@@ -21,7 +21,7 @@
     "@types/react-dom": "~0.14.18",
     "enzyme": "~2.6.0",
     "glob": "^7.0.6",
-    "jasmine": "^2.5.3",
+    "jasmine": "~2.5.3",
     "jsdom": "~9.8.3",
     "mkdirp": "^0.5.1",
     "react-addons-test-utils": "^15.4.0",
