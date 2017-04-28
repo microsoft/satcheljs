@@ -1,6 +1,6 @@
 {
   "name": "satcheljs-suite",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "Store implementation for functional reactive flux.",
   "scripts": {
     "clean": "rimraf dist",
@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@types/enzyme": "^2.5.38",
-    "@types/es6-promise": "^0.0.32",
     "@types/jasmine": "^2.5.47",
     "@types/jsdom": "^2.0.29",
     "@types/node": "^6.0.48",
@@ -22,7 +21,7 @@
     "@types/react-dom": "~0.14.18",
     "enzyme": "~2.6.0",
     "glob": "^7.0.6",
-    "jasmine": "^2.5.3",
+    "jasmine": "~2.5.3",
     "jsdom": "~9.8.3",
     "mkdirp": "^0.5.1",
     "react-addons-test-utils": "^15.4.0",
