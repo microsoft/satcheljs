@@ -42,7 +42,7 @@ function normalizePackageJson(package, packages) {
         "copy-project-files": "node ../../tools/copy-project-files.js",
         "build": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js",
         "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
-        "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json --verbose"
+        "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
     };
 
     fs.writeFileSync(packageJsonFilePath, JSON.stringify(packageJson, null, 2));
@@ -58,6 +58,7 @@ function normalizeTsConfigJson(package, packages) {
     json.compilerOptions.rootDir = ".";
     json.include = ['lib/**/*.ts', 'lib/**/*.tsx', 'test/**/*.ts', 'test/**/*.tsx', 'typings/**/*.d.ts'];
     json.compilerOptions.outDir = `../../dist/${package}`;
+    json.compilerOptions.lib = ['es6', 'dom'];
     fs.writeFileSync(tsConfigJsonFilePath, JSON.stringify(json, null, 2));
 }
 

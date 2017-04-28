@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@types/enzyme": "^2.5.38",
-    "@types/es6-promise": "^0.0.32",
     "@types/jasmine": "^2.5.47",
     "@types/jsdom": "^2.0.29",
     "@types/node": "^6.0.48",
