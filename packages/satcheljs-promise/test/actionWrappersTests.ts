@@ -1,7 +1,7 @@
 import 'jasmine';
 import * as satcheljs from 'satcheljs';
 import * as promiseMiddleware from '../lib/promiseMiddleware';
-import { setOriginalThenCatch, wrappedThen, wrappedCatch } from '../lib/actionWrappers';
+import { wrapThen, wrapCatch } from '../lib/actionWrappers';
 
 describe("actionWrappers", () => {
 
@@ -14,43 +14,28 @@ describe("actionWrappers", () => {
         getCurrentActionSpy = spyOn(promiseMiddleware, "getCurrentAction");
         originalThenSpy = jasmine.createSpy("originalThen");
         originalCatchSpy = jasmine.createSpy("originalCatch");
-        setOriginalThenCatch(originalThenSpy, originalCatchSpy);
     });
 
     it("just pass through null callbacks", () => {
         // Act
-        wrappedThen(null, null);
-        wrappedCatch(null);
+        wrapThen(originalThenSpy)(null, null);
+        wrapCatch(originalCatchSpy)(null);
 
         // Assert
         expect(originalThenSpy).toHaveBeenCalledWith(null, null);
         expect(originalCatchSpy).toHaveBeenCalledWith(null);
     });
 
-    it("when not in an action, just pass through the original callbacks", () => {
-        // Arrange
-        let onFulfilled = () => {};
-        let onRejected = () => {};
-
-        // Act
-        wrappedThen(onFulfilled, onRejected);
-        wrappedCatch(onRejected);
-
-        // Assert
-        expect(originalThenSpy).toHaveBeenCalledWith(onFulfilled, onRejected);
-        expect(originalCatchSpy).toHaveBeenCalledWith(onRejected);
-    });
-
-    it("when in an action, wrap the callbacks in actions", () => {
+    it("wrap the callbacks in actions", () => {
         // Arrange
         getCurrentActionSpy.and.returnValue("testAction");
 
         let onFulfilled = jasmine.createSpy("onFulfilled");
         let onRejectedInThen = jasmine.createSpy("onRejectedInThen");
-        wrappedThen(onFulfilled, onRejectedInThen);
+        wrapThen(originalThenSpy)(onFulfilled, onRejectedInThen);
 
         let onRejectedInCatch = jasmine.createSpy("onRejectedInCatch");
-        wrappedCatch(onRejectedInCatch);
+        wrapCatch(originalCatchSpy)(onRejectedInCatch);
 
         // Act / Assert
         fulfillPromise();
@@ -72,7 +57,7 @@ describe("actionWrappers", () => {
         let onFulfilled = jasmine.createSpy("onFulfilled").and.returnValue("returnValue");
 
         // Act
-        wrappedThen(onFulfilled, null);
+        wrapThen(originalThenSpy)(onFulfilled, null);
 
         // Simulate the promise being fulfilled
         let returnValue = fulfillPromise("arg");

@@ -4,16 +4,42 @@ import * as install from '../lib/install';
 
 describe("promiseMiddleware", () => {
 
+    let uninstallSpy: jasmine.Spy;
+
     beforeEach(() => {
-        spyOn(install, "default");
+        uninstallSpy = jasmine.createSpy("uninstall");
+        spyOn(install, "default").and.returnValue(uninstallSpy);
     });
 
-    it("calls install to monkeypatch Promise", () => {
+    it("calls install to monkeypatch Promise for the duration of the action", () => {
+        // Arrange
+        let next = () => {
+            expect(install.default).toHaveBeenCalled();
+            expect(uninstallSpy).not.toHaveBeenCalled();
+        };
+
         // Act
-        promiseMiddleware(() => {}, null, null, null, null);
+        promiseMiddleware(next, null, null, null, null);
 
         // Assert
-        expect(install.default).toHaveBeenCalled();
+        expect(uninstallSpy).toHaveBeenCalled();
+    });
+
+    it("does not uninstall until all recursive actions have completed", () => {
+        // Act
+        let outerNext = () => {
+            let innerNext = () => {
+                expect(uninstallSpy).not.toHaveBeenCalled();
+            };
+
+            promiseMiddleware(innerNext, null, null, null, null);
+            expect(uninstallSpy).not.toHaveBeenCalled();
+        };
+
+        promiseMiddleware(outerNext, null, null, null, null);
+
+        // Assert
+        expect(uninstallSpy).toHaveBeenCalled();
     });
 
     it("calls next with arguments", () => {
