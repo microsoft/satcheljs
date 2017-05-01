@@ -1,12 +1,14 @@
-import { setOriginalThenCatch, wrappedThen, wrappedCatch } from './actionWrappers';
-
-let isInstalled = false;
+import { wrapThen, wrapCatch } from './actionWrappers';
 
 export default function install() {
-    if (!isInstalled) {
-        setOriginalThenCatch(Promise.prototype.then, Promise.prototype.catch);
-        Promise.prototype.then = <any>wrappedThen;
-        Promise.prototype.catch = <any>wrappedCatch;
-        isInstalled = true;
-    }
+    let originalThen = Promise.prototype.then;
+    let originalCatch = Promise.prototype.catch;
+
+    Promise.prototype.then = wrapThen(originalThen);
+    Promise.prototype.catch = wrapCatch(originalCatch);
+
+    return function uninstall() {
+        Promise.prototype.then = originalThen;
+        Promise.prototype.catch = originalCatch;
+    };
 }
