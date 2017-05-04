@@ -1,3 +1,7 @@
+export { default as ActionMessage } from './interfaces/ActionMessage';
+
+
+// Legacy API
 export { default as rootStore } from './legacy/rootStore';
 export { default as initializeState } from './legacy/initializeState';
 export { default as applyMiddleware } from './legacy/applyMiddleware';
