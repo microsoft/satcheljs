@@ -4,7 +4,7 @@ import { dispatch } from './dispatcher';
 
 export default function actionDispatcher(actionType: string) {
     return function createActionDispatcher<T extends ActionCreator>(target: T): T {
-        return function createAndDispatchAction(...args: any[]) {
+        let decoratedTarget = function createAndDispatchAction(...args: any[]) {
             let actionMessage: ActionMessage = target.apply(null, args);
 
             // Ideally we'd just stamp the type property on the action message at this point, but
@@ -18,6 +18,16 @@ export default function actionDispatcher(actionType: string) {
             dispatch(actionMessage);
             return actionMessage;
         } as T;
+
+        setActionType(decoratedTarget, actionType);
+        return decoratedTarget;
     };
 }
 
+export function getActionType(target: ActionCreator) {
+    return (target as any).__SATCHELJS_ACTION_TYPE_V2;
+}
+
+function setActionType(target: ActionCreator, actionType: string) {
+    (target as any).__SATCHELJS_ACTION_TYPE_V2 = actionType;
+}
