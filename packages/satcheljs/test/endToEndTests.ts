@@ -20,7 +20,7 @@ describe("satcheljs", () => {
         // Create a mutator that subscribes to it
         mutator(testAction)(
             function(actionMessage) {
-                fooValue = (actionMessage as any).foo;
+                fooValue = actionMessage.foo;
             });
 
         // Dispatch the action

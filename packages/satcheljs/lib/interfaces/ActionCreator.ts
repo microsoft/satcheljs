@@ -1,7 +1,7 @@
 import ActionMessage from './ActionMessage';
 
-interface ActionCreator {
-    (...args: any[]): ActionMessage;
+interface ActionCreator<T extends ActionMessage> {
+    (...args: any[]): T;
 }
 
 export default ActionCreator;

@@ -3,7 +3,9 @@ import ActionCreator from './interfaces/ActionCreator';
 import { dispatch } from './dispatcher';
 
 export default function actionDispatcher(actionType: string) {
-    return function createActionDispatcher<T extends ActionCreator>(target: T): T {
+    return function createActionDispatcher<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
+        target: TActionCreator): TActionCreator
+    {
         let decoratedTarget = function createAndDispatchAction(...args: any[]) {
             let actionMessage: ActionMessage = target.apply(null, args);
 
@@ -17,17 +19,17 @@ export default function actionDispatcher(actionType: string) {
 
             dispatch(actionMessage);
             return actionMessage;
-        } as T;
+        } as TActionCreator;
 
         setActionType(decoratedTarget, actionType);
         return decoratedTarget;
     };
 }
 
-export function getActionType(target: ActionCreator) {
+export function getActionType(target: ActionCreator<any>) {
     return (target as any).__SATCHELJS_ACTION_TYPE_V2;
 }
 
-function setActionType(target: ActionCreator, actionType: string) {
+function setActionType(target: ActionCreator<any>, actionType: string) {
     (target as any).__SATCHELJS_ACTION_TYPE_V2 = actionType;
 }
