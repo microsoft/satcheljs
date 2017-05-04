@@ -1,5 +1,8 @@
+export { default as ActionCreator } from './interfaces/ActionCreator';
 export { default as ActionMessage } from './interfaces/ActionMessage';
-
+export { default as Mutator } from './interfaces/Mutator';
+export { default as actionDispatcher } from './actionDispatcher';
+export { default as mutator } from './mutator';
 
 // Legacy API
 export { default as rootStore } from './legacy/rootStore';
