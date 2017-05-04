@@ -1,8 +1,8 @@
 import 'jasmine';
-import action from '../lib/action';
-import * as dispatchImports from '../lib/dispatch';
-import { getGlobalContext } from '../lib/globalContext';
-import { getActionType } from '../lib/functionInternals';
+import action from '../../lib/legacy/action';
+import * as dispatchImports from '../../lib/legacy/dispatch';
+import { getGlobalContext } from '../../lib/legacy/globalContext';
+import { getActionType } from '../../lib/legacy/functionInternals';
 
 describe("action", () => {
     it("wraps the function call in a dispatch", () => {

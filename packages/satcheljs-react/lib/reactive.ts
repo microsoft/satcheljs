@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import {SelectorFunction} from 'satcheljs/lib/select';
-import {getGlobalContext} from 'satcheljs/lib/globalContext';
+import {SelectorFunction} from 'satcheljs/lib/legacy/select';
+import {getGlobalContext} from 'satcheljs/lib/legacy/globalContext';
 import {observer} from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {

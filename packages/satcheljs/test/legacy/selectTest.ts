@@ -1,10 +1,10 @@
 import 'jasmine';
 import {map, ObservableMap} from 'mobx';
-import action from '../lib/action';
-import select from '../lib/select';
-import createStore from '../lib/createStore';
-import {initializeTestMode, resetTestMode} from '../lib/testMode';
-import { getActionType } from '../lib/functionInternals';
+import action from '../../lib/legacy/action';
+import select from '../../lib/legacy/select';
+import createStore from '../../lib/legacy/createStore';
+import {initializeTestMode, resetTestMode} from '../../lib/legacy/testMode';
+import { getActionType } from '../../lib/legacy/functionInternals';
 
 describe("select", () => {
     it("creates a state scoped to subset of state tree", () => {

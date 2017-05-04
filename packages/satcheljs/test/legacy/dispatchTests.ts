@@ -1,13 +1,13 @@
 import 'jasmine';
 import { action as mobxAction, autorun, _ } from 'mobx';
 
-import rootStore from '../lib/rootStore';
-import initializeState from '../lib/initializeState';
-import dispatch from '../lib/dispatch';
-import * as applyMiddlewareImports from '../lib/applyMiddleware';
-import { __resetGlobalContext } from '../lib/globalContext'
-import { useStrict } from '../lib/useStrict';
-import { getGlobalContext } from '../lib/globalContext';
+import rootStore from '../../lib/legacy/rootStore';
+import initializeState from '../../lib/legacy/initializeState';
+import dispatch from '../../lib/legacy/dispatch';
+import * as applyMiddlewareImports from '../../lib/legacy/applyMiddleware';
+import { __resetGlobalContext } from '../../lib/legacy/globalContext'
+import { useStrict } from '../../lib/legacy/useStrict';
+import { getGlobalContext } from '../../lib/legacy/globalContext';
 
 var backupConsoleError = console.error;
 

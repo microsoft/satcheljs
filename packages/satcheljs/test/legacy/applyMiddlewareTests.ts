@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import { default as applyMiddleware, dispatchWithMiddleware } from '../lib/applyMiddleware';
-import ActionFunction from '../lib/ActionFunction';
-import ActionContext from '../lib/ActionContext';
+import { default as applyMiddleware, dispatchWithMiddleware } from '../../lib/legacy/applyMiddleware';
+import ActionFunction from '../../lib/legacy/ActionFunction';
+import ActionContext from '../../lib/legacy/ActionContext';
 
 describe("applyMiddleware", () => {
     beforeEach(() => {

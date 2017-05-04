@@ -1,6 +1,6 @@
 import 'jasmine';
-import rootStore from '../lib/rootStore';
-import initializeState from '../lib/initializeState';
+import rootStore from '../../lib/legacy/rootStore';
+import initializeState from '../../lib/legacy/initializeState';
 
 describe("initializeState", () => {
     it("replaces the state value", () => {
