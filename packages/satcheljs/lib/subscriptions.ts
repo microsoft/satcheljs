@@ -15,5 +15,8 @@ export function subscribe(actionDispatcher: ActionCreator, callback: Mutator) {
 }
 
 export function notifySubscribers(actionMessage: ActionMessage) {
-
+    let subscribers = subscriptions[actionMessage.type];
+    if (subscribers) {
+        subscribers.forEach((subscriber) => subscriber(actionMessage));
+    }
 }
