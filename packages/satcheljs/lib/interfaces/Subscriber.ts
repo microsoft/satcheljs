@@ -1,7 +1,7 @@
 import ActionMessage from './ActionMessage';
 
-interface Mutator<T extends ActionMessage> {
+interface Subscriber<T extends ActionMessage> {
     (actionMessage: T): void;
 }
 
-export default Mutator;
+export default Subscriber;
