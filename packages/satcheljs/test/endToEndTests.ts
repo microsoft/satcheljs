@@ -1,6 +1,7 @@
 import 'jasmine';
 import actionDispatcher from '../lib/actionDispatcher';
 import mutator from '../lib/mutator';
+import simpleAction from '../lib/simpleAction';
 
 
 describe("satcheljs", () => {
@@ -28,6 +29,25 @@ describe("satcheljs", () => {
 
         // Validate that the mutator was called with the dispatched action
         expect(fooValue).toBe("test");
+    });
+
+    it("simpleAction dispatches an action and subscribes to it", () => {
+        // Arrange
+        let arg1Value = null;
+        let arg2Value = null;
+
+        let testSimpleAction = simpleAction("testSimpleAction")(
+            function testSimpleAction(arg1: string, arg2: number) {
+                arg1Value = arg1;
+                arg2Value = arg2;
+            });
+
+        // Act
+        testSimpleAction("testValue", 2);
+
+        // Assert
+        expect(arg1Value).toBe("testValue");
+        expect(arg2Value).toBe(2);
     });
 
 });
