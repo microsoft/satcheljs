@@ -1,17 +1,18 @@
 import SimpleAction from './interfaces/SimpleAction';
 import actionCreator from './actionCreator';
+import bindToDispatch from './bindToDispatch';
 import mutator from './mutator';
 
 export default function simpleAction(actionType: string) {
     return function createSimpleAction<T extends SimpleAction>(target: T): T {
         // Create an action dispatcher
-        let simpleActionCreator = actionCreator(actionType)(
+        let simpleActionCreator = bindToDispatch(actionCreator(actionType)(
             function simpleActionCreator() {
                 return {
                     type: actionType,
                     args: arguments
                 };
-            });
+            }));
 
         // Create a mutator that subscribes to that action creator
         mutator(simpleActionCreator)(

@@ -2,6 +2,8 @@ export { default as ActionCreator } from './interfaces/ActionCreator';
 export { default as ActionMessage } from './interfaces/ActionMessage';
 export { default as Subscriber } from './interfaces/Subscriber';
 export { default as actionCreator } from './actionCreator';
+export { default as bindToDispatch } from './bindToDispatch';
+export { dispatch } from './dispatcher';
 export { default as mutator } from './mutator';
 export { default as orchestrator } from './orchestrator';
 

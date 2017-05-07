@@ -1,5 +1,6 @@
 import 'jasmine';
 import actionCreator from '../lib/actionCreator';
+import bindToDispatch from '../lib/bindToDispatch';
 import mutator from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
 
@@ -10,13 +11,13 @@ describe("satcheljs", () => {
         let fooValue = null
 
         // Create an action dispatcher
-        let testAction = actionCreator("testAction")(
+        let testAction = bindToDispatch(actionCreator("testAction")(
             function testAction(foo: string) {
                 return {
                     type: "testAction",
                     foo: foo
                 };
-            });
+            }));
 
         // Create a mutator that subscribes to it
         mutator(testAction)(
