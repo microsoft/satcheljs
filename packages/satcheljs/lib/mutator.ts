@@ -3,8 +3,8 @@ import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
 import { subscribe } from './dispatcher';
 
-export default function mutator<T extends ActionMessage>(actionDispatcher: ActionCreator<T>) {
+export default function mutator<T extends ActionMessage>(actionCreator: ActionCreator<T>) {
     return function subscribeMutator(callback: Subscriber<T>) {
-        subscribe(actionDispatcher, callback);
+        subscribe(actionCreator, callback);
     }
 }

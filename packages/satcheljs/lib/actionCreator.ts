@@ -1,12 +1,11 @@
 import ActionMessage from './interfaces/ActionMessage';
 import ActionCreator from './interfaces/ActionCreator';
-import { dispatch } from './dispatcher';
 
-export default function actionDispatcher(actionType: string) {
-    return function createActionDispatcher<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
+export default function actionCreator(actionType: string) {
+    return function createActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
         target: TActionCreator): TActionCreator
     {
-        let decoratedTarget = function createAndDispatchAction(...args: any[]) {
+        let decoratedTarget = function createAction(...args: any[]) {
             let actionMessage: ActionMessage = target.apply(null, args);
 
             // Ideally we'd just stamp the type property on the action message at this point, but
@@ -17,7 +16,6 @@ export default function actionDispatcher(actionType: string) {
                 throw new Error("The action type must match the type property on the action message.");
             }
 
-            dispatch(actionMessage);
             return actionMessage;
         } as TActionCreator;
 

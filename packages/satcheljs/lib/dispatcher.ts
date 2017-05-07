@@ -1,12 +1,12 @@
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
-import { getActionType } from './actionDispatcher';
+import { getActionType } from './actionCreator';
 
 let subscriptions: {[key: string]: Subscriber<ActionMessage>[]} = {};
 
-export function subscribe<T extends ActionMessage>(actionDispatcher: ActionCreator<T>, callback: Subscriber<T>) {
-    let actionType = getActionType(actionDispatcher);
+export function subscribe<T extends ActionMessage>(actionCreator: ActionCreator<T>, callback: Subscriber<T>) {
+    let actionType = getActionType(actionCreator);
     if (!subscriptions[actionType]) {
         subscriptions[actionType] = [];
     }

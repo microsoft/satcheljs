@@ -1,5 +1,5 @@
 import 'jasmine';
-import actionDispatcher from '../lib/actionDispatcher';
+import actionCreator from '../lib/actionCreator';
 import mutator from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
 
@@ -10,7 +10,7 @@ describe("satcheljs", () => {
         let fooValue = null
 
         // Create an action dispatcher
-        let testAction = actionDispatcher("testAction")(
+        let testAction = actionCreator("testAction")(
             function testAction(foo: string) {
                 return {
                     type: "testAction",
