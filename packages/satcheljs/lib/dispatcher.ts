@@ -14,7 +14,7 @@ export function subscribe<T extends ActionMessage>(actionDispatcher: ActionCreat
     subscriptions[actionType].push(callback);
 }
 
-export function notifySubscribers(actionMessage: ActionMessage) {
+export function dispatch(actionMessage: ActionMessage) {
     let subscribers = subscriptions[actionMessage.type];
     if (subscribers) {
         subscribers.forEach((subscriber) => subscriber(actionMessage));
