@@ -11,7 +11,8 @@ describe("satcheljs", () => {
         let fooValue = null
 
         // Create an action dispatcher
-        let testAction = bindToDispatch(actionCreator("testAction")(
+        let testAction = bindToDispatch(actionCreator(
+            "testAction",
             function testAction(foo: string) {
                 return {
                     type: "testAction",
@@ -20,7 +21,8 @@ describe("satcheljs", () => {
             }));
 
         // Create a mutator that subscribes to it
-        mutator(testAction)(
+        mutator(
+            testAction,
             function(actionMessage) {
                 fooValue = actionMessage.foo;
             });
@@ -37,7 +39,8 @@ describe("satcheljs", () => {
         let arg1Value = null;
         let arg2Value = null;
 
-        let testSimpleAction = simpleAction("testSimpleAction")(
+        let testSimpleAction = simpleAction(
+            "testSimpleAction",
             function testSimpleAction(arg1: string, arg2: number) {
                 arg1Value = arg1;
                 arg2Value = arg2;
