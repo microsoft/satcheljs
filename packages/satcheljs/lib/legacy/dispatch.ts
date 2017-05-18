@@ -17,14 +17,8 @@ export default function dispatch(action: ActionFunction, actionType: string, arg
     getGlobalContext().inDispatch--;
 }
 
-// Guard against state changes happening outside of SatchelJS actions
+// Guard against state changes happening outside of MobX actions
 // unless explicitely disabled
 if (getGlobalContext().strictMode) {
     useStrict(true);
 }
-
-spy((change) => {
-    if (getGlobalContext().strictMode && !getGlobalContext().inDispatch && change.type == "action") {
-        throw new Error('The state may only be changed by a SatchelJS action.');
-    }
-});
