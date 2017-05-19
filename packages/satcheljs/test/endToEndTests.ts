@@ -2,7 +2,7 @@ import 'jasmine';
 import { boundActionCreator } from '../lib/actionCreator';
 import mutator from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
-
+import createStore from '../lib/legacy/createStore';
 
 describe("satcheljs", () => {
 
@@ -51,6 +51,24 @@ describe("satcheljs", () => {
         // Assert
         expect(arg1Value).toBe("testValue");
         expect(arg2Value).toBe(2);
+    });
+
+    it("mutators can modify the store", () => {
+        // Arrange
+        let store = createStore("testStore", { testProperty: "testValue" });
+        let modifyStore = boundActionCreator(
+            "modifyStore",
+            () => { return { type: "modifyStore" }; });
+
+        mutator(
+            modifyStore,
+            (actionMessage) => { store.testProperty = "newValue"; });
+
+        // Act
+        modifyStore();
+
+        // Assert
+        expect(store.testProperty).toBe("newValue");
     });
 
 });

@@ -1,3 +1,5 @@
+import { action } from 'mobx';
+
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
@@ -7,5 +9,7 @@ export default function mutator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
     callback: Subscriber<T>)
 {
-    subscribe(actionCreator, callback);
+    subscribe(
+        actionCreator,
+        action(callback));
 }
