@@ -14,7 +14,6 @@ describe("satcheljs", () => {
             "testAction",
             function testAction(foo: string) {
                 return {
-                    type: "testAction",
                     foo: foo
                 };
             });
@@ -58,7 +57,7 @@ describe("satcheljs", () => {
         let store = createStore("testStore", { testProperty: "testValue" });
         let modifyStore = boundActionCreator(
             "modifyStore",
-            () => { return { type: "modifyStore" }; });
+            () => { return {}; });
 
         mutator(
             modifyStore,

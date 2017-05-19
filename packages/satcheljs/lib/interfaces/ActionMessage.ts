@@ -1,5 +1,5 @@
 interface ActionMessage {
-    type: string;
+    type?: string;
 }
 
 export default ActionMessage;

@@ -6,23 +6,43 @@ export function actionCreator<T extends ActionMessage, TActionCreator extends Ac
     actionType: string,
     target: TActionCreator): TActionCreator
 {
-    setActionType(target, actionType);
-    return target;
-};
+    return createActionCreator(actionType, target, false);
+}
 
 export function boundActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
     actionType: string,
     target: TActionCreator): TActionCreator
 {
+    return createActionCreator(actionType, target, true);
+}
+
+function createActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
+    actionType: string,
+    target: TActionCreator,
+    shouldDispatch: boolean): TActionCreator
+{
     let decoratedTarget = function createAction(...args: any[]) {
+        // Create the action message
         let actionMessage: ActionMessage = target.apply(null, args);
-        dispatch(actionMessage);
+
+        // Stamp the action type
+        if (actionMessage.type) {
+            throw new Error("Action creators should not include the type property.");
+        }
+
+        actionMessage.type = actionType;
+
+        // Dispatch if necessary
+        if (shouldDispatch) {
+            dispatch(actionMessage);
+        }
+
         return actionMessage;
     } as TActionCreator;
 
     setActionType(decoratedTarget, actionType);
     return decoratedTarget;
-};
+}
 
 export function getActionType(target: ActionCreator<any>) {
     return (target as any).__SATCHELJS_ACTION_TYPE_V2;

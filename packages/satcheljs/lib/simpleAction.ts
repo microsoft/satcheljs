@@ -11,7 +11,6 @@ export default function simpleAction<T extends SimpleAction>(
         actionType,
         function simpleActionCreator() {
             return {
-                type: actionType,
                 args: arguments
             };
         });
