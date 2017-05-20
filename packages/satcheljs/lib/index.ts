@@ -3,7 +3,7 @@ export { default as ActionMessage } from './interfaces/ActionMessage';
 export { default as Subscriber } from './interfaces/Subscriber';
 export { actionCreator, boundActionCreator } from './actionCreator';
 export { dispatch } from './dispatcher';
-export { default as mutator } from './mutator';
+export { mutator, registerMutators } from './mutator';
 export { default as orchestrator } from './orchestrator';
 
 // Legacy API

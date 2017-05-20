@@ -48,6 +48,6 @@ export function getActionType(target: ActionCreator<any>) {
     return (target as any).__SATCHELJS_ACTION_TYPE_V2;
 }
 
-export function setActionType(target: ActionCreator<any>, actionType: string) {
+function setActionType(target: ActionCreator<any>, actionType: string) {
     (target as any).__SATCHELJS_ACTION_TYPE_V2 = actionType;
 }

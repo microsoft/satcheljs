@@ -1,6 +1,6 @@
 import 'jasmine';
 import { boundActionCreator } from '../lib/actionCreator';
-import mutator from '../lib/mutator';
+import { mutator, registerMutators } from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
 import createStore from '../lib/legacy/createStore';
 
@@ -19,11 +19,14 @@ describe("satcheljs", () => {
             });
 
         // Create a mutator that subscribes to it
-        mutator(
+        let onTestAction = mutator(
             testAction,
             function(actionMessage) {
                 fooValue = actionMessage.foo;
             });
+
+        // Register the mutator
+        registerMutators(onTestAction);
 
         // Dispatch the action
         testAction("test");
@@ -59,9 +62,11 @@ describe("satcheljs", () => {
             "modifyStore",
             () => { return {}; });
 
-        mutator(
+        let onModifyStore = mutator(
             modifyStore,
             (actionMessage) => { store.testProperty = "newValue"; });
+
+        registerMutators(onModifyStore);
 
         // Act
         modifyStore();

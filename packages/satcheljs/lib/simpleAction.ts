@@ -1,6 +1,6 @@
 import SimpleAction from './interfaces/SimpleAction';
 import { boundActionCreator } from './actionCreator';
-import mutator from './mutator';
+import { mutator, registerMutators } from './mutator';
 
 export default function simpleAction<T extends SimpleAction>(
     actionType: string,
@@ -15,12 +15,15 @@ export default function simpleAction<T extends SimpleAction>(
             };
         });
 
-    // Create a mutator that subscribes to that action creator
-    mutator(
+    // Create a mutator
+    let simpleMutator = mutator(
         simpleActionCreator,
         function simpleActionMutator(actionMessage) {
             target.apply(null, actionMessage.args);
         });
+
+    // Register the mutator
+    registerMutators(simpleMutator);
 
     // Return a function that dispatches that action
     return simpleActionCreator as any as T;
