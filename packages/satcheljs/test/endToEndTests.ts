@@ -58,9 +58,7 @@ describe("satcheljs", () => {
     it("mutators can modify the store", () => {
         // Arrange
         let store = createStore("testStore", { testProperty: "testValue" });
-        let modifyStore = boundActionCreator(
-            "modifyStore",
-            () => { return {}; });
+        let modifyStore = boundActionCreator("modifyStore");
 
         let onModifyStore = mutator(
             modifyStore,
