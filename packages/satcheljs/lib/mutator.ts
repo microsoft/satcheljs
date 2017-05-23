@@ -27,10 +27,10 @@ export function registerMutators(...mutators: Subscriber<any>[]) {
     });
 }
 
-export function getMutatorType(target: ActionCreator<any>) {
+function getMutatorType(target: ActionCreator<any>) {
     return (target as any).__SATCHELJS_MUTATOR_TYPE;
 }
 
-export function setMutatorType(target: ActionCreator<any>, actionType: string) {
+function setMutatorType(target: ActionCreator<any>, actionType: string) {
     (target as any).__SATCHELJS_MUTATOR_TYPE = actionType;
 }
