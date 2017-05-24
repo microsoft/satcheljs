@@ -42,11 +42,7 @@ The following examples assume you're developing in Typescript.
 ```typescript
 import { createStore } from 'satcheljs';
 
-interface ScoreboardStore {
-    score: number;
-}
-
-var store = createStore<ScoreboardStore>(
+var store = createStore(
     'scoreboardStore',
     {
         score: 0
@@ -80,7 +76,7 @@ let addPoints = actionCreator('ADD_POINTS',
 ### Implement and register a mutator
 
 You specify what action a mutator subscribes to by providing the corresponding action creator.
-If you're using TypeScript, the type of `actionCreator` is automatically inferred.
+If you're using TypeScript, the type of `actionMessage` is automatically inferred.
 
 ```typescript
 import { mutator, registerMutator } from 'satcheljs';

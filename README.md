@@ -1,119 +1,142 @@
-[![Build Status](https://travis-ci.org/Microsoft/satcheljs.svg?branch=master)](https://travis-ci.org/Microsoft/satcheljs)
-
 # Satchel
 
-Satchel is a data store based on the [Flux architecture](http://facebook.github.io/react/blog/2014/05/06/flux.html).  It is characterized by exposing an observable state that makes view updates painless and efficient.
+Satchel is a dataflow framework based on the [Flux architecture](http://facebook.github.io/react/blog/2014/05/06/flux.html).  It is characterized by exposing an observable state that makes view updates painless and efficient.
 
+[![Build Status](https://travis-ci.org/Microsoft/satcheljs.svg?branch=master)](https://travis-ci.org/Microsoft/satcheljs)
 
 ## Influences
 
-Satchel synthesizes the best of several dataflow patterns typically used to drive a React-based UI.  In particular:
-* [Flux](http://facebook.github.io/react/blog/2014/05/06/flux.html) is not a library itself, but is a dataflow pattern conceived for use with React.  In Flux, dataflow is unidirectional, and the only way to modify state is by dispatching actions through a central dispatcher.
-* [Redux](http://redux.js.org/index.html) is an implementation of Flux that consolidates stores into a single state tree and attempts to simplify state changes by making all mutations via pure functions called reducers.  Ultimately, however, we found that reducers and immutable state were difficult to reason about, particularly in a large, interconnected app.
-* [MobX](http://mobxjs.github.io/mobx/index.html) provides a seamless way to make state observable, and allows React to listen to state changes and rerender in a very performant way.  Satchel uses MobX under the covers to allow React components to observe the data they depend on.
+Satchel is an attempt to synthesize the best of several dataflow patterns typically used to drive a React-based UI.  In particular:
 
+* [Flux](http://facebook.github.io/react/blog/2014/05/06/flux.html) is not a library itself, but is a dataflow pattern conceived for use with React.  In Flux, dataflow is unidirectional, and the only way to modify state is by dispatching actions through a central dispatcher.
+* [Redux](http://redux.js.org/index.html) is an implementation of Flux that consolidates stores into a single state tree and attempts to simplify state changes by making all mutations via pure functions called reducers.  Ultimately, however, we found reducers and immutable state cumbersome to deal with, particularly in a large, interconnected app.
+* [MobX](http://mobxjs.github.io/mobx/index.html) provides a seamless way to make state observable, and allows React to listen to state changes and rerender in a very performant way.  Satchel uses MobX under the covers to allow React components to observe the data they depend on.
 
 ## Advantages
 
-There are a number of advantages to using Satchel to maintain your application state.  (Each of the frameworks above has some, but not all, of these qualities.)
+There are a number of advantages to using Satchel to maintain your application state:
 
 * Satchel enables a very **performant UI**, only rerendering the minimal amount necessary.  MobX makes UI updates very efficient by automatically detecting specifically what components need to rerender for a given state change.
 * Satchel's datastore allows for **isomorphic JavaScript** by making it feasible to render on the server and then serialize and pass the application state down to the client.
 * Satchel supports **middleware** that can act on each action that is dispatched.  (For example, for tracing or performance instrumentation.)
-* Satchel requires **minimal boilerplate** code.
-
+* Satchel is **type-safe** out of the box, without any extra effort on the consumer's part.
 
 ## Installation
+
 Install via NPM:
 
 `npm install satcheljs --save`
 
-In order to use Satchel with React, you'll also need the React bindings:
+In order to use Satchel with React, you'll also need MobX and the MobX React bindings:
 
-`npm install satcheljs-react --save`
+`npm install mobx --save`
 
+`npm install mobx-react --save`
 
 ## Usage
+
 The following examples assume you're developing in Typescript.
 
 ### Create a store with some initial state
-```typescript
-interface MyStoreSchema {
-    foo: number;
-    bar: string;
-}
 
-var myStore = createStore<MyStoreSchema>(
-    "mystore",
+```typescript
+import { createStore } from 'satcheljs';
+
+var store = createStore(
+    'scoreboardStore',
     {
-        foo: 1,
-        bar: "baz"
+        score: 0
     });
 ```
 
 ### Create a component that consumes your state
-Notice the @observer decorator on the component---this is what tells MobX to rerender the component if any of the data it relies on changes.
 
-```typescript
+Notice the `@observer` decorator on the component—this is what tells MobX to rerender the component whenever the data it relies on changes.
+
+```javascript
 @observer
 class ApplicationComponent extends React.Component<any, any> {
-	render() {
-		return (<div>foo is {myStore.foo}</div>);
-	}
+    render() {
+        return (<div>Score = {store.score}</div>);
+    }
 }
 ```
 
-### Implement an action to update the store
+### Implement an action creator
 
 ```typescript
-let updateFoo =
-	function updateFoo(newFoo: number) {
-		myStore.foo = newFoo;
-	};
+import { actionCreator } from 'satcheljs';
 
-updateFoo = action("updateFoo")(updateFoo);
+let addPoints = actionCreator('ADD_POINTS',
+    (points: number) => ({
+        points: points
+    }));
 ```
 
-Note that the above is just syntactic sugar for applying an @action decorator.  Typescript doesn't support decorators on function expressions yet, but it will in the future. At that point the syntax for creating an action will be simply:
+### Implement and register a mutator
+
+You specify what action a mutator subscribes to by providing the corresponding action creator.
+If you're using TypeScript, the type of `actionMessage` is automatically inferred.
+
 ```typescript
-let updateFoo =
-	@action("updateFoo")
-	function updateFoo(newFoo: number) {
-		myStore.foo = newFoo;
-	};
+import { mutator, registerMutator } from 'satcheljs';
+
+let onAddPoints = mutator(addPoints, (actionMessage) => {
+    store.score += actionMessage.points;
+};
+
+registerMutator(onAddPoints);
 ```
 
-### Call the action
-
-It's just a function:
+### Create and dispatch an action
 
 ```typescript
-updateFoo(2);
+import { dispatch } from 'satcheljs';
+
+dispatch(addPoints(2));
 ```
 
-### Asynchronous actions
+### Bound action creators
 
-Often actions will need to do some sort of asynchronous work (such as making a server request) and then update the state based on the result.
-Since the asynchronous callback happens outside of the context of the original action the callback itself must be an action too.
-This syntax will be simplified once Typescript supports decorators for plain functions.
+Bound action creators create and dispatch the action in one call.
+Also notice that if the action doesn't need any arguments then you don't need to supply an action creator function.
 
 ```typescript
-let updateFooAsync =
-	function updateFooAsync(newFoo: number) {
-		// You can modify the state in the original action
-		myStore.loading = true;
+import { boundActionCreator } from 'satcheljs';
 
-		// doSomethingAsync returns a promise
-		doSomethingAsync().then(
-			action("doSomethingAsyncCallback")(
-				() => {
-					// Modify the state again in the callback
-					myStore.loading = false;
-					myStore.foo = newFoo;
-				}));
-	};
+let resetScore = boundActionCreator('RESET_SCORE');
 
-updateFooAsync = action("updateFooAsync")(updateFooAsync);
+// This dispatches a RESET_SCORE action.  Of course, you'd still need a mutator
+// to subscribe to it to update the store.
+resetScore();
+```
+
+### Orchestrators
+
+Orchestrators are like mutators—they subscribe to actions—but they serve a different purpose.
+While mutators modify the store, orchestrators are responsible for side effects.
+Side effects might include making a server call or even dispatching further actions.
+
+The following example shows how an orchestrator can persist a value to a server before updating the store.
+
+```typescript
+import { boundActionCreator, orchestrator, registerOrchestrator } from 'satcheljs';
+
+let requestAddPoints = boundActionCreator('REQUEST_ADD_POINTS',
+    (points: number) => ({
+        points: points
+    }));
+
+let onRequestAddPoints = orchestrator(requestAddPoints, (actionMessage) => {
+    updatePointsOnServer(store.score + actionMessage.points)
+    .then((response) => {
+        if (response.result == 200) {
+            addPoints(actionMessage.points);
+        }
+    });
+};
+
+registerOrchestrator(onRequestAddPoints);
 ```
 
 ## License - MIT
