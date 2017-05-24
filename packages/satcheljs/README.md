@@ -19,7 +19,7 @@ There are a number of advantages to using Satchel to maintain your application s
 * Satchel enables a very **performant UI**, only rerendering the minimal amount necessary.  MobX makes UI updates very efficient by automatically detecting specifically what components need to rerender for a given state change.
 * Satchel's datastore allows for **isomorphic JavaScript** by making it feasible to render on the server and then serialize and pass the application state down to the client.
 * Satchel supports **middleware** that can act on each action that is dispatched.  (For example, for tracing or performance instrumentation.)
-
+* Satchel is **type-safe** out of the box, without any extra effort on the consumer's part.
 
 ## Installation
 
@@ -32,7 +32,6 @@ In order to use Satchel with React, you'll also need MobX and the MobX React bin
 `npm install mobx --save`
 
 `npm install mobx-react --save`
-
 
 ## Usage
 
@@ -78,7 +77,10 @@ let addPoints = actionCreator('ADD_POINTS',
     }));
 ```
 
-## Create and register a mutator to handle the action
+### Implement and register a mutator
+
+You specify what action a mutator subscribes to by providing the corresponding action creator.
+If you're using TypeScript, the type of `actionCreator` is automatically inferred.
 
 ```typescript
 import { mutator, registerMutator } from 'satcheljs';
@@ -90,7 +92,7 @@ let onAddPoints = mutator(addPoints, (actionMessage) => {
 registerMutator(onAddPoints);
 ```
 
-### Dispatch an action
+### Create and dispatch an action
 
 ```typescript
 import { dispatch } from 'satcheljs';
@@ -98,7 +100,7 @@ import { dispatch } from 'satcheljs';
 dispatch(addPoints(2));
 ```
 
-## Bound action creators
+### Bound action creators
 
 Bound action creators create and dispatch the action in one call.
 Also notice that if the action doesn't need any arguments then you don't need to supply an action creator function.
@@ -111,6 +113,34 @@ let resetScore = boundActionCreator('RESET_SCORE');
 // This dispatches a RESET_SCORE action.  Of course, you'd still need a mutator
 // to subscribe to it to update the store.
 resetScore();
+```
+
+### Orchestrators
+
+Orchestrators are like mutators—they subscribe to actions—but they serve a different purpose.
+While mutators modify the store, orchestrators are responsible for side effects.
+Side effects might include making a server call or even dispatching further actions.
+
+The following example shows how an orchestrator can persist a value to a server before updating the store.
+
+```typescript
+import { boundActionCreator, orchestrator, registerOrchestrator } from 'satcheljs';
+
+let requestAddPoints = boundActionCreator('REQUEST_ADD_POINTS',
+    (points: number) => ({
+        points: points
+    }));
+
+let onRequestAddPoints = orchestrator(requestAddPoints, (actionMessage) => {
+    updatePointsOnServer(store.score + actionMessage.points)
+    .then((response) => {
+        if (response.result == 200) {
+            addPoints(actionMessage.points);
+        }
+    });
+};
+
+registerOrchestrator(onRequestAddPoints);
 ```
 
 ## License - MIT
