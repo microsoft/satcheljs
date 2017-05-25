@@ -5,6 +5,7 @@ export { actionCreator, boundActionCreator } from './actionCreator';
 export { dispatch } from './dispatcher';
 export { mutator, registerMutators } from './mutator';
 export { orchestrator, registerOrchestrators } from './orchestrator';
+export { useStrict } from 'mobx';
 
 // Legacy API
 export { default as rootStore } from './legacy/rootStore';
@@ -20,4 +21,3 @@ export { default as select, SelectorFunction } from './legacy/select';
 export { default as createUndo, UndoResult, CreateUndoReturnValue} from './legacy/createUndo';
 export { getActionType } from './legacy/functionInternals';
 export { initializeTestMode, resetTestMode } from './legacy/testMode';
-export { useStrict } from './legacy/useStrict';

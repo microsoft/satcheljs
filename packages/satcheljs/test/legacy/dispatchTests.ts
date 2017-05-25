@@ -6,7 +6,6 @@ import initializeState from '../../lib/legacy/initializeState';
 import dispatch from '../../lib/legacy/dispatch';
 import * as applyMiddlewareImports from '../../lib/legacy/applyMiddleware';
 import { __resetGlobalContext } from '../../lib/legacy/globalContext'
-import { useStrict } from '../../lib/legacy/useStrict';
 import { getGlobalContext } from '../../lib/legacy/globalContext';
 
 var backupConsoleError = console.error;
@@ -35,34 +34,6 @@ describe("dispatch", () => {
         let options = { a: 1 };
         dispatch(originalAction, originalActionType, originalArguments, options);
         expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
-    });
-
-    it("changing state outside of an action causes an exception", () => {
-        initializeState({ foo: 1 });
-        var delegate = () => { rootStore.set("foo", 2); };
-        expect(delegate).toThrow();
-    });
-
-    it("changing state in a MobX action in strict mode disabled does not cause an exception", () => {
-        useStrict(false);
-        initializeState({ foo: 1 });
-
-        var delegate = mobxAction(() => { rootStore.set("foo", 2); });
-        expect(delegate).not.toThrow();
-    });
-
-    it("changing state outside of an action causes an exception", () => {
-        initializeState({ foo: 1 });
-        var delegate = () => { rootStore.set("foo", 2); };
-        expect(delegate).toThrow();
-    });
-
-    it("changing state in a MobX action in strict mode disabled does not cause an exception", () => {
-        useStrict(false);
-        initializeState({ foo: 1 });
-
-        var delegate = mobxAction(() => { rootStore.set("foo", 2); });
-        expect(delegate).not.toThrow();
     });
 
     it("executes middleware in the same transaction as the action", () => {

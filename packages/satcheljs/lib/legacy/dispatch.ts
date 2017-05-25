@@ -1,4 +1,4 @@
-import {useStrict, spy, action as mobxAction} from 'mobx';
+import {action as mobxAction} from 'mobx';
 import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
@@ -15,10 +15,4 @@ export default function dispatch(action: ActionFunction, actionType: string, arg
         })();
 
     getGlobalContext().inDispatch--;
-}
-
-// Guard against state changes happening outside of MobX actions
-// unless explicitely disabled
-if (getGlobalContext().strictMode) {
-    useStrict(true);
 }
