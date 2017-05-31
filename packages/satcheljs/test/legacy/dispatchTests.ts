@@ -5,8 +5,8 @@ import rootStore from '../../lib/legacy/rootStore';
 import initializeState from '../../lib/legacy/initializeState';
 import dispatch from '../../lib/legacy/dispatch';
 import * as applyMiddlewareImports from '../../lib/legacy/applyMiddleware';
-import { __resetGlobalContext } from '../../lib/legacy/globalContext'
-import { getGlobalContext } from '../../lib/legacy/globalContext';
+import { __resetGlobalContext } from '../../lib/globalContext'
+import { getGlobalContext } from '../../lib/globalContext';
 
 var backupConsoleError = console.error;
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {SelectorFunction} from 'satcheljs/lib/legacy/select';
-import {getGlobalContext} from 'satcheljs/lib/legacy/globalContext';
+import {getGlobalContext} from 'satcheljs/lib/globalContext';
 import {observer} from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
@@ -72,7 +72,7 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
     }
 
     return function<Target extends React.ReactType>(target: Target) {
-        if (getGlobalContext().testMode) {
+        if (getGlobalContext().legacyTestMode) {
             if (isReactComponent(target)) {
                 return observer(target as React.ComponentClass<any>);
             } else if (isFunction(target)) {

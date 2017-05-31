@@ -1,7 +1,7 @@
 import 'jasmine';
 import action from '../../lib/legacy/action';
 import * as dispatchImports from '../../lib/legacy/dispatch';
-import { getGlobalContext } from '../../lib/legacy/globalContext';
+import { getGlobalContext } from '../../lib/globalContext';
 import { getActionType } from '../../lib/legacy/functionInternals';
 
 describe("action", () => {
@@ -67,7 +67,7 @@ describe("action", () => {
             @action("testMethod")
             testMethod() {
                 thisValue = this;
-                inDispatchValue = getGlobalContext().inDispatch;
+                inDispatchValue = getGlobalContext().legacyInDispatch;
             }
         }
 

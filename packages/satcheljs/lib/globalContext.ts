@@ -1,16 +1,18 @@
 import { map, ObservableMap } from 'mobx';
-import ActionContext from './ActionContext';
-import ActionFunction from './ActionFunction';
+import ActionContext from './legacy/ActionContext';
+import ActionFunction from './legacy/ActionFunction';
 
-const schemaVersion = 2;
+const schemaVersion = 3;
 
 // Interfaces for Global Context
 export interface GlobalContext {
     schemaVersion: number;
-    inDispatch: number;
     rootStore: ObservableMap<any>;
-    dispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void;
-    testMode: boolean;
+
+    // Legacy properties
+    legacyInDispatch: number;
+    legacyDispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void;
+    legacyTestMode: boolean;
 }
 
 declare var global: {
@@ -21,10 +23,10 @@ declare var global: {
 export function __resetGlobalContext() {
     global.__satchelGlobalContext = {
         schemaVersion: schemaVersion,
-        inDispatch: 0,
         rootStore: map({}),
-        dispatchWithMiddleware: null,
-        testMode: false
+        legacyInDispatch: 0,
+        legacyDispatchWithMiddleware: null,
+        legacyTestMode: false
     };
 }
 

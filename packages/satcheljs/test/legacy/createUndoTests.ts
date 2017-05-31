@@ -3,7 +3,7 @@ import action from '../../lib/legacy/action';
 import createUndo, { UndoResult } from '../../lib/legacy/createUndo';
 import { extendObservable, observable, map, _ } from 'mobx';
 import initializeState from '../../lib/legacy/initializeState';
-import { __resetGlobalContext } from '../../lib/legacy/globalContext'
+import { __resetGlobalContext } from '../../lib/globalContext'
 
 function resetState() {
     _.resetGlobalState();

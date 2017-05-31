@@ -1,9 +1,9 @@
-import { getGlobalContext } from './globalContext';
+import { getGlobalContext } from '../globalContext';
 
 export function initializeTestMode() {
-    getGlobalContext().testMode = true;
+    getGlobalContext().legacyTestMode = true;
 }
 
 export function resetTestMode() {
-    getGlobalContext().testMode = false;
+    getGlobalContext().legacyTestMode = false;
 }

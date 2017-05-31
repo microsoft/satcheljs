@@ -3,10 +3,10 @@ import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
 import DispatchFunction from './DispatchFunction';
 import { dispatchWithMiddleware } from './applyMiddleware';
-import { getGlobalContext } from './globalContext';
+import { getGlobalContext } from '../globalContext';
 
 export default function dispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext): void {
-    getGlobalContext().inDispatch++;
+    getGlobalContext().legacyInDispatch++;
 
     mobxAction(
         actionType ? actionType : "(anonymous action)",
@@ -14,5 +14,5 @@ export default function dispatch(action: ActionFunction, actionType: string, arg
             dispatchWithMiddleware(action, actionType, args, actionContext);
         })();
 
-    getGlobalContext().inDispatch--;
+    getGlobalContext().legacyInDispatch--;
 }

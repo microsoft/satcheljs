@@ -1,6 +1,6 @@
 import {Reaction, Atom, IObservableValue, isObservableArray} from 'mobx';
 import {getOriginalTarget, getActionType, setActionType} from './functionInternals';
-import {getGlobalContext} from './globalContext';
+import {getGlobalContext} from '../globalContext';
 
 export type SelectorFunction<T> = {
     [key in keyof T]?: (...args: any[]) => T[key];
@@ -69,7 +69,7 @@ export default function select<T>(selector: SelectorFunction<T>) {
     return function decorator<Target extends Function>(target: Target): Target {
         // do not execute the selector function in test mode, simply returning
         // the target that was passed in
-        if (getGlobalContext().testMode) {
+        if (getGlobalContext().legacyTestMode) {
             return target;
         }
 
