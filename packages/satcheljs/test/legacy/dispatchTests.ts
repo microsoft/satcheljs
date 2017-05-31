@@ -1,7 +1,7 @@
 import 'jasmine';
 import { action as mobxAction, autorun, _ } from 'mobx';
 
-import rootStore from '../../lib/legacy/rootStore';
+import rootStore from '../../lib/rootStore';
 import initializeState from '../../lib/legacy/initializeState';
 import dispatch from '../../lib/legacy/dispatch';
 import * as applyMiddlewareImports from '../../lib/legacy/applyMiddleware';

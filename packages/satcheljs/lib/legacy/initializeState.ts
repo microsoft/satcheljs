@@ -1,4 +1,4 @@
-import rootStore from './rootStore';
+import rootStore from '../rootStore';
 import action from './action';
 
 // initializeState can be used to completely replace the existing state object, e.g. to restore

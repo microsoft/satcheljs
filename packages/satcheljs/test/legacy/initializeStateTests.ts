@@ -1,5 +1,5 @@
 import 'jasmine';
-import rootStore from '../../lib/legacy/rootStore';
+import rootStore from '../../lib/rootStore';
 import initializeState from '../../lib/legacy/initializeState';
 
 describe("initializeState", () => {

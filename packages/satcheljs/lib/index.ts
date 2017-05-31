@@ -5,10 +5,10 @@ export { actionCreator, boundActionCreator } from './actionCreator';
 export { dispatch } from './dispatcher';
 export { mutator, registerMutators } from './mutator';
 export { orchestrator, registerOrchestrators } from './orchestrator';
+export { default as rootStore } from './rootStore';
 export { useStrict } from 'mobx';
 
 // Legacy API
-export { default as rootStore } from './legacy/rootStore';
 export { default as initializeState } from './legacy/initializeState';
 export { default as applyMiddleware } from './legacy/applyMiddleware';
 export { default as Middleware } from './legacy/Middleware';

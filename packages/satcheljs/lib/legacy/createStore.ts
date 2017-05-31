@@ -1,4 +1,4 @@
-import rootStore from './rootStore';
+import rootStore from '../rootStore';
 import action from './action';
 
 let internalCreateStore =
