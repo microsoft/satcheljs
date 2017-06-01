@@ -32,11 +32,10 @@ packages.forEach((package) => {
     try {
         console.log(`Publishing to registry`);
         console.log(publishCommand);
-        //var results = exec(publishCommand, {cwd: cwd });
+        var results = exec(publishCommand, {cwd: cwd });
     } catch (err) {
         console.error(`Build error ${err.message}`);
     }
 
-    //console.log(results.toString());
+    console.log(results.toString());
 });
-
