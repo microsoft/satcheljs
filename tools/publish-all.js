@@ -21,14 +21,20 @@ packages.forEach((package) => {
         fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
     }
 
-    console.log("Branch: ", process.env['TRAVIS_BRANCH']);
+    // If we're publishing from a branch other than master, tag the release with the branch name
+    let publishCommand = 'npm publish';
+    let branch = process.env['TRAVIS_BRANCH'];
+    if (branch != 'master') {
+        publishCommand += ` --tag ${branch}`;
+    }
 
-    // try {
-    //     console.log(`Publishing to registry`);
-    //     var results = exec(`npm publish`, {cwd: cwd });
-    // } catch (err) {
-    //     console.error(`Build error ${err.message}`);
-    // }
+    try {
+        console.log(`Publishing to registry`);
+        console.log(publishCommand);
+        //var results = exec(publishCommand, {cwd: cwd });
+    } catch (err) {
+        console.error(`Build error ${err.message}`);
+    }
 
     console.log(results.toString());
 });
