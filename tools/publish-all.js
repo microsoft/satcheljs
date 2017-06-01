@@ -23,7 +23,8 @@ packages.forEach((package) => {
 
     // If we're publishing from a branch other than master, tag the release with the branch name
     let publishCommand = 'npm publish';
-    let branch = process.env['TRAVIS_BRANCH'];
+    //let branch = process.env['TRAVIS_BRANCH'];
+    let branch = exec('git symbolic-ref --short HEAD', {cwd: cwd, stdio: 'inherit'});
     if (branch != 'master') {
         publishCommand += ` --tag ${branch}`;
     }
@@ -36,6 +37,6 @@ packages.forEach((package) => {
         console.error(`Build error ${err.message}`);
     }
 
-    console.log(results.toString());
+    //console.log(results.toString());
 });
 
