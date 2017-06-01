@@ -21,12 +21,14 @@ packages.forEach((package) => {
         fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
     }
 
-    try {
-        console.log(`Publishing to registry`);
-        var results = exec(`npm publish`, {cwd: cwd });
-    } catch (err) {
-        console.error(`Build error ${err.message}`);
-    }
+    console.log("Branch: ", process.env['TRAVIS_BRANCH']);
+
+    // try {
+    //     console.log(`Publishing to registry`);
+    //     var results = exec(`npm publish`, {cwd: cwd });
+    // } catch (err) {
+    //     console.error(`Build error ${err.message}`);
+    // }
 
     console.log(results.toString());
 });
