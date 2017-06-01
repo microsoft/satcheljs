@@ -21,12 +21,12 @@ packages.forEach((package) => {
         fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
     }
 
-    // If we're publishing from a branch other than master, tag the release with the branch name
+    // If this is a prerelease, tag the release as 'next'.  Prereleases have
+    // hyphens in the version tag, e.g. 'v3.0.0-beta1'.
     let publishCommand = 'npm publish';
-    //let branch = process.env['TRAVIS_BRANCH'];
-    let branch = exec('git symbolic-ref --short HEAD', {cwd: cwd, stdio: 'inherit'});
-    if (branch != 'master') {
-        publishCommand += ` --tag ${branch}`;
+    let tag = process.env['TRAVIS_TAG'];
+    if (tag.indexOf('-') > 0) {
+        publishCommand += ` --tag next`;
     }
 
     try {
