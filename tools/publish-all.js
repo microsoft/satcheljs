@@ -21,13 +21,21 @@ packages.forEach((package) => {
         fs.writeFileSync(pkgNpmrc, fs.readFileSync(pkgNpmrc).toString() + "\n//registry.npmjs.org/:_authToken=" + process.env['NPM_AUTH_TOKEN'] + "\n");
     }
 
+    // If this is a prerelease, tag the release as 'next'.  Prereleases have
+    // hyphens in the version tag, e.g. 'v3.0.0-beta1'.
+    let publishCommand = 'npm publish';
+    let tag = process.env['TRAVIS_TAG'];
+    if (tag.indexOf('-') > 0) {
+        publishCommand += ` --tag next`;
+    }
+
     try {
         console.log(`Publishing to registry`);
-        var results = exec(`npm publish`, {cwd: cwd });
+        console.log(publishCommand);
+        var results = exec(publishCommand, { cwd: cwd });
     } catch (err) {
         console.error(`Build error ${err.message}`);
     }
 
     console.log(results.toString());
 });
-
