@@ -2,7 +2,7 @@ import 'jasmine';
 import { boundActionCreator } from '../lib/actionCreator';
 import { mutator, registerMutators } from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
-import createStore from '../lib/legacy/createStore';
+import createStore from '../lib/createStore';
 
 describe("satcheljs", () => {
 

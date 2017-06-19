@@ -2,7 +2,7 @@ import 'jasmine';
 import {map, ObservableMap} from 'mobx';
 import action from '../../lib/legacy/action';
 import select from '../../lib/legacy/select';
-import createStore from '../../lib/legacy/createStore';
+import createStore from '../../lib/createStore';
 import {initializeTestMode, resetTestMode} from '../../lib/legacy/testMode';
 import { getActionType } from '../../lib/legacy/functionInternals';
 
