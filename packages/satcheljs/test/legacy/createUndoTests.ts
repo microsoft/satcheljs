@@ -2,7 +2,7 @@ import 'jasmine';
 import action from '../../lib/legacy/action';
 import createUndo, { UndoResult } from '../../lib/legacy/createUndo';
 import { extendObservable, observable, map, _ } from 'mobx';
-import initializeState from '../../lib/legacy/initializeState';
+import initializeState from '../../lib/initializeState';
 import { __resetGlobalContext } from '../../lib/globalContext'
 
 function resetState() {
