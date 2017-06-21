@@ -7,14 +7,14 @@ import createStore from '../lib/createStore';
 describe("satcheljs", () => {
 
     it("mutators subscribe to actions", () => {
-        let fooValue = null
+        let actualValue;
 
-        // Create an action dispatcher
+        // Create an action creator
         let testAction = boundActionCreator(
             "testAction",
-            function testAction(foo: string) {
+            function testAction(value: string) {
                 return {
-                    foo: foo
+                    value: value
                 };
             });
 
@@ -22,7 +22,7 @@ describe("satcheljs", () => {
         let onTestAction = mutator(
             testAction,
             function(actionMessage) {
-                fooValue = actionMessage.foo;
+                actualValue = actionMessage.value;
             });
 
         // Register the mutator
@@ -32,13 +32,13 @@ describe("satcheljs", () => {
         testAction("test");
 
         // Validate that the mutator was called with the dispatched action
-        expect(fooValue).toBe("test");
+        expect(actualValue).toBe("test");
     });
 
     it("simpleAction dispatches an action and subscribes to it", () => {
         // Arrange
-        let arg1Value = null;
-        let arg2Value = null;
+        let arg1Value;
+        let arg2Value;
 
         let testSimpleAction = simpleAction(
             "testSimpleAction",
