@@ -402,7 +402,7 @@ describe('createUndo', () => {
 
         expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
 
-        innerUndo();
+        innerUndo && innerUndo();
 
         expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
 
