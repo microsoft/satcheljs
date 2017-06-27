@@ -15,7 +15,7 @@
     "@types/jasmine": "^2.5.47",
     "@types/jsdom": "^2.0.29",
     "@types/node": "^6.0.48",
-    "@types/react": "~0.14.49",
+    "@types/react": "~15.0.27",
     "@types/react-addons-perf": "~0.14.17",
     "@types/react-addons-test-utils": "^0.14.15",
     "@types/react-dom": "~0.14.18",
