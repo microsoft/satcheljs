@@ -11,20 +11,20 @@
     "test": "npm run build && npm run link-all && node tools/test-all.js"
   },
   "devDependencies": {
-    "@types/enzyme": "^2.5.38",
-    "@types/jasmine": "^2.5.47",
-    "@types/jsdom": "^2.0.29",
-    "@types/node": "^6.0.48",
+    "@types/enzyme": "~2.8.1",
+    "@types/jasmine": "~2.5.53",
+    "@types/jsdom": "~2.0.32",
+    "@types/node": "~6.0.78",
     "@types/react": "~15.0.27",
-    "@types/react-addons-perf": "~0.14.17",
-    "@types/react-addons-test-utils": "^0.14.15",
-    "@types/react-dom": "~0.14.18",
+    "@types/react-addons-perf": "~0.14.18",
+    "@types/react-addons-test-utils": "~0.14.19",
+    "@types/react-dom": "~15.5.1",
     "enzyme": "~2.6.0",
     "glob": "^7.0.6",
     "jasmine": "~2.5.3",
     "jsdom": "~9.8.3",
     "mkdirp": "^0.5.1",
-    "react-addons-test-utils": "^15.4.0",
+    "react-addons-test-utils": "~15.6.0",
     "rimraf": "^2.5.4",
     "toposort": "~1.0.0",
     "tslint": "^4.0.2",
@@ -36,8 +36,8 @@
     "mobx": "~2.6.5",
     "mobx-react": "~4.0.3",
     "mobx-react-devtools": "~4.2.10",
-    "react": "^15.4.0",
-    "react-addons-perf": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react": "^15.6.1",
+    "react-addons-perf": "^15.4.2",
+    "react-dom": "^15.6.1"
   }
 }
