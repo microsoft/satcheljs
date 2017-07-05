@@ -1,5 +1,8 @@
 import 'jasmine';
+import Middleware from '../lib/interfaces/Middleware';
 import { boundActionCreator } from '../lib/actionCreator';
+import applyMiddleware from '../lib/applyMiddleware';
+import { dispatch } from '../lib/dispatcher';
 import { mutator, registerMutators } from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
 import createStore from '../lib/createStore';
@@ -71,6 +74,23 @@ describe("satcheljs", () => {
 
         // Assert
         expect(store.testProperty).toBe("newValue");
+    });
+
+    it("middleware gets called during dispatch", () => {
+        // Arrange
+        let actualValue;
+        let expectedValue = { type: "testMiddleware" };
+
+        applyMiddleware((next, actionMessage) => {
+            actualValue = actionMessage;
+            next(actionMessage);
+        });
+
+        // Act
+        dispatch(expectedValue);
+
+        // Assert
+        expect(actualValue).toBe(expectedValue);
     });
 
 });
