@@ -12,11 +12,11 @@ export { default as simpleAction } from './simpleAction';
 export { useStrict } from 'mobx';
 
 // Legacy API
-export { default as applyMiddleware } from './legacy/applyMiddleware';
-export { default as Middleware } from './legacy/Middleware';
+export { default as legacyApplyMiddleware } from './legacy/legacyApplyMiddleware';
+export { default as LegacyMiddleware } from './legacy/LegacyMiddleware';
 export { default as ActionFunction } from './legacy/ActionFunction';
 export { default as ActionContext } from './legacy/ActionContext';
-export { default as DispatchFunction } from './legacy/DispatchFunction';
+export { default as LegacyDispatchFunction } from './legacy/LegacyDispatchFunction';
 export { default as action } from './legacy/action';
 export { default as select, SelectorFunction } from './legacy/select';
 export { default as createUndo, UndoResult, CreateUndoReturnValue } from './legacy/createUndo';

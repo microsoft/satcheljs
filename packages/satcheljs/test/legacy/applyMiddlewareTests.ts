@@ -1,19 +1,19 @@
 import 'jasmine';
 
-import { default as applyMiddleware, dispatchWithMiddleware } from '../../lib/legacy/applyMiddleware';
+import { default as legacyApplyMiddleware, dispatchWithMiddleware } from '../../lib/legacy/legacyApplyMiddleware';
 import ActionFunction from '../../lib/legacy/ActionFunction';
 import ActionContext from '../../lib/legacy/ActionContext';
 
 describe("applyMiddleware", () => {
     beforeEach(() => {
-        applyMiddleware();
+        legacyApplyMiddleware();
     });
 
     it("Calls middleware during dispatchWithMiddleware", () => {
         let actionCalled = false;
         let middlewareCalled = false;
 
-        applyMiddleware(
+        legacyApplyMiddleware(
             (next, action, actionType, actionContext) => {
                 middlewareCalled = true;
                 next(action, actionType, null, actionContext);
@@ -28,7 +28,7 @@ describe("applyMiddleware", () => {
         var middleware0Called = false;
         var middleware1Called = false;
 
-        applyMiddleware(
+        legacyApplyMiddleware(
             (next, action, actionType, actionContext) => {
                 expect(middleware1Called).toBeFalsy();
                 middleware0Called = true;
@@ -55,7 +55,7 @@ describe("applyMiddleware", () => {
         var passedArguments: IArguments;
         var passedOptions: ActionContext;
 
-        applyMiddleware(
+        legacyApplyMiddleware(
             (next, action, actionType, args, actionContext) => {
                 passedAction = action;
                 passedActionType = actionType;
@@ -75,7 +75,7 @@ describe("applyMiddleware", () => {
         let originalAction = () => { return originalReturnValue; }
         let receivedReturnValue: Promise<any> | void;
 
-        applyMiddleware(
+        legacyApplyMiddleware(
             (next, action, actionType, args, actionContext) => {
                 receivedReturnValue = next(action, actionType, args, actionContext)
             });

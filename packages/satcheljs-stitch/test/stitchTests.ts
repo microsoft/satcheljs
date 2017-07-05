@@ -1,5 +1,5 @@
 import 'jasmine';
-import { DispatchFunction, ActionContext } from 'satcheljs';
+import { LegacyDispatchFunction, ActionContext } from 'satcheljs';
 import { stitch, subscribe } from '../lib/stitch';
 
 let sequenceOfEvents: any[];
@@ -73,7 +73,7 @@ describe("stitch", () => {
     });
 });
 
-function getNext(returnValue?: Promise<any>): DispatchFunction {
+function getNext(returnValue?: Promise<any>): LegacyDispatchFunction {
     return (action, actionType, args) => {
         sequenceOfEvents.push({
             actionType,

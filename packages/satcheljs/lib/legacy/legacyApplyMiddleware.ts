@@ -1,12 +1,12 @@
 import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
-import DispatchFunction from './DispatchFunction';
-import Middleware from './Middleware';
+import LegacyDispatchFunction from './LegacyDispatchFunction';
+import LegacyMiddleware from './LegacyMiddleware';
 import { getGlobalContext } from '../globalContext';
 
 
-export default function applyMiddleware(...middleware: Middleware[]) {
-    var next: DispatchFunction = finalDispatch;
+export default function applyMiddleware(...middleware: LegacyMiddleware[]) {
+    var next: LegacyDispatchFunction = finalDispatch;
     for (var i = middleware.length - 1; i >= 0; i--) {
         next = applyMiddlewareInternal(middleware[i], next);
     }
@@ -14,7 +14,7 @@ export default function applyMiddleware(...middleware: Middleware[]) {
     getGlobalContext().legacyDispatchWithMiddleware = next;
 }
 
-function applyMiddlewareInternal(middleware: Middleware, next: DispatchFunction): DispatchFunction {
+function applyMiddlewareInternal(middleware: LegacyMiddleware, next: LegacyDispatchFunction): LegacyDispatchFunction {
     return (action, actionType, args, actionContext) => middleware(next, action, actionType, args, actionContext);
 }
 

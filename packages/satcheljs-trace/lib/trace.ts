@@ -1,8 +1,8 @@
-import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import { LegacyDispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
 
 let depth = 0;
 
-export default function trace(next: DispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
+export default function trace(next: LegacyDispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
     log("Executing action: " + (actionType ? actionType : "(anonymous action)"));
 
     try {

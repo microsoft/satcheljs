@@ -1,12 +1,12 @@
 import 'jasmine';
-import { action, applyMiddleware, createStore } from 'satcheljs';
+import { action, legacyApplyMiddleware, createStore } from 'satcheljs';
 import { getCurrentAction, promiseMiddleware } from '../lib/promiseMiddleware';
 
 describe("promiseMiddleware", () => {
 
     it("wraps callbacks in promises when applied", (done) => {
         // Arrange
-        applyMiddleware(promiseMiddleware);
+        legacyApplyMiddleware(promiseMiddleware);
         let store = createStore("testStore", { testValue: null, currentAction: null });
         let newValue = {};
 
@@ -30,7 +30,7 @@ describe("promiseMiddleware", () => {
 
     it("does not wrap callbacks in promises when not applied", (done) => {
         // Arrange
-        applyMiddleware();
+        legacyApplyMiddleware();
         let store = createStore("testStore", { testValue: null });
         let newValue = {};
 

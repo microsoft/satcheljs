@@ -4,7 +4,7 @@ import { action as mobxAction, autorun, _ } from 'mobx';
 import rootStore from '../../lib/rootStore';
 import initializeState from '../../lib/initializeState';
 import dispatch from '../../lib/legacy/dispatch';
-import * as applyMiddlewareImports from '../../lib/legacy/applyMiddleware';
+import * as legacyApplyMiddlewareImports from '../../lib/legacy/legacyApplyMiddleware';
 import { __resetGlobalContext } from '../../lib/globalContext'
 import { getGlobalContext } from '../../lib/globalContext';
 
@@ -27,13 +27,13 @@ describe("dispatch", () => {
     });
 
     it("calls dispatchWithMiddleware with same arguments", () => {
-        spyOn(applyMiddlewareImports, "dispatchWithMiddleware");
+        spyOn(legacyApplyMiddlewareImports, "dispatchWithMiddleware");
         let originalAction = () => { };
         let originalActionType = "testAction";
         let originalArguments: IArguments = <IArguments>{};
         let options = { a: 1 };
         dispatch(originalAction, originalActionType, originalArguments, options);
-        expect(applyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
+        expect(legacyApplyMiddlewareImports.dispatchWithMiddleware).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, options);
     });
 
     it("executes middleware in the same transaction as the action", () => {
@@ -50,7 +50,7 @@ describe("dispatch", () => {
         expect(count).toBe(1);
 
         // Change the state twice, once in middleware and once in the action
-        applyMiddlewareImports.default(
+        legacyApplyMiddlewareImports.default(
             (next, action, actionType, actionContext) => {
                 rootStore.set("foo", 1);
                 next(action, actionType, null, actionContext);

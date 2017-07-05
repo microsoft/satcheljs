@@ -1,5 +1,5 @@
 import ActionContext from './ActionContext';
-import DispatchFunction from './DispatchFunction';
+import DispatchFunction from './LegacyDispatchFunction';
 import ActionFunction from './ActionFunction';
 
 interface Middleware {

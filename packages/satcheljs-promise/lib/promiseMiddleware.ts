@@ -1,4 +1,4 @@
-import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import { LegacyDispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
 import install from './install';
 
 let actionStack: string[] = [];
@@ -10,7 +10,7 @@ export function getCurrentAction() {
 }
 
 export function promiseMiddleware(
-    next: DispatchFunction,
+    next: LegacyDispatchFunction,
     action: ActionFunction,
     actionType: string,
     args: IArguments,

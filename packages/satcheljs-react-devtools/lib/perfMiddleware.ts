@@ -1,5 +1,5 @@
 import * as Perf from 'react-addons-perf';
-import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import { LegacyDispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
 
 // Make react perf tools available from the console
 (<any>window).Perf = Perf;
@@ -8,7 +8,7 @@ let isTrackingPerf = false;
 let actionDepth = 0;
 let rootActions: string[] = [];
 
-export default function perfMiddleware(next: DispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
+export default function perfMiddleware(next: LegacyDispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
     if (!isTrackingPerf) {
         startTrackingPerf();
     }

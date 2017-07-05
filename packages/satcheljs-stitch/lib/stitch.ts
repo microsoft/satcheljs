@@ -1,4 +1,4 @@
-import { action, ActionFunction, DispatchFunction, ActionContext } from 'satcheljs';
+import { action, ActionFunction, LegacyDispatchFunction, ActionContext } from 'satcheljs';
 
 export interface ActionHandler {
     (...args: any[]): Promise<any> | void;
@@ -8,7 +8,7 @@ export interface ActionHandler {
 let handlers: {[key: string]: ActionHandler[]} = {};
 
 // The actual middleware function: after dispatching an action, calls any callbacks that are subscribed to that action
-export function stitch(next: DispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
+export function stitch(next: LegacyDispatchFunction, action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) {
     let returnValue = next(action, actionType, args, actionContext);
 
     if (actionType && handlers[actionType]) {
