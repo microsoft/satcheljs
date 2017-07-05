@@ -1,6 +1,6 @@
 import 'jasmine';
 import { DispatchFunction, ActionContext } from 'satcheljs';
-import { stitch, subscribe } from '../lib/stitch';
+import { stitch, subscribe, unsubscribe } from '../lib/stitch';
 
 let sequenceOfEvents: any[];
 
@@ -70,6 +70,19 @@ describe("stitch", () => {
             "callback",
             args[0]
         ]);
+    });
+
+    it("unsubscribes correctly", () => {
+        const actionType = "testAction2";
+        let hitCount = 0;
+        const handler = (args: any) => {
+            hitCount++;
+        };
+        subscribe(actionType, handler);
+        stitch(getNext(), () => {}, actionType, null, null);
+        unsubscribe(actionType, handler);
+        stitch(getNext(), () => {}, actionType, null, null);
+        expect(hitCount).toEqual(1);
     });
 });
 
