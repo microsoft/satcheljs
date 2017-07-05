@@ -1,3 +1,6 @@
+import { useStrict } from 'mobx';
+
+// Current API
 export { default as ActionCreator } from './interfaces/ActionCreator';
 export { default as ActionMessage } from './interfaces/ActionMessage';
 export { default as DispatchFunction } from './interfaces/DispatchFunction';
@@ -12,7 +15,7 @@ export { mutator, registerMutators } from './mutator';
 export { orchestrator, registerOrchestrators } from './orchestrator';
 export { default as rootStore } from './rootStore';
 export { default as simpleAction } from './simpleAction';
-export { useStrict } from 'mobx';
+export { useStrict };
 
 // Legacy API
 export { default as legacyApplyMiddleware } from './legacy/legacyApplyMiddleware';
@@ -25,3 +28,6 @@ export { default as select, SelectorFunction } from './legacy/select';
 export { default as createUndo, UndoResult, CreateUndoReturnValue } from './legacy/createUndo';
 export { getActionType } from './legacy/functionInternals';
 export { initializeTestMode, resetTestMode } from './legacy/testMode';
+
+// Default to MobX strict mode
+useStrict(true);
