@@ -73,19 +73,17 @@ let addPoints = actionCreator('ADD_POINTS',
     }));
 ```
 
-### Implement and register a mutator
+### Implement a mutator
 
 You specify what action a mutator subscribes to by providing the corresponding action creator.
 If you're using TypeScript, the type of `actionMessage` is automatically inferred.
 
 ```typescript
-import { mutator, registerMutator } from 'satcheljs';
+import { mutator } from 'satcheljs';
 
 let onAddPoints = mutator(addPoints, (actionMessage) => {
     store.score += actionMessage.points;
 };
-
-registerMutator(onAddPoints);
 ```
 
 ### Create and dispatch an action
@@ -120,7 +118,7 @@ Side effects might include making a server call or even dispatching further acti
 The following example shows how an orchestrator can persist a value to a server before updating the store.
 
 ```typescript
-import { boundActionCreator, orchestrator, registerOrchestrator } from 'satcheljs';
+import { boundActionCreator, orchestrator } from 'satcheljs';
 
 let requestAddPoints = boundActionCreator('REQUEST_ADD_POINTS',
     (points: number) => ({
@@ -135,8 +133,6 @@ let onRequestAddPoints = orchestrator(requestAddPoints, (actionMessage) => {
         }
     });
 };
-
-registerOrchestrator(onRequestAddPoints);
 ```
 
 ## License - MIT

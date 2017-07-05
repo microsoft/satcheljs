@@ -3,7 +3,7 @@ import Middleware from '../lib/interfaces/Middleware';
 import { boundActionCreator } from '../lib/actionCreator';
 import applyMiddleware from '../lib/applyMiddleware';
 import { dispatch } from '../lib/dispatcher';
-import { mutator, registerMutators } from '../lib/mutator';
+import { mutator } from '../lib/mutator';
 import simpleAction from '../lib/simpleAction';
 import createStore from '../lib/createStore';
 
@@ -27,9 +27,6 @@ describe("satcheljs", () => {
             function(actionMessage) {
                 actualValue = actionMessage.value;
             });
-
-        // Register the mutator
-        registerMutators(onTestAction);
 
         // Dispatch the action
         testAction("test");
@@ -66,8 +63,6 @@ describe("satcheljs", () => {
         let onModifyStore = mutator(
             modifyStore,
             (actionMessage) => { store.testProperty = "newValue"; });
-
-        registerMutators(onModifyStore);
 
         // Act
         modifyStore();

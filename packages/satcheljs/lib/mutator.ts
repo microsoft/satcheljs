@@ -10,27 +10,12 @@ export function mutator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
     target: Subscriber<T>): Subscriber<T>
 {
-    setMutatorType(target, getActionType(actionCreator));
+    let actionType = getActionType(actionCreator);
+    if (!actionType) {
+        throw new Error("Mutators can only subscribe to action creators.");
+    }
+
+    // Wrap the callback in a MobX action so it can modify the store
+    subscribe(actionType, action(target));
     return target;
-}
-
-export function registerMutators(...mutators: Subscriber<any>[]) {
-    mutators.forEach((subscriber) => {
-        let mutatorType = getMutatorType(subscriber);
-        if (!mutatorType) {
-            throw new Error("Provided function is not a mutator.");
-        }
-
-        subscribe(
-            mutatorType,
-            action(subscriber));
-    });
-}
-
-function getMutatorType(target: ActionCreator<any>) {
-    return (target as any).__SATCHELJS_MUTATOR_TYPE;
-}
-
-function setMutatorType(target: ActionCreator<any>, actionType: string) {
-    (target as any).__SATCHELJS_MUTATOR_TYPE = actionType;
 }
