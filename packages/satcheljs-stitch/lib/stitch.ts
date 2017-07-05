@@ -27,6 +27,16 @@ export function subscribe<T extends ActionHandler>(actionType: string, callback:
     handlers[actionType].push(callback);
 }
 
+export function unsubscribe<T extends ActionHandler>(actionType: string, callback: T) {
+    const actionHandlers = handlers[actionType] || [];
+    const index: number = actionHandlers.indexOf(callback);
+    if (index > -1) {
+        actionHandlers.splice(index, 1);
+    } else {
+        console.error("[satcheljs-stitch] Callback not found, cannot unsubscribe.");
+    }
+}
+
 export function raise<T extends ActionHandler>(actionType: string, callback?: (actionToExecute: T) => void) {
     console.error("[satcheljs-stitch] The 'raise' API is deprecated.  Use 'raiseAction' instead.");
 
