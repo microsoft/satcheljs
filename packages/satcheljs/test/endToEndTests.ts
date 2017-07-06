@@ -4,7 +4,7 @@ import { boundActionCreator } from '../lib/actionCreator';
 import applyMiddleware from '../lib/applyMiddleware';
 import { dispatch } from '../lib/dispatcher';
 import { mutator } from '../lib/mutator';
-import simpleAction from '../lib/simpleAction';
+import { simpleMutator } from '../lib/simpleSubscribers';
 import createStore from '../lib/createStore';
 
 describe("satcheljs", () => {
@@ -35,20 +35,20 @@ describe("satcheljs", () => {
         expect(actualValue).toBe("test");
     });
 
-    it("simpleAction dispatches an action and subscribes to it", () => {
+    it("simpleMutator dispatches an action and subscribes to it", () => {
         // Arrange
         let arg1Value;
         let arg2Value;
 
-        let testSimpleAction = simpleAction(
-            "testSimpleAction",
-            function testSimpleAction(arg1: string, arg2: number) {
+        let testSimpleMutator = simpleMutator(
+            "testSimpleMutator",
+            function testSimpleMutator(arg1: string, arg2: number) {
                 arg1Value = arg1;
                 arg2Value = arg2;
             });
 
         // Act
-        testSimpleAction("testValue", 2);
+        testSimpleMutator("testValue", 2);
 
         // Assert
         expect(arg1Value).toBe("testValue");

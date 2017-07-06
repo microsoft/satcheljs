@@ -1,7 +1,7 @@
 import rootStore from './rootStore';
-import simpleAction from './simpleAction';
+import { simpleMutator } from './simpleSubscribers';
 
-let createStoreAction = simpleAction("createStore",
+let createStoreAction = simpleMutator("createStore",
     function createStoreAction(key: string, initialState: any) {
         rootStore.set(key, initialState);
     });
