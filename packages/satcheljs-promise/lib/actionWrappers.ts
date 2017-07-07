@@ -1,5 +1,5 @@
 import { action } from 'satcheljs';
-import { getCurrentAction } from './promiseMiddleware';
+import { getCurrentAction } from './actionStack';
 
 export function wrapThen(originalThen: any) {
     return function wrappedThen(onFulfilled?: Function, onRejected?: Function) {

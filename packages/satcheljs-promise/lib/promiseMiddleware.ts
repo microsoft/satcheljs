@@ -1,7 +1,7 @@
 import { DispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
 import install from './install';
+import actionStack from './actionStack';
 
-let actionStack: string[] = [];
 let isInstalled = false;
 let uninstall: () => void;
 
