@@ -14,7 +14,7 @@ export { default as initializeState } from './initializeState';
 export { mutator } from './mutator';
 export { orchestrator } from './orchestrator';
 export { default as rootStore } from './rootStore';
-export { default as simpleAction } from './simpleAction';
+export { simpleMutator, simpleOrchestrator } from './simpleSubscribers';
 export { useStrict };
 
 // Legacy API

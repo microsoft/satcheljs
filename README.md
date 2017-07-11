@@ -81,7 +81,7 @@ If you're using TypeScript, the type of `actionMessage` is automatically inferre
 ```typescript
 import { mutator } from 'satcheljs';
 
-let onAddPoints = mutator(addPoints, (actionMessage) => {
+mutator(addPoints, (actionMessage) => {
     store.score += actionMessage.points;
 };
 ```
@@ -122,10 +122,9 @@ import { boundActionCreator, orchestrator } from 'satcheljs';
 
 let requestAddPoints = boundActionCreator('REQUEST_ADD_POINTS',
     (points: number) => ({
-        points: points
     }));
 
-let onRequestAddPoints = orchestrator(requestAddPoints, (actionMessage) => {
+orchestrator(requestAddPoints, (actionMessage) => {
     updatePointsOnServer(store.score + actionMessage.points)
     .then((response) => {
         if (response.result == 200) {
@@ -134,5 +133,37 @@ let onRequestAddPoints = orchestrator(requestAddPoints, (actionMessage) => {
     });
 };
 ```
+
+### Simple mutators and orchestrators
+
+In many cases a given action only needs to be handled by one mutator.
+Satchel provides the concept of a simple mutator which ecapsulates action creation, dispatch, and handling in one simple function call.
+The `addPoints` mutator above could be implemented as follows:
+
+```typescript
+let addPoints = simpleMutator(
+    'addPoints',
+    function addPoints(points: number) {
+        store.score += points;
+    });
+```
+
+Simple orchestrators can be created similarly:
+
+```typescript
+let requestAddPoints = simpleOrchestrator(
+    'requestAddPoints',
+    function requestAddPoints(points: number) {
+        .then((response) => {
+            if (response.result == 200) {
+                addPoints(points);
+            }
+        });
+    });
+```
+
+These simple mutators and orchestrators are succinct and easy to write, but they come with a restriction:
+the action creator is not exposed, so no other mutators or orchestrators can subscribe to it.
+If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
 
 ## License - MIT

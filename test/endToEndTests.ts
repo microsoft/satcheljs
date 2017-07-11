@@ -3,73 +3,77 @@ import { boundActionCreator } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
 import { mutator } from '../src/mutator';
-import simpleAction from '../src/simpleAction';
+import { simpleMutator } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
 
-describe('satcheljs', () => {
-    it('mutators subscribe to actions', () => {
+describe("satcheljs", () => {
+
+    it("mutators subscribe to actions", () => {
         let actualValue;
 
         // Create an action creator
-        let testAction = boundActionCreator('testAction', function testAction(value: string) {
-            return {
-                value: value,
-            };
-        });
+        let testAction = boundActionCreator(
+            "testAction",
+            function testAction(value: string) {
+                return {
+                    value: value
+                };
+            });
 
         // Create a mutator that subscribes to it
-        let onTestAction = mutator(testAction, function(actionMessage: any) {
-            actualValue = actionMessage.value;
-        });
+        let onTestAction = mutator(
+            testAction,
+            function(actionMessage) {
+                actualValue = actionMessage.value;
+            });
 
         // Dispatch the action
-        testAction('test');
+        testAction("test");
 
         // Validate that the mutator was called with the dispatched action
-        expect(actualValue).toBe('test');
+        expect(actualValue).toBe("test");
     });
 
-    it('simpleAction dispatches an action and subscribes to it', () => {
+    it("simpleMutator dispatches an action and subscribes to it", () => {
         // Arrange
         let arg1Value;
         let arg2Value;
 
-        let testSimpleAction = simpleAction('testSimpleAction', function testSimpleAction(
-            arg1: string,
-            arg2: number
-        ) {
-            arg1Value = arg1;
-            arg2Value = arg2;
-        });
+        let testSimpleMutator = simpleMutator(
+            "testSimpleMutator",
+            function testSimpleMutator(arg1: string, arg2: number) {
+                arg1Value = arg1;
+                arg2Value = arg2;
+            });
 
         // Act
-        testSimpleAction('testValue', 2);
+        testSimpleMutator("testValue", 2);
 
         // Assert
-        expect(arg1Value).toBe('testValue');
+        expect(arg1Value).toBe("testValue");
         expect(arg2Value).toBe(2);
     });
 
-    it('mutators can modify the store', () => {
+    it("mutators can modify the store", () => {
         // Arrange
-        let store = createStore('testStore', { testProperty: 'testValue' });
-        let modifyStore = boundActionCreator('modifyStore');
+        let store = createStore("testStore", { testProperty: "testValue" });
+        let modifyStore = boundActionCreator("modifyStore");
 
-        let onModifyStore = mutator(modifyStore, actionMessage => {
-            store.testProperty = 'newValue';
-        });
+        let onModifyStore = mutator(
+            modifyStore,
+            (actionMessage) => { store.testProperty = "newValue"; });
 
         // Act
         modifyStore();
 
         // Assert
-        expect(store.testProperty).toBe('newValue');
+        expect(store.testProperty).toBe("newValue");
     });
 
-    it('middleware gets called during dispatch', () => {
+    it("middleware gets called during dispatch", () => {
         // Arrange
         let actualValue;
-        let expectedValue = { type: 'testMiddleware' };
+        let expectedValue = { type: "testMiddleware" };
 
         applyMiddleware((next, actionMessage) => {
             actualValue = actionMessage;
@@ -82,4 +86,5 @@ describe('satcheljs', () => {
         // Assert
         expect(actualValue).toBe(expectedValue);
     });
+
 });
