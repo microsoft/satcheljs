@@ -1,5 +1,5 @@
 import 'jasmine';
-import * as satcheljs from '../../../src/index';
+import * as actionImports from '../../../src/legacy/action';
 import * as promiseMiddleware from '../../../src/legacy/promise/promiseMiddleware';
 import { wrapThen, wrapCatch } from '../../../src/legacy/promise/actionWrappers';
 
@@ -9,7 +9,7 @@ describe('actionWrappers', () => {
     let getCurrentActionSpy: jasmine.Spy;
 
     beforeEach(() => {
-        spyOn(satcheljs, 'action').and.returnValue((callback: Function) => callback);
+        spyOn(actionImports, 'default').and.returnValue((callback: Function) => callback);
         getCurrentActionSpy = spyOn(promiseMiddleware, 'getCurrentAction');
         originalThenSpy = jasmine.createSpy('originalThen');
         originalCatchSpy = jasmine.createSpy('originalCatch');
@@ -38,15 +38,15 @@ describe('actionWrappers', () => {
 
         // Act / Assert
         fulfillPromise();
-        expect(satcheljs.action).toHaveBeenCalledWith('testAction => then');
+        expect(actionImports.default).toHaveBeenCalledWith('testAction => then');
         expect(onFulfilled).toHaveBeenCalled();
 
         rejectPromiseInThen();
-        expect(satcheljs.action).toHaveBeenCalledWith('testAction => then_rejected');
+        expect(actionImports.default).toHaveBeenCalledWith('testAction => then_rejected');
         expect(onRejectedInThen).toHaveBeenCalled();
 
         rejectPromiseInCatch();
-        expect(satcheljs.action).toHaveBeenCalledWith('testAction => catch');
+        expect(actionImports.default).toHaveBeenCalledWith('testAction => catch');
         expect(onRejectedInCatch).toHaveBeenCalled();
     });
 

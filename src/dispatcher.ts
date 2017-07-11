@@ -1,4 +1,3 @@
-import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
 import { getGlobalContext } from './globalContext';

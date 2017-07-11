@@ -3,14 +3,17 @@ module.exports = {
   transform: {
     '.(ts|tsx)': '<rootDir>/jest.preprocessor.js'
   },
+  moduleDirectories: [
+    "node_modules"
+  ],
   moduleFileExtensions: [
     'ts',
     'tsx',
     'js',
     'jsx',
   ],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)x?$',
-  coverageDirectory: 'coverage',
+  testRegex: '/test/.*Tests.tsx?$',
+  coverageDirectory: 'build/coverage',
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx}',
     '!src/**/*.d.ts',

@@ -1,5 +1,5 @@
 import 'jasmine';
-import * as satcheljsImports from '../../../src';
+import * as actionImports from '../../../src/legacy/action';
 import { raise } from '../../../src/legacy/stitch';
 
 describe('raise', () => {
@@ -8,15 +8,15 @@ describe('raise', () => {
     });
 
     it('creates an action of the given type', () => {
-        spyOn(satcheljsImports, 'action').and.returnValue((rawAction: Function) => rawAction);
+        spyOn(actionImports, 'default').and.returnValue((rawAction: Function) => rawAction);
         raise('testAction');
-        expect(satcheljsImports.action).toHaveBeenCalledWith('testAction');
+        expect(actionImports.default).toHaveBeenCalledWith('testAction');
     });
 
     it('passes the action to the callback', () => {
         let actionToCreate = () => {};
         let passedAction: Function;
-        spyOn(satcheljsImports, 'action').and.returnValue((rawAction: Function) => actionToCreate);
+        spyOn(actionImports, 'default').and.returnValue((rawAction: Function) => actionToCreate);
 
         raise('testAction', actionToExecute => {
             passedAction = actionToExecute;
@@ -30,7 +30,7 @@ describe('raise', () => {
         let actionToCreate = () => {
             actionExecuted = true;
         };
-        spyOn(satcheljsImports, 'action').and.returnValue((rawAction: Function) => actionToCreate);
+        spyOn(actionImports, 'default').and.returnValue((rawAction: Function) => actionToCreate);
         raise('testAction');
         expect(actionExecuted).toBeTruthy();
     });

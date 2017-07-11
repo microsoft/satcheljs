@@ -1,7 +1,6 @@
 import { action as mobxAction } from 'mobx';
 import ActionContext from './ActionContext';
 import ActionFunction from './ActionFunction';
-import LegacyDispatchFunction from './LegacyDispatchFunction';
 import { dispatchWithMiddleware } from './legacyApplyMiddleware';
 import { getGlobalContext } from '../globalContext';
 

@@ -1,4 +1,3 @@
-import ActionMessage from './interfaces/ActionMessage';
 import DispatchFunction from './interfaces/DispatchFunction';
 import Middleware from './interfaces/Middleware';
 import { finalDispatch } from './dispatcher';

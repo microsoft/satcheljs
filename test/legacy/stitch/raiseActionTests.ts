@@ -1,5 +1,5 @@
 import 'jasmine';
-import * as satcheljsImports from '../../../src';
+import * as actionImport from '../../../src/legacy/action';
 import { raiseAction } from '../../../src/legacy/stitch';
 
 interface TestActionType {
@@ -10,13 +10,13 @@ describe('raiseAction', () => {
     it('returns a dummy action of the given type', () => {
         // Arrange
         let createdAction = jasmine.createSpy('createdAction');
-        spyOn(satcheljsImports, 'action').and.returnValue((rawAction: Function) => createdAction);
+        spyOn(actionImport, 'default').and.returnValue((rawAction: Function) => createdAction);
 
         // Act
         raiseAction<TestActionType>('testAction')('arg1', 'arg2');
 
         // Assert
-        expect(satcheljsImports.action).toHaveBeenCalledWith('testAction');
+        expect(actionImport.default).toHaveBeenCalledWith('testAction');
         expect(createdAction).toHaveBeenCalledWith('arg1', 'arg2');
     });
 });

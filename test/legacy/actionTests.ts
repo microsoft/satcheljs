@@ -51,7 +51,9 @@ describe('action', () => {
     });
 
     it('returns the original return value', () => {
+        /* tslint:disable:promise-must-complete */
         let originalReturnValue = new Promise<any>(() => {});
+        /* tslint:enable:promise-must-complete */
 
         let testFunction = function() {
             return originalReturnValue;
@@ -64,7 +66,9 @@ describe('action', () => {
     });
 
     it('can decorate a class method', () => {
-        let thisValue, inDispatchValue;
+        let thisValue;
+        let inDispatchValue;
+
         class TestClass {
             @action('testMethod')
             testMethod() {
