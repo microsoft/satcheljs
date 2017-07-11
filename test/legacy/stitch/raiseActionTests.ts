@@ -1,6 +1,6 @@
 import 'jasmine';
-import * as satcheljsImports from 'satcheljs';
-import { raiseAction } from '../src/stitch';
+import * as satcheljsImports from '../../../src';
+import { raiseAction } from '../../../src/legacy/stitch';
 
 interface TestActionType {
     (arg1: string, arg2: string): void;

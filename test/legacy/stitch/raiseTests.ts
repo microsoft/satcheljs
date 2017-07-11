@@ -1,6 +1,6 @@
 import 'jasmine';
-import * as satcheljsImports from 'satcheljs';
-import { stitch, subscribe, raise } from '../src/stitch';
+import * as satcheljsImports from '../../../src';
+import { raise } from '../../../src/legacy/stitch';
 
 describe("raise", () => {
 

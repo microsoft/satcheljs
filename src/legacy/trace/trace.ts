@@ -1,4 +1,6 @@
-import { LegacyDispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import ActionFunction from '../ActionFunction';
+import LegacyDispatchFunction from '../LegacyDispatchFunction';
+import ActionContext from '../ActionContext';
 
 let depth = 0;
 

@@ -1,6 +1,6 @@
 import 'jasmine';
-import { action, legacyApplyMiddleware, createStore } from 'satcheljs';
-import { getCurrentAction, promiseMiddleware } from '../src/promiseMiddleware';
+import { action, legacyApplyMiddleware, createStore } from '../../../src';
+import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
 
 describe("promiseMiddleware", () => {
 

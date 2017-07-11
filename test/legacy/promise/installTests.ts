@@ -1,6 +1,6 @@
 import 'jasmine';
-import * as actionWrappers from '../src/actionWrappers';
-import install from '../src/install';
+import * as actionWrappers from '../../../src/legacy/promise/actionWrappers';
+import install from '../../../src/legacy/promise/install';
 
 describe("install", () => {
 

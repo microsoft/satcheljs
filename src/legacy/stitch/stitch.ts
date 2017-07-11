@@ -1,4 +1,7 @@
-import { action, ActionFunction, LegacyDispatchFunction, ActionContext } from 'satcheljs';
+import action from '../action';
+import ActionFunction from '../ActionFunction';
+import LegacyDispatchFunction from '../LegacyDispatchFunction';
+import ActionContext from '../ActionContext';
 
 export interface ActionHandler {
     (...args: any[]): Promise<any> | void;

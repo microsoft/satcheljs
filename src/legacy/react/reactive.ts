@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import {SelectorFunction} from 'satcheljs/lib/legacy/select';
-import {getGlobalContext} from 'satcheljs/lib/globalContext';
+import {SelectorFunction} from '../select';
+import {getGlobalContext} from '../../globalContext';
 import {observer} from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
@@ -49,7 +49,7 @@ function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>
 
     return function(props: any) {
         let newProps = setPropAccessors(props, selector);
-        return original.call(original, newProps);
+        return (<Function>original).call(original, newProps);
     };
 }
 

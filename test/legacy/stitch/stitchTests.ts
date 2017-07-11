@@ -1,6 +1,6 @@
 import 'jasmine';
-import { LegacyDispatchFunction, ActionContext } from 'satcheljs';
-import { stitch, subscribe } from '../src/stitch';
+import { LegacyDispatchFunction, ActionContext } from '../../../src';
+import { stitch, subscribe } from '../../../src/legacy/stitch';
 
 let sequenceOfEvents: any[];
 

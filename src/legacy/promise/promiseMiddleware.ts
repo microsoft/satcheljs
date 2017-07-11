@@ -1,4 +1,6 @@
-import { LegacyDispatchFunction, ActionFunction, ActionContext } from 'satcheljs';
+import LegacyDispatchFunction from '../LegacyDispatchFunction';
+import ActionFunction from '../ActionFunction';
+import ActionContext from '../ActionContext';
 import install from './install';
 
 let actionStack: string[] = [];

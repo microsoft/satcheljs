@@ -3,11 +3,11 @@ import 'jasmine';
 
 import * as React from 'react';
 
-import {action, createStore, initializeTestMode, resetTestMode} from 'satcheljs';
+import {action, createStore, initializeTestMode, resetTestMode} from '../../../src';
 import {mount, shallow} from 'enzyme';
 
 import {isObservable} from 'mobx';
-import reactive from '../lib/reactive';
+import reactive from '../../../src/legacy/react/reactive';
 
 let sequenceOfEvents: any[];
 

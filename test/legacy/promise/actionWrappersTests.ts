@@ -1,7 +1,7 @@
 import 'jasmine';
-import * as satcheljs from 'satcheljs';
-import * as promiseMiddleware from '../src/promiseMiddleware';
-import { wrapThen, wrapCatch } from '../src/actionWrappers';
+import * as satcheljs from '../../../src/index';
+import * as promiseMiddleware from '../../../src/legacy/promise/promiseMiddleware';
+import { wrapThen, wrapCatch } from '../../../src/legacy/promise/actionWrappers';
 
 describe("actionWrappers", () => {
 

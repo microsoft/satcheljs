@@ -1,6 +1,6 @@
 import 'jasmine';
-import { getCurrentAction, promiseMiddleware } from '../src/promiseMiddleware';
-import * as install from '../src/install';
+import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
+import * as install from '../../../src/legacy/promise/install';
 
 describe("promiseMiddleware", () => {
 
