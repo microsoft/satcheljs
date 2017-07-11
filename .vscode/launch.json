@@ -5,22 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
-            "type": "node2",
+            "name": "Tests",
+            "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/node_modules/jasmine/bin/jasmine.js",
-            "args": ["JASMINE_CONFIG_PATH=jasmine.json", "--verbose"],
-            "cwd": "${workspaceRoot}/packages/satcheljs-react",
-            "outFiles": [],
-            "sourceMaps": true
-        },
-        {
-            "name": "Attach to Process",
-            "type": "node2",
-            "request": "attach",
-            "port": 9229,
-            "outFiles": [],
-            "sourceMaps": true
+            "protocol": "inspector",
+            "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+            "stopOnEntry": false,
+            "args": [
+                "${fileBasenameNoExtension}",
+                "--runInBand"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "sourceMaps": true,
+            "outFiles": [
+                "build/**/*"
+            ]
         }
     ]
 }
