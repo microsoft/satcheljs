@@ -2,15 +2,14 @@ language: node_js
 node_js:
 - '6.1'
 before_install:
-- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
 - npm config set spin false
 install:
 - npm install
 script:
-- | 
+- |
   if [ -n "$TRAVIS_TAG" ]; then
     npm run build
-    npm run publish-all
+    npm publish
   fi
 - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash npm run test; fi
 env:
