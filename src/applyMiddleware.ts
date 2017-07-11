@@ -14,5 +14,5 @@ export default function applyMiddleware(...middleware: Middleware[]) {
 }
 
 function applyNextMiddleware(middleware: Middleware, next: DispatchFunction): DispatchFunction {
-    return (actionMessage) => middleware(next, actionMessage);
+    return actionMessage => middleware(next, actionMessage);
 }

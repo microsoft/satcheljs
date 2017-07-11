@@ -2,8 +2,7 @@ import 'jasmine';
 import * as actionWrappers from '../../../src/legacy/promise/actionWrappers';
 import install from '../../../src/legacy/promise/install';
 
-describe("install", () => {
-
+describe('install', () => {
     let originalThen = Promise.prototype.then;
     let originalCatch = Promise.prototype.catch;
 
@@ -20,7 +19,7 @@ describe("install", () => {
         Promise.prototype.catch = originalCatch;
     });
 
-    it("wraps Promise.then and Promise.catch", () => {
+    it('wraps Promise.then and Promise.catch', () => {
         // Act
         install();
 
@@ -29,7 +28,7 @@ describe("install", () => {
         expect(Promise.prototype.catch).toBe(wrappedCatch);
     });
 
-    it("returns an uninstall function to restore the original then and catch", () => {
+    it('returns an uninstall function to restore the original then and catch', () => {
         // Arrange
         let uninstall = install();
 
@@ -40,5 +39,4 @@ describe("install", () => {
         expect(Promise.prototype.then).toBe(originalThen);
         expect(Promise.prototype.catch).toBe(originalCatch);
     });
-
 });

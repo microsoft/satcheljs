@@ -2,11 +2,19 @@
   "name": "satcheljs-suite",
   "version": "3.0.0-beta1",
   "description": "Store implementation for functional reactive flux.",
+  "lint-staged": {
+    "packages/**/*.{ts,tsx}": [
+      "prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote",
+      "git add"
+    ]
+  },
   "scripts": {
+    "precommit": "lint-staged",
     "clean": "rimraf build lib",
     "lint": "tslint -t stylish --type-check --project 'tsconfig.json'",
     "build": "run-s clean build:release",
     "build:watch": "tsc -w",
+    "build:release": "tsc -p tsconfig.release.json",
     "start": "run-s clean build:watch",
     "test": "run-s clean lint test:unit",
     "test:watch": "jest --watch",
@@ -21,12 +29,15 @@
     "@types/react-addons-perf": "~0.14.18",
     "@types/react-addons-test-utils": "~0.14.19",
     "@types/react-dom": "~15.5.1",
+    "prettier": "~1.5.2",
+    "lint-staged": "~4.0.1",
+    "husky": "~0.14.3",
     "jest": "20.0.4",
     "npm-run-all": "^4.0.2",
     "rimraf": "^2.5.4",
-    "tslint": "^4.0.2",
-    "tslint-eslint-rules": "^3.2.0",
-    "tslint-microsoft-contrib": "^4.0.0",
+    "tslint": "~5.5.0",
+    "tslint-eslint-rules": "~4.1.1",
+    "tslint-microsoft-contrib": "~5.0.1",
     "typescript": "~2.3.4"
   },
   "dependencies": {
@@ -36,5 +47,7 @@
     "react": "^15.6.1",
     "react-addons-perf": "^15.4.2",
     "react-dom": "^15.6.1"
-  }
+  },
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts"
 }

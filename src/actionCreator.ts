@@ -4,30 +4,30 @@ import { dispatch } from './dispatcher';
 
 export function actionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
     actionType: string,
-    target?: TActionCreator): TActionCreator
-{
+    target?: TActionCreator
+): TActionCreator {
     return createActionCreator(actionType, target, false);
 }
 
-export function boundActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
-    actionType: string,
-    target?: TActionCreator): TActionCreator
-{
+export function boundActionCreator<
+    T extends ActionMessage,
+    TActionCreator extends ActionCreator<T>
+>(actionType: string, target?: TActionCreator): TActionCreator {
     return createActionCreator(actionType, target, true);
 }
 
 function createActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
     actionType: string,
     target: TActionCreator,
-    shouldDispatch: boolean): TActionCreator
-{
+    shouldDispatch: boolean
+): TActionCreator {
     let decoratedTarget = function createAction(...args: any[]) {
         // Create the action message
         let actionMessage: ActionMessage = target ? target.apply(null, args) : {};
 
         // Stamp the action type
         if (actionMessage.type) {
-            throw new Error("Action creators should not include the type property.");
+            throw new Error('Action creators should not include the type property.');
         }
 
         actionMessage.type = actionType;

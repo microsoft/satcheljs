@@ -1,5 +1,5 @@
 interface ActionContext {
-    [key: string]: any
+    [key: string]: any;
 }
 
 export default ActionContext;

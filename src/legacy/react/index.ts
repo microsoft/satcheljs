@@ -1,1 +1,1 @@
-export {default as reactive, ReactiveTarget} from './reactive';
+export { default as reactive, ReactiveTarget } from './reactive';

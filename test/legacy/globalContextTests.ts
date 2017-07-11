@@ -1,11 +1,15 @@
 import 'jasmine';
-import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion } from '../../src/globalContext';
+import {
+    __resetGlobalContext,
+    getGlobalContext,
+    ensureGlobalContextSchemaVersion,
+} from '../../src/globalContext';
 
 declare var global: any;
 
 var backupConsoleError = console.error;
 
-describe("globalContext", () => {
+describe('globalContext', () => {
     beforeEach(() => {
         __resetGlobalContext();
     });
@@ -19,7 +23,7 @@ describe("globalContext", () => {
         console.error = backupConsoleError;
     });
 
-    it("will throw error if the wrong schema version is detected", () => {
+    it('will throw error if the wrong schema version is detected', () => {
         getGlobalContext().schemaVersion = -999;
 
         let checker = function() {

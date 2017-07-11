@@ -6,11 +6,11 @@ import { subscribe } from './dispatcher';
 
 export function orchestrator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
-    target: Subscriber<T>)
-{
+    target: Subscriber<T>
+) {
     let actionType = getActionType(actionCreator);
     if (!actionType) {
-        throw new Error("Orchestrators can only subscribe to action creators.");
+        throw new Error('Orchestrators can only subscribe to action creators.');
     }
 
     subscribe(actionType, target);

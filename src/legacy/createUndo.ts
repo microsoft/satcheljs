@@ -37,7 +37,7 @@ function spyOnChanges(event: any) {
     let undoStep: UndoStep;
     let modifiedObject = event.object;
 
-    switch(event.type) {
+    switch (event.type) {
         case 'update':
             if (event.index !== undefined) {
                 // update (array)
@@ -45,7 +45,9 @@ function spyOnChanges(event: any) {
                     verify: () => modifiedObject[event.index] === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.index,
-                    undo: () => { modifiedObject[event.index] = event.oldValue; }
+                    undo: () => {
+                        modifiedObject[event.index] = event.oldValue;
+                    },
                 };
             } else if (typeof modifiedObject.get !== 'undefined') {
                 // update (map)
@@ -53,7 +55,9 @@ function spyOnChanges(event: any) {
                     verify: () => modifiedObject.get(event.name) === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { modifiedObject.set(event.name, event.oldValue); }
+                    undo: () => {
+                        modifiedObject.set(event.name, event.oldValue);
+                    },
                 };
             } else {
                 // update (object)
@@ -61,7 +65,9 @@ function spyOnChanges(event: any) {
                     verify: () => modifiedObject[event.name] === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { modifiedObject[event.name] = event.oldValue; }
+                    undo: () => {
+                        modifiedObject[event.name] = event.oldValue;
+                    },
                 };
             }
             break;
@@ -84,7 +90,7 @@ function spyOnChanges(event: any) {
                     for (let i = 0; i < event.removedCount; i++) {
                         modifiedObject.splice(event.index + i, 0, event.removed[i]);
                     }
-                }
+                },
             };
             break;
         case 'add':
@@ -94,16 +100,20 @@ function spyOnChanges(event: any) {
                     verify: () => modifiedObject.get(event.name) === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { modifiedObject.delete(event.name); }
-                }
+                    undo: () => {
+                        modifiedObject.delete(event.name);
+                    },
+                };
             } else {
                 // add (object)
                 undoStep = {
                     verify: () => modifiedObject[event.name] === event.newValue,
                     objectName: modifiedObject.$mobx.name,
                     propertyName: event.name,
-                    undo: () => { delete modifiedObject[event.name]; }
-                }
+                    undo: () => {
+                        delete modifiedObject[event.name];
+                    },
+                };
             }
             break;
         case 'delete':
@@ -111,8 +121,10 @@ function spyOnChanges(event: any) {
                 verify: () => !modifiedObject.has(event.name),
                 objectName: modifiedObject.$mobx.name,
                 propertyName: event.name,
-                undo: () => { modifiedObject.set(event.name, event.oldValue); }
-            }
+                undo: () => {
+                    modifiedObject.set(event.name, event.oldValue);
+                },
+            };
             break;
         default:
             // Nothing worth tracking
@@ -132,42 +144,42 @@ export type CreateUndoReturnValue<T> = (action: () => T | void) => UndoResult<T>
 function trackUndo<T>(
     actionName: string,
     action: () => T,
-    undoVerifiesChanges: boolean) : UndoResult<T> {
+    undoVerifiesChanges: boolean
+): UndoResult<T> {
+    initializeSpy();
+    undoWindows.push({ steps: [] });
 
-        initializeSpy();
-        undoWindows.push({steps: []});
+    try {
+        let returnValue: T = action();
 
-        try {
-            let returnValue: T = action();
+        let undoWindow: UndoWindow = undoWindows[undoWindows.length - 1];
+        let undoPreviouslyExecuted = false;
 
-            let undoWindow : UndoWindow = undoWindows[undoWindows.length - 1];
-            let undoPreviouslyExecuted = false;
+        // Reverse the steps, as changes made later in the action may depend on changes earlier in the action
+        undoWindow.steps.reverse();
 
-            // Reverse the steps, as changes made later in the action may depend on changes earlier in the action
-            undoWindow.steps.reverse();
+        let undo: UndoResult<T> = satcheljsAction(`undo-${actionName}`)(() => {
+            if (undoPreviouslyExecuted) {
+                throw `This instance of undo-${actionName} has already been executed`;
+            }
+            if (undoVerifiesChanges) {
+                undoWindow.steps.forEach(step => {
+                    if (!step.verify()) {
+                        throw `Property "${step.propertyName} on store object "${step.objectName} changed since action was performed.`;
+                    }
+                });
+            }
+            undoWindow.steps.forEach(step => step.undo());
+            undoPreviouslyExecuted = true;
+        });
 
-            let undo: UndoResult<T> = satcheljsAction(`undo-${actionName}`)(() => {
-                if (undoPreviouslyExecuted) {
-                    throw `This instance of undo-${actionName} has already been executed`;
-                }
-                if (undoVerifiesChanges) {
-                    undoWindow.steps.forEach(step => {
-                        if (!step.verify()) {
-                            throw `Property "${step.propertyName} on store object "${step.objectName} changed since action was performed.`
-                        }
-                    })
-                }
-                undoWindow.steps.forEach(step => step.undo());
-                undoPreviouslyExecuted = true;
-            });
+        undo.actionReturnValue = returnValue;
 
-            undo.actionReturnValue = returnValue;
-
-            return undo;
-        } finally {
-            undoWindows.pop();
-            disposeSpy();
-        }
+        return undo;
+    } finally {
+        undoWindows.pop();
+        disposeSpy();
+    }
 }
 
 /**
@@ -179,12 +191,9 @@ function trackUndo<T>(
  */
 export default function createUndo<T>(
     actionName: string,
-    undoVerifiesChanges?: boolean) : CreateUndoReturnValue<T> {
-
-        return (action: () => T) => {
-            return trackUndo(
-                    actionName,
-                    action,
-                    !!undoVerifiesChanges);
-        };
+    undoVerifiesChanges?: boolean
+): CreateUndoReturnValue<T> {
+    return (action: () => T) => {
+        return trackUndo(actionName, action, !!undoVerifiesChanges);
+    };
 }

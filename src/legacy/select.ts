@@ -1,10 +1,8 @@
-import {Reaction, Atom, IObservableValue, isObservableArray} from 'mobx';
-import {getOriginalTarget, getActionType, setActionType} from './functionInternals';
-import {getGlobalContext} from '../globalContext';
+import { Reaction, Atom, IObservableValue, isObservableArray } from 'mobx';
+import { getOriginalTarget, getActionType, setActionType } from './functionInternals';
+import { getGlobalContext } from '../globalContext';
 
-export type SelectorFunction<T> = {
-    [key in keyof T]?: (...args: any[]) => T[key];
-}
+export type SelectorFunction<T> = { [key in keyof T]?: (...args: any[]) => T[key] };
 
 function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) {
     let state: any = {};
@@ -26,10 +24,12 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
                 Object.defineProperty(state, key, {
                     enumerable: true,
                     get: value.get.bind(observable),
-                    set: value.set.bind(observable)
+                    set: value.set.bind(observable),
                 });
             } else if (observable && observable instanceof Atom) {
-                let parent: any[] = reaction.observing.length > 2 && <any>reaction.observing[reaction.observing.length - 2];
+                let parent: any[] =
+                    reaction.observing.length > 2 &&
+                    (<any>reaction.observing[reaction.observing.length - 2]);
                 if (parent && isObservableArray(parent)) {
                     // Handle the case where this is an element of an array
                     let atom: Atom = observable;
@@ -38,20 +38,20 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
                     Object.defineProperty(state, key, {
                         enumerable: true,
                         get: () => selector[key].apply(null, args),
-                        set: (value) => parent[index] = value
+                        set: value => (parent[index] = value),
                     });
                 } else {
                     // If not an array, then all we can provide is a getter
                     Object.defineProperty(state, key, {
                         enumerable: true,
-                        get: () => selector[key].apply(null, args)
+                        get: () => selector[key].apply(null, args),
                     });
                 }
             } else {
                 // If this is not an observable, then just create a getter
                 Object.defineProperty(state, key, {
                     enumerable: true,
-                    get: () => selector[key].apply(null, args)
+                    get: () => selector[key].apply(null, args),
                 });
             }
         }
@@ -92,9 +92,9 @@ export default function select<T>(selector: SelectorFunction<T>) {
             }
 
             return target.apply(context, args);
-        }
+        };
 
         setActionType(returnValue, getActionType(<any>target));
         return <Target>returnValue;
-    }
+    };
 }

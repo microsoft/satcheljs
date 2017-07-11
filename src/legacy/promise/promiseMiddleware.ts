@@ -16,20 +16,18 @@ export function promiseMiddleware(
     action: ActionFunction,
     actionType: string,
     args: IArguments,
-    actionContext: ActionContext)
-{
+    actionContext: ActionContext
+) {
     // If we're not already installed, install now
     if (!isInstalled) {
         uninstall = install();
         isInstalled = true;
     }
 
-    try
-    {
+    try {
         actionStack.push(actionType);
         return next(action, actionType, args, actionContext);
-    }
-    finally {
+    } finally {
         actionStack.pop();
 
         // If we're no longer in an action, uninstall

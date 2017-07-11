@@ -4,7 +4,6 @@ import LegacyDispatchFunction from './LegacyDispatchFunction';
 import LegacyMiddleware from './LegacyMiddleware';
 import { getGlobalContext } from '../globalContext';
 
-
 export default function applyMiddleware(...middleware: LegacyMiddleware[]) {
     var next: LegacyDispatchFunction = finalDispatch;
     for (var i = middleware.length - 1; i >= 0; i--) {
@@ -14,11 +13,20 @@ export default function applyMiddleware(...middleware: LegacyMiddleware[]) {
     getGlobalContext().legacyDispatchWithMiddleware = next;
 }
 
-function applyMiddlewareInternal(middleware: LegacyMiddleware, next: LegacyDispatchFunction): LegacyDispatchFunction {
-    return (action, actionType, args, actionContext) => middleware(next, action, actionType, args, actionContext);
+function applyMiddlewareInternal(
+    middleware: LegacyMiddleware,
+    next: LegacyDispatchFunction
+): LegacyDispatchFunction {
+    return (action, actionType, args, actionContext) =>
+        middleware(next, action, actionType, args, actionContext);
 }
 
-export function dispatchWithMiddleware(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {
+export function dispatchWithMiddleware(
+    action: ActionFunction,
+    actionType: string,
+    args: IArguments,
+    actionContext: ActionContext
+) {
     if (!getGlobalContext().legacyDispatchWithMiddleware) {
         getGlobalContext().legacyDispatchWithMiddleware = finalDispatch;
     }
@@ -26,6 +34,11 @@ export function dispatchWithMiddleware(action: ActionFunction, actionType: strin
     getGlobalContext().legacyDispatchWithMiddleware(action, actionType, args, actionContext);
 }
 
-function finalDispatch(action: ActionFunction, actionType: string, args: IArguments,  actionContext: ActionContext) {
+function finalDispatch(
+    action: ActionFunction,
+    actionType: string,
+    args: IArguments,
+    actionContext: ActionContext
+) {
     return action();
 }

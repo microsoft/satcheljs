@@ -13,7 +13,12 @@ export interface GlobalContext {
 
     // Legacy properties
     legacyInDispatch: number;
-    legacyDispatchWithMiddleware: (action: ActionFunction, actionType: string, args: IArguments, actionContext: ActionContext) => Promise<any> | void;
+    legacyDispatchWithMiddleware: (
+        action: ActionFunction,
+        actionType: string,
+        args: IArguments,
+        actionContext: ActionContext
+    ) => Promise<any> | void;
     legacyTestMode: boolean;
 }
 
@@ -29,19 +34,19 @@ export function __resetGlobalContext() {
         dispatchWithMiddleware: null,
         legacyInDispatch: 0,
         legacyDispatchWithMiddleware: null,
-        legacyTestMode: false
+        legacyTestMode: false,
     };
 }
 
 export function ensureGlobalContextSchemaVersion() {
     if (schemaVersion != global.__satchelGlobalContext.schemaVersion) {
-        throw new Error("Detected incompatible SatchelJS versions loaded.");
+        throw new Error('Detected incompatible SatchelJS versions loaded.');
     }
 }
 
 export function getGlobalContext() {
     return global.__satchelGlobalContext;
-};
+}
 
 // Side Effects: actually initialize the global context if it is undefined
 if (!global.__satchelGlobalContext) {

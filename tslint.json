@@ -71,7 +71,7 @@
     "no-switch-case-fall-through": true,
     "trailing-comma": true,
     "no-trailing-whitespace": true,
-    "no-unused-expression": true,
+    "no-unused-expression": false,
     "no-use-before-declare": true,
     "no-var-requires": false,
     "one-line": [
@@ -82,7 +82,6 @@
       "check-whitespace"
     ],
     "quotemark": [false],
-    "require-full-import": [true, "owa-attachment", "owa-upnext"],
     "semicolon": [true],
     "triple-equals": false,
     "typedef": [

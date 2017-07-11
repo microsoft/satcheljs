@@ -2,16 +2,15 @@ import 'jasmine';
 import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
 import * as install from '../../../src/legacy/promise/install';
 
-describe("promiseMiddleware", () => {
-
+describe('promiseMiddleware', () => {
     let uninstallSpy: jasmine.Spy;
 
     beforeEach(() => {
-        uninstallSpy = jasmine.createSpy("uninstall");
-        spyOn(install, "default").and.returnValue(uninstallSpy);
+        uninstallSpy = jasmine.createSpy('uninstall');
+        spyOn(install, 'default').and.returnValue(uninstallSpy);
     });
 
-    it("calls install to monkeypatch Promise for the duration of the action", () => {
+    it('calls install to monkeypatch Promise for the duration of the action', () => {
         // Arrange
         let next = () => {
             expect(install.default).toHaveBeenCalled();
@@ -25,7 +24,7 @@ describe("promiseMiddleware", () => {
         expect(uninstallSpy).toHaveBeenCalled();
     });
 
-    it("does not uninstall until all recursive actions have completed", () => {
+    it('does not uninstall until all recursive actions have completed', () => {
         // Act
         let outerNext = () => {
             let innerNext = () => {
@@ -42,13 +41,13 @@ describe("promiseMiddleware", () => {
         expect(uninstallSpy).toHaveBeenCalled();
     });
 
-    it("calls next with arguments", () => {
+    it('calls next with arguments', () => {
         // Arrange
         let originalAction = () => {};
-        let originalActionType = "testAction";
+        let originalActionType = 'testAction';
         let originalArguments = <IArguments>{};
-        let originalActionContext = {a:1}
-        let next = jasmine.createSpy("next");
+        let originalActionContext = { a: 1 };
+        let next = jasmine.createSpy('next');
 
         // Act
         promiseMiddleware(
@@ -56,17 +55,25 @@ describe("promiseMiddleware", () => {
             originalAction,
             originalActionType,
             originalArguments,
-            originalActionContext);
+            originalActionContext
+        );
 
         // Assert
-        expect(next).toHaveBeenCalledWith(originalAction, originalActionType, originalArguments, originalActionContext);
+        expect(next).toHaveBeenCalledWith(
+            originalAction,
+            originalActionType,
+            originalArguments,
+            originalActionContext
+        );
     });
 
-    it("keeps track of the current action", () => {
+    it('keeps track of the current action', () => {
         // Arrange
-        let actionType = "testAction";
+        let actionType = 'testAction';
         let currentAction;
-        let next = () => { currentAction = getCurrentAction(); };
+        let next = () => {
+            currentAction = getCurrentAction();
+        };
 
         // Act
         promiseMiddleware(next, null, actionType, null, null);
@@ -75,16 +82,18 @@ describe("promiseMiddleware", () => {
         expect(currentAction).toBe(actionType);
     });
 
-    it("keeps track of recursive actions", () => {
+    it('keeps track of recursive actions', () => {
         // Arrange
-        let outerAction = "outerAction";
-        let innerAction = "innerAction";
+        let outerAction = 'outerAction';
+        let innerAction = 'innerAction';
         let currentActionValues: string[] = [];
 
         // Act
         let outerNext = () => {
             currentActionValues.push(getCurrentAction());
-            let innerNext = () => { currentActionValues.push(getCurrentAction()); };
+            let innerNext = () => {
+                currentActionValues.push(getCurrentAction());
+            };
             promiseMiddleware(innerNext, null, innerAction, null, null);
             currentActionValues.push(getCurrentAction());
         };
@@ -92,7 +101,6 @@ describe("promiseMiddleware", () => {
         promiseMiddleware(outerNext, null, outerAction, null, null);
 
         // Assert
-        expect(currentActionValues).toEqual([ outerAction, innerAction, outerAction ]);
+        expect(currentActionValues).toEqual([outerAction, innerAction, outerAction]);
     });
-
 });

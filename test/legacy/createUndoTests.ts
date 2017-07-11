@@ -3,7 +3,7 @@ import action from '../../src/legacy/action';
 import createUndo, { UndoResult } from '../../src/legacy/createUndo';
 import { extendObservable, observable, map, _ } from 'mobx';
 import initializeState from '../../src/initializeState';
-import { __resetGlobalContext } from '../../src/globalContext'
+import { __resetGlobalContext } from '../../src/globalContext';
 
 function resetState() {
     _.resetGlobalState();
@@ -12,11 +12,9 @@ function resetState() {
 }
 
 describe('createUndo', () => {
-
     beforeEach(resetState);
 
     describe('undo without verification', () => {
-
         beforeEach(resetState);
 
         it('undoes an update to an array', () => {
@@ -25,7 +23,9 @@ describe('createUndo', () => {
             let oldValue = 2;
 
             let array = observable([1, oldValue, 3]);
-            let undoableAction = action('updateArray')(() => {array[index] = newValue});
+            let undoableAction = action('updateArray')(() => {
+                array[index] = newValue;
+            });
 
             let undoResult = createUndo('updateArray')(undoableAction);
 
@@ -41,8 +41,10 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({key: oldValue});
-            let undoableAction = action('updateMap')(() => { object.set(index, newValue) });
+            let object = map({ key: oldValue });
+            let undoableAction = action('updateMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('updateMap')(undoableAction);
 
@@ -57,8 +59,10 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = observable({key: oldValue});
-            let undoableAction = action('updateObject')(() => { object.key = newValue });
+            let object = observable({ key: oldValue });
+            let undoableAction = action('updateObject')(() => {
+                object.key = newValue;
+            });
 
             let undoResult = createUndo('updateObject')(undoableAction);
 
@@ -71,7 +75,9 @@ describe('createUndo', () => {
 
         it('undoes an array splice', () => {
             let object = observable([1, 2, 3, 4, 5, 6] as any[]);
-            let undoableAction = action('spliceArray')(() => { object.splice(2, 3, 'a') });
+            let undoableAction = action('spliceArray')(() => {
+                object.splice(2, 3, 'a');
+            });
 
             let undoResult = createUndo('spliceArray')(undoableAction);
 
@@ -87,7 +93,9 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object = map({});
-            let undoableAction = action('addMap')(() => { object.set(index, newValue) });
+            let undoableAction = action('addMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('addMap')(undoableAction);
 
@@ -103,7 +111,9 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object: any = observable({});
-            let undoableAction = action('addObject')(() => { extendObservable(object, {[index]: newValue}) });
+            let undoableAction = action('addObject')(() => {
+                extendObservable(object, { [index]: newValue });
+            });
 
             let undoResult = createUndo('addObject')(undoableAction);
 
@@ -118,8 +128,10 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({[index]: oldValue});
-            let undoableAction = action('deleteMap')(() => { object.delete(index) });
+            let object = map({ [index]: oldValue });
+            let undoableAction = action('deleteMap')(() => {
+                object.delete(index);
+            });
 
             let undoResult = createUndo('deleteMap')(undoableAction);
 
@@ -132,7 +144,6 @@ describe('createUndo', () => {
     });
 
     describe('undo with passing verification', () => {
-
         beforeEach(resetState);
 
         it('undoes an update to an array', () => {
@@ -141,7 +152,9 @@ describe('createUndo', () => {
             let oldValue = 2;
 
             let array = observable([1, oldValue, 3]);
-            let undoableAction = action('updateArray')(() => {array[index] = newValue});
+            let undoableAction = action('updateArray')(() => {
+                array[index] = newValue;
+            });
 
             let undoResult = createUndo('updateArray', true)(undoableAction);
 
@@ -157,8 +170,10 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({key: oldValue});
-            let undoableAction = action('updateMap')(() => { object.set(index, newValue) });
+            let object = map({ key: oldValue });
+            let undoableAction = action('updateMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('updateMap', true)(undoableAction);
 
@@ -173,8 +188,10 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = observable({key: oldValue});
-            let undoableAction = action('updateObject')(() => { object.key = newValue });
+            let object = observable({ key: oldValue });
+            let undoableAction = action('updateObject')(() => {
+                object.key = newValue;
+            });
 
             let undoResult = createUndo('updateObject', true)(undoableAction);
 
@@ -187,7 +204,9 @@ describe('createUndo', () => {
 
         it('undoes an array splice', () => {
             let object = observable([1, 2, 3, 4, 5, 6] as any[]);
-            let undoableAction = action('spliceArray')(() => { object.splice(2, 3, 'a') });
+            let undoableAction = action('spliceArray')(() => {
+                object.splice(2, 3, 'a');
+            });
 
             let undoResult = createUndo('spliceArray', true)(undoableAction);
 
@@ -203,7 +222,9 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object = map({});
-            let undoableAction = action('addMap')(() => { object.set(index, newValue) });
+            let undoableAction = action('addMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('addMap', true)(undoableAction);
 
@@ -219,7 +240,9 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object: any = observable({});
-            let undoableAction = action('addObject')(() => { extendObservable(object, {[index]: newValue}) });
+            let undoableAction = action('addObject')(() => {
+                extendObservable(object, { [index]: newValue });
+            });
 
             let undoResult = createUndo('addObject', true)(undoableAction);
 
@@ -234,8 +257,10 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({[index]: oldValue});
-            let undoableAction = action('deleteMap')(() => { object.delete(index) });
+            let object = map({ [index]: oldValue });
+            let undoableAction = action('deleteMap')(() => {
+                object.delete(index);
+            });
 
             let undoResult = createUndo('deleteMap', true)(undoableAction);
 
@@ -248,7 +273,6 @@ describe('createUndo', () => {
     });
 
     describe('undo with failing verification', () => {
-
         beforeEach(resetState);
 
         it('throws an exception when it undoes an update to an array', () => {
@@ -257,10 +281,14 @@ describe('createUndo', () => {
             let oldValue = 2;
 
             let array = observable([1, oldValue, 3]);
-            let undoableAction = action('updateArray')(() => {array[index] = newValue});
+            let undoableAction = action('updateArray')(() => {
+                array[index] = newValue;
+            });
 
             let undoResult = createUndo('updateArray', true)(undoableAction);
-            action('updateArray-again')(() => { array[index] = 100 })();
+            action('updateArray-again')(() => {
+                array[index] = 100;
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -270,11 +298,15 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({key: oldValue});
-            let undoableAction = action('updateMap')(() => { object.set(index, newValue) });
+            let object = map({ key: oldValue });
+            let undoableAction = action('updateMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('updateMap', true)(undoableAction);
-            action('updateMap-again')(() => { object.set(index, 100) })();
+            action('updateMap-again')(() => {
+                object.set(index, 100);
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -283,21 +315,29 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = observable({key: oldValue});
-            let undoableAction = action('updateObject')(() => { object.key = newValue });
+            let object = observable({ key: oldValue });
+            let undoableAction = action('updateObject')(() => {
+                object.key = newValue;
+            });
 
             let undoResult = createUndo('updateObject', true)(undoableAction);
-            action('updateObject-again')(() => { object.key = 100 })();
+            action('updateObject-again')(() => {
+                object.key = 100;
+            })();
 
             expect(undoResult).toThrow();
         });
 
         it('throws an exception when it undoes an array splice', () => {
             let object = observable([1, 2, 3, 4, 5, 6] as any[]);
-            let undoableAction = action('spliceArray')(() => { object.splice(2, 3, 'a') });
+            let undoableAction = action('spliceArray')(() => {
+                object.splice(2, 3, 'a');
+            });
 
             let undoResult = createUndo('spliceArray', true)(undoableAction);
-            action('spliceArray-again')(() => { object[2] = 100 })();
+            action('spliceArray-again')(() => {
+                object[2] = 100;
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -307,10 +347,14 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object = map({});
-            let undoableAction = action('addMap')(() => { object.set(index, newValue) });
+            let undoableAction = action('addMap')(() => {
+                object.set(index, newValue);
+            });
 
             let undoResult = createUndo('addMap', true)(undoableAction);
-            action('addMap-again')(() => {object.set(index, 100);})();
+            action('addMap-again')(() => {
+                object.set(index, 100);
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -320,10 +364,14 @@ describe('createUndo', () => {
             let newValue = 5;
 
             let object: any = observable({});
-            let undoableAction = action('addObject')(() => { extendObservable(object, {[index]: newValue}) });
+            let undoableAction = action('addObject')(() => {
+                extendObservable(object, { [index]: newValue });
+            });
 
             let undoResult = createUndo('addObject', true)(undoableAction);
-            action('addMap-again')(() => {object[index] = 100;})();
+            action('addMap-again')(() => {
+                object[index] = 100;
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -332,11 +380,15 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({[index]: oldValue});
-            let undoableAction = action('deleteMap')(() => { object.delete(index) });
+            let object = map({ [index]: oldValue });
+            let undoableAction = action('deleteMap')(() => {
+                object.delete(index);
+            });
 
             let undoResult = createUndo('deleteMap', true)(undoableAction);
-            action('deleteMap-again')(() => {object.set(index, 100);})();
+            action('deleteMap-again')(() => {
+                object.set(index, 100);
+            })();
 
             expect(undoResult).toThrow();
         });
@@ -345,23 +397,27 @@ describe('createUndo', () => {
     it('handles nested undo windows', () => {
         let array = observable([1, 2, 3, 4, 5]);
 
-        let outerUndo = createUndo('outerUndo')(action('outerUndo')(() => {
-            array[0] = 0;
+        let outerUndo = createUndo('outerUndo')(
+            action('outerUndo')(() => {
+                array[0] = 0;
 
-            expect(array.slice(0)).toEqual([0, 2, 3, 4, 5]);
+                expect(array.slice(0)).toEqual([0, 2, 3, 4, 5]);
 
-            let innerUndo = createUndo('innerUndo')(action('innerUndo')(() => {
-                array[1] = 0;
-            }));
+                let innerUndo = createUndo('innerUndo')(
+                    action('innerUndo')(() => {
+                        array[1] = 0;
+                    })
+                );
 
-            array[2] = 0;
+                array[2] = 0;
 
-            expect(array.slice(0)).toEqual([0, 0, 0, 4, 5]);
+                expect(array.slice(0)).toEqual([0, 0, 0, 4, 5]);
 
-            innerUndo();
+                innerUndo();
 
-            expect(array.slice(0)).toEqual([0, 2, 0, 4, 5]);
-        }));
+                expect(array.slice(0)).toEqual([0, 2, 0, 4, 5]);
+            })
+        );
 
         outerUndo();
 
@@ -369,9 +425,10 @@ describe('createUndo', () => {
     });
 
     it('throws if an undo instance is called twice', () => {
-
-        let object = map({key: 2});
-        let undoableAction = action('updateMap')(() => { object.set('key', 5) });
+        let object = map({ key: 2 });
+        let undoableAction = action('updateMap')(() => {
+            object.set('key', 5);
+        });
 
         let undoResult = createUndo('updateMap')(undoableAction);
         undoResult();
@@ -383,20 +440,23 @@ describe('createUndo', () => {
         let array = observable([1, 2, 3, 4, 5]);
 
         let innerUndo;
-        let outerUndo = createUndo('outerUndo')(action('outerUndo')(() => {
-            array[0] = 0;
+        let outerUndo = createUndo('outerUndo')(
+            action('outerUndo')(() => {
+                array[0] = 0;
 
-            expect(array.slice(0)).toEqual([0, 2, 3, 4, 5]);
+                expect(array.slice(0)).toEqual([0, 2, 3, 4, 5]);
 
-            innerUndo = createUndo('innerUndo')(action('innerUndo')(() => {
-                array[1] = 0;
-            }));
+                innerUndo = createUndo('innerUndo')(
+                    action('innerUndo')(() => {
+                        array[1] = 0;
+                    })
+                );
 
-            array[2] = 0;
+                array[2] = 0;
 
-            expect(array.slice(0)).toEqual([0, 0, 0, 4, 5]);
-
-        }));
+                expect(array.slice(0)).toEqual([0, 0, 0, 4, 5]);
+            })
+        );
 
         outerUndo();
 
@@ -405,6 +465,5 @@ describe('createUndo', () => {
         innerUndo && innerUndo();
 
         expect(array.slice(0)).toEqual([1, 2, 3, 4, 5]);
-
     });
 });

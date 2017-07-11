@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import {SelectorFunction} from '../select';
-import {getGlobalContext} from '../../globalContext';
-import {observer} from 'mobx-react';
+import { SelectorFunction } from '../select';
+import { getGlobalContext } from '../../globalContext';
+import { observer } from 'mobx-react';
 
 export interface ReactiveTarget extends React.ClassicComponentClass<any> {
-    nonReactiveComponent?: React.ComponentClass<any>,
-    nonReactiveStatelessComponent?: React.StatelessComponent<any>
-};
+    nonReactiveComponent?: React.ComponentClass<any>;
+    nonReactiveStatelessComponent?: React.StatelessComponent<any>;
+}
 
 function setPropAccessors<T>(props: any, selector: SelectorFunction<T>) {
     let newProps: any = {};
@@ -22,7 +22,7 @@ function setPropAccessors<T>(props: any, selector: SelectorFunction<T>) {
         if (typeof newProps[key] === typeof undefined) {
             Object.defineProperty(newProps, key, {
                 enumerable: true,
-                get: () => getter.call(null, newProps)
+                get: () => getter.call(null, newProps),
             });
         }
     });
@@ -30,7 +30,10 @@ function setPropAccessors<T>(props: any, selector: SelectorFunction<T>) {
     return newProps;
 }
 
-function createNewConstructor<T>(original: React.ComponentClass<any>, selector: SelectorFunction<T>): React.ComponentClass<any> | React.Component<any, any> {
+function createNewConstructor<T>(
+    original: React.ComponentClass<any>,
+    selector: SelectorFunction<T>
+): React.ComponentClass<any> | React.Component<any, any> {
     if (!selector) {
         return original;
     }
@@ -42,7 +45,10 @@ function createNewConstructor<T>(original: React.ComponentClass<any>, selector: 
     };
 }
 
-function createNewFunctionalComponent<T>(original: React.StatelessComponent<any>, selector: SelectorFunction<T>) {
+function createNewFunctionalComponent<T>(
+    original: React.StatelessComponent<any>,
+    selector: SelectorFunction<T>
+) {
     if (!selector) {
         return original;
     }
@@ -64,7 +70,9 @@ function isFunction(target: any) {
 /**
  * Reactive decorator
  */
-export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<T> | React.ComponentClass<any>): any {
+export default function reactive<T>(
+    selectorOrComponentClass?: SelectorFunction<T> | React.ComponentClass<any>
+): any {
     // this check only applies to ES6 React Class Components
     if (isReactComponent(selectorOrComponentClass)) {
         let componentClass = selectorOrComponentClass as React.ComponentClass<any>;
@@ -92,10 +100,15 @@ export default function reactive<T>(selectorOrComponentClass?: SelectorFunction<
                     selectorOrComponentClass as SelectorFunction<T>
                 ) as React.ComponentClass<any>
             );
-            newComponent.nonReactiveComponent = target  as React.ComponentClass<any>;
+            newComponent.nonReactiveComponent = target as React.ComponentClass<any>;
             return newComponent;
         } else if (isFunction(target)) {
-            newComponent = observer(createNewFunctionalComponent(target as React.StatelessComponent<any>, selectorOrComponentClass as SelectorFunction<T>));
+            newComponent = observer(
+                createNewFunctionalComponent(
+                    target as React.StatelessComponent<any>,
+                    selectorOrComponentClass as SelectorFunction<T>
+                )
+            );
             newComponent.nonReactiveStatelessComponent = target as React.StatelessComponent<any>;
             return newComponent;
         }

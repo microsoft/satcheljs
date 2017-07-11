@@ -5,12 +5,16 @@ import { setActionType, setOriginalTarget } from './functionInternals';
 
 export interface ActionFactory {
     <T extends RawAction>(target: T): T;
-    <T extends RawAction>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<T>): void;
+    <T extends RawAction>(
+        target: any,
+        propertyKey: string,
+        descriptor: TypedPropertyDescriptor<T>
+    ): void;
 }
 
 export default function action(actionType: string, actionContext?: ActionContext): ActionFactory {
     return function createAction(arg0: any, arg1: any, arg2: any) {
-        if (arguments.length == 1 && typeof arg0 == "function") {
+        if (arguments.length == 1 && typeof arg0 == 'function') {
             return wrapFunctionInAction(arg0, actionType, actionContext);
         } else {
             decorateClassMethod(arg0, arg1, arg2, actionType, actionContext);
@@ -18,16 +22,24 @@ export default function action(actionType: string, actionContext?: ActionContext
     } as ActionFactory;
 }
 
-function wrapFunctionInAction<T extends RawAction>(target: T, actionType: string, actionContext: ActionContext): T {
+function wrapFunctionInAction<T extends RawAction>(
+    target: T,
+    actionType: string,
+    actionContext: ActionContext
+): T {
     let decoratedTarget: T = <T>function() {
         let returnValue: any;
         let passedArguments = arguments;
 
         dispatch(
-            () => { returnValue = target.apply(this, passedArguments); return returnValue; },
+            () => {
+                returnValue = target.apply(this, passedArguments);
+                return returnValue;
+            },
             actionType,
             arguments,
-            actionContext);
+            actionContext
+        );
 
         return returnValue;
     };
@@ -43,11 +55,11 @@ function decorateClassMethod<T extends RawAction>(
     propertyKey: string,
     descriptor: TypedPropertyDescriptor<T>,
     actionType: string,
-    actionContext: ActionContext)
-{
-    if (descriptor && typeof descriptor.value == "function") {
+    actionContext: ActionContext
+) {
+    if (descriptor && typeof descriptor.value == 'function') {
         descriptor.value = wrapFunctionInAction(descriptor.value, actionType, actionContext);
     } else {
-        throw new Error("The @action decorator can only apply to class methods.");
+        throw new Error('The @action decorator can only apply to class methods.');
     }
 }
