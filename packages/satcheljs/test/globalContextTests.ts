@@ -1,5 +1,6 @@
 import 'jasmine';
-import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion } from '../../lib/globalContext';
+import { isObservableMap } from 'mobx';
+import { __resetGlobalContext, getGlobalContext, ensureGlobalContextSchemaVersion } from '../lib/globalContext';
 
 declare var global: any;
 
@@ -10,15 +11,6 @@ describe("globalContext", () => {
         __resetGlobalContext();
     });
 
-    beforeAll(() => {
-        // Some of these tests cause MobX to write to console.error, so we need to supress that output
-        console.error = (message: any): void => null;
-    });
-
-    afterAll(() => {
-        console.error = backupConsoleError;
-    });
-
     it("will throw error if the wrong schema version is detected", () => {
         getGlobalContext().schemaVersion = -999;
 
@@ -27,5 +19,10 @@ describe("globalContext", () => {
         };
 
         expect(checker).toThrow();
+    });
+
+    it("rootStore is an ObservableMap", () => {
+        let rootStore = getGlobalContext().rootStore;
+        expect(isObservableMap(rootStore)).toBeTruthy();
     });
 });

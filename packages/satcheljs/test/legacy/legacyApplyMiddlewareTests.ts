@@ -4,7 +4,7 @@ import { default as legacyApplyMiddleware, dispatchWithMiddleware } from '../../
 import ActionFunction from '../../lib/legacy/ActionFunction';
 import ActionContext from '../../lib/legacy/ActionContext';
 
-describe("applyMiddleware", () => {
+describe("legacyApplyMiddleware", () => {
     beforeEach(() => {
         legacyApplyMiddleware();
     });
