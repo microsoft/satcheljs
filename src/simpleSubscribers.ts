@@ -30,7 +30,7 @@ function createSimpleSubscriber(decorator: SubscriberDecorator) {
         // Create the subscriber
         decorator(
             simpleActionCreator,
-            function simpleSubscriberCallback(actionMessage) {
+            function simpleSubscriberCallback(actionMessage: any) {
                 target.apply(null, actionMessage.args);
             });
 

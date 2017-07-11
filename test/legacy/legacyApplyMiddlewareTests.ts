@@ -48,7 +48,7 @@ describe("legacyApplyMiddleware", () => {
         let originalAction = () => {};
         let originalActionType = "testAction";
         let originalArguments = <IArguments>{};
-        let originalOptions = {a:1};
+        let originalOptions = { a: 1 };
 
         var passedAction: ActionFunction;
         var passedActionType: string;
@@ -72,12 +72,12 @@ describe("legacyApplyMiddleware", () => {
 
     it("Returns the action return value to middleware", () => {
         let originalReturnValue = Promise.resolve({});
-        let originalAction = () => { return originalReturnValue; }
+        let originalAction = () => { return originalReturnValue; };
         let receivedReturnValue: Promise<any> | void;
 
         legacyApplyMiddleware(
             (next, action, actionType, args, actionContext) => {
-                receivedReturnValue = next(action, actionType, args, actionContext)
+                receivedReturnValue = next(action, actionType, args, actionContext);
             });
 
         dispatchWithMiddleware(originalAction, null, null, null);

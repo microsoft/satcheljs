@@ -85,8 +85,8 @@
     "semicolon": [true],
     "triple-equals": false,
     "typedef": [
-      true,
-      "parameter"],
+      false
+    ],
     "variable-name": [
       true,
       "check-format",
