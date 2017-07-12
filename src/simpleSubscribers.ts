@@ -10,32 +10,28 @@ interface SimpleActionMessage {
 }
 
 interface SubscriberDecorator {
-    (actionCreator: ActionCreator<SimpleActionMessage>, target: Subscriber<SimpleActionMessage>): Subscriber<SimpleActionMessage>;
+    (
+        actionCreator: ActionCreator<SimpleActionMessage>,
+        target: Subscriber<SimpleActionMessage>
+    ): Subscriber<SimpleActionMessage>;
 }
 
 function createSimpleSubscriber(decorator: SubscriberDecorator) {
-    return function simpleSubscriber<T extends SimpleAction>(
-        actionType: string,
-        target: T): T
-    {
+    return function simpleSubscriber<T extends SimpleAction>(actionType: string, target: T): T {
         // Create the action creator
-        let simpleActionCreator = boundActionCreator(
-            actionType,
-            function simpleActionCreator() {
-                return {
-                    args: arguments,
-                };
+        let simpleActionCreator = boundActionCreator(actionType, function simpleActionCreator() {
+            return {
+                args: arguments,
+            };
         });
 
         // Create the subscriber
-        decorator(
-            simpleActionCreator,
-            function simpleSubscriberCallback(actionMessage: any) {
-                target.apply(null, actionMessage.args);
-            });
+        decorator(simpleActionCreator, function simpleSubscriberCallback(actionMessage: any) {
+            target.apply(null, actionMessage.args);
+        });
 
         // Return a function that dispatches that action
-        return simpleActionCreator as any as T;
+        return (simpleActionCreator as any) as T;
     };
 }
 

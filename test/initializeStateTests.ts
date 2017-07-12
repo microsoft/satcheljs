@@ -3,8 +3,8 @@ import rootStore from '../src/rootStore';
 import initializeState from '../src/initializeState';
 import { __resetGlobalContext } from '../src/globalContext';
 
-describe("initializeState", () => {
-    it("replaces the state value", () => {
+describe('initializeState', () => {
+    it('replaces the state value', () => {
         // Arrange
         __resetGlobalContext();
         var initialState = { testStore: 1 };
@@ -13,6 +13,6 @@ describe("initializeState", () => {
         initializeState(initialState);
 
         // Assert
-        expect(rootStore.get("testStore")).toEqual(1);
+        expect(rootStore.get('testStore')).toEqual(1);
     });
 });
