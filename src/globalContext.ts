@@ -1,5 +1,7 @@
 import { map, ObservableMap } from 'mobx';
+import ActionMessage from './interfaces/ActionMessage';
 import DispatchFunction from './interfaces/DispatchFunction';
+import Subscriber from './interfaces/Subscriber';
 import ActionContext from './legacy/ActionContext';
 import ActionFunction from './legacy/ActionFunction';
 
@@ -9,6 +11,7 @@ const schemaVersion = 3;
 export interface GlobalContext {
     schemaVersion: number;
     rootStore: ObservableMap<any>;
+    subscriptions: { [key: string]: Subscriber<ActionMessage>[] };
     dispatchWithMiddleware: DispatchFunction;
 
     // Legacy properties
@@ -31,6 +34,7 @@ export function __resetGlobalContext() {
     global.__satchelGlobalContext = {
         schemaVersion: schemaVersion,
         rootStore: map({}),
+        subscriptions: {},
         dispatchWithMiddleware: null,
         legacyInDispatch: 0,
         legacyDispatchWithMiddleware: null,

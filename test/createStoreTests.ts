@@ -2,11 +2,12 @@ import 'jasmine';
 import rootStore from '../src/rootStore';
 import createStore from '../src/createStore';
 import initializeState from '../src/initializeState';
+import { __resetGlobalContext } from '../src/globalContext';
 
 describe("createStore", () => {
     it("creates a subtree under rootStore", () => {
         // Arrange
-        initializeState({});
+        __resetGlobalContext();
         let initialState = { testProp: "testValue" };
 
         // Act

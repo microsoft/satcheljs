@@ -1,7 +1,7 @@
+import { action } from 'mobx';
 import rootStore from './rootStore';
-import { simpleMutator } from './simpleSubscribers';
 
-let createStoreAction = simpleMutator("createStore",
+let createStoreAction = action("createStore",
     function createStoreAction(key: string, initialState: any) {
         rootStore.set(key, initialState);
     });
