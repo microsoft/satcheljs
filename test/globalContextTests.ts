@@ -6,27 +6,24 @@ import {
     ensureGlobalContextSchemaVersion,
 } from '../src/globalContext';
 
-declare var global: any;
-
-var backupConsoleError = console.error;
-
 describe('globalContext', () => {
     beforeEach(() => {
         __resetGlobalContext();
     });
 
     it('will throw error if the wrong schema version is detected', () => {
+        // Arrange
         getGlobalContext().schemaVersion = -999;
 
-        let checker = function() {
-            ensureGlobalContextSchemaVersion();
-        };
-
-        expect(checker).toThrow();
+        // Act / Assert
+        expect(ensureGlobalContextSchemaVersion).toThrow();
     });
 
     it('rootStore is an ObservableMap', () => {
+        // Act
         let rootStore = getGlobalContext().rootStore;
+
+        // Assert
         expect(isObservableMap(rootStore)).toBeTruthy();
     });
 });

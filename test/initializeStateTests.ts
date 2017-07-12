@@ -4,7 +4,7 @@ import initializeState from '../src/initializeState';
 import { __resetGlobalContext } from '../src/globalContext';
 
 describe('initializeState', () => {
-    it('replaces the state value', () => {
+    it('replaces the properties of rootStore', () => {
         // Arrange
         __resetGlobalContext();
         var initialState = { testStore: 1 };
