@@ -1,6 +1,5 @@
 import 'jasmine';
 import { actionCreator, boundActionCreator, getPrivateActionId } from '../src/actionCreator';
-//import { __resetGlobalContext } from '../src/globalContext';
 import * as createActionId from '../src/createActionId';
 import * as dispatcher from '../src/dispatcher';
 
