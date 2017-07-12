@@ -3,16 +3,16 @@ import ActionCreator from './interfaces/ActionCreator';
 import { dispatch } from './dispatcher';
 import createActionId from './createActionId';
 
-export function actionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
-    actionType: string,
-    target?: TActionCreator
-): TActionCreator {
+export function actionCreator<
+    T extends ActionMessage = {},
+    TActionCreator extends ActionCreator<T> = () => T
+>(actionType: string, target?: TActionCreator): TActionCreator {
     return createActionCreator(actionType, target, false);
 }
 
 export function boundActionCreator<
-    T extends ActionMessage,
-    TActionCreator extends ActionCreator<T>
+    T extends ActionMessage = {},
+    TActionCreator extends ActionCreator<T> = () => T
 >(actionType: string, target?: TActionCreator): TActionCreator {
     return createActionCreator(actionType, target, true);
 }
