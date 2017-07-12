@@ -1,6 +1,7 @@
 import ActionMessage from './interfaces/ActionMessage';
 import ActionCreator from './interfaces/ActionCreator';
 import { dispatch } from './dispatcher';
+import createActionId from './createActionId';
 
 export function actionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
     actionType: string,
@@ -21,6 +22,8 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
     target: TActionCreator,
     shouldDispatch: boolean
 ): TActionCreator {
+    let actionId = createActionId();
+
     let decoratedTarget = function createAction(...args: any[]) {
         // Create the action message
         let actionMessage: ActionMessage = target ? target.apply(null, args) : {};
@@ -30,7 +33,9 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
             throw new Error('Action creators should not include the type property.');
         }
 
+        // Stamp the action message with the type and the private ID
         actionMessage.type = actionType;
+        setPrivateActionId(actionMessage, actionId);
 
         // Dispatch if necessary
         if (shouldDispatch) {
@@ -40,14 +45,15 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
         return actionMessage;
     } as TActionCreator;
 
-    setActionType(decoratedTarget, actionType);
+    // Stamp the action creator function with the private ID
+    setPrivateActionId(decoratedTarget, actionId);
     return decoratedTarget;
 }
 
-export function getActionType(target: ActionCreator<any>) {
-    return (target as any).__SATCHELJS_ACTION_TYPE_V2;
+export function getPrivateActionId(target: any) {
+    return target.__SATCHELJS_ACTION_ID;
 }
 
-function setActionType(target: ActionCreator<any>, actionType: string) {
-    (target as any).__SATCHELJS_ACTION_TYPE_V2 = actionType;
+function setPrivateActionId(target: any, actionId: string) {
+    target.__SATCHELJS_ACTION_ID = actionId;
 }

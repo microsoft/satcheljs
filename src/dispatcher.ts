@@ -1,14 +1,15 @@
 import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
+import { getPrivateActionId } from './actionCreator';
 import { getGlobalContext } from './globalContext';
 
-export function subscribe(actionType: string, callback: Subscriber<any>) {
+export function subscribe(actionId: string, callback: Subscriber<any>) {
     let subscriptions = getGlobalContext().subscriptions;
-    if (!subscriptions[actionType]) {
-        subscriptions[actionType] = [];
+    if (!subscriptions[actionId]) {
+        subscriptions[actionId] = [];
     }
 
-    subscriptions[actionType].push(callback);
+    subscriptions[actionId].push(callback);
 }
 
 export function dispatch(actionMessage: ActionMessage) {
@@ -17,7 +18,8 @@ export function dispatch(actionMessage: ActionMessage) {
 }
 
 export function finalDispatch(actionMessage: ActionMessage) {
-    let subscribers = getGlobalContext().subscriptions[actionMessage.type];
+    let actionId = getPrivateActionId(actionMessage);
+    let subscribers = getGlobalContext().subscriptions[actionId];
     if (subscribers) {
         subscribers.forEach(subscriber => subscriber(actionMessage));
     }

@@ -11,6 +11,7 @@ const schemaVersion = 3;
 export interface GlobalContext {
     schemaVersion: number;
     rootStore: ObservableMap<any>;
+    nextActionId: number;
     subscriptions: { [key: string]: Subscriber<ActionMessage>[] };
     dispatchWithMiddleware: DispatchFunction;
 
@@ -34,6 +35,7 @@ export function __resetGlobalContext() {
     global.__satchelGlobalContext = {
         schemaVersion: schemaVersion,
         rootStore: map({}),
+        nextActionId: 0,
         subscriptions: {},
         dispatchWithMiddleware: null,
         legacyInDispatch: 0,
