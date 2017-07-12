@@ -37,7 +37,6 @@
     "no-string-based-set-immediate": true,
     "no-string-based-set-interval": true,
     "no-string-based-set-timeout": true,
-    "no-unused-imports": true,
     "no-with-statement": true,
     "prefer-array-literal": false,
     "promise-must-complete": true,
