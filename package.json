@@ -3,7 +3,7 @@
   "version": "3.0.0-beta1",
   "description": "Store implementation for functional reactive flux.",
   "lint-staged": {
-    "packages/**/*.{ts,tsx}": [
+    "*.{ts,tsx}": [
       "prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote",
       "git add"
     ]
