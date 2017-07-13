@@ -4,7 +4,7 @@ import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
 import { mutator } from '../src/mutator';
 import { simpleMutator } from '../src/simpleSubscribers';
-import createStore from '../src/createStore';
+import createStoreSelector from '../src/createStoreSelector';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
@@ -52,7 +52,7 @@ describe('satcheljs', () => {
 
     it('mutators can modify the store', () => {
         // Arrange
-        let store = createStore('testStore', { testProperty: 'testValue' });
+        let store = createStoreSelector('testStore', { testProperty: 'testValue' })();
         let modifyStore = boundActionCreator('modifyStore');
 
         let onModifyStore = mutator(modifyStore, actionMessage => {

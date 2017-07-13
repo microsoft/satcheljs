@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import rootStore from './rootStore';
+import getRootStore from './getRootStore';
 import { simpleMutator } from './simpleSubscribers';
 
 // initializeState can be used to completely replace the existing state object, e.g. to restore
@@ -7,6 +7,8 @@ import { simpleMutator } from './simpleSubscribers';
 export default action('initializeState', function initializeState(initialState: {
     [key: string]: any;
 }) {
+    let rootStore = getRootStore();
+
     rootStore.clear();
     rootStore.merge(initialState);
 });

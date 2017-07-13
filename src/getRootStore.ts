@@ -3,4 +3,9 @@ import { ObservableMap } from 'mobx';
 /* tslint:enable:no-unused-imports */
 import { getGlobalContext } from './globalContext';
 
-export default getGlobalContext().rootStore;
+/**
+ * Satchel-provided root store getter
+ */
+export default function getRootStore(storeName?: string) {
+    return getGlobalContext().rootStore;
+}

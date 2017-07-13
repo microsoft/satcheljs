@@ -3,7 +3,7 @@ import 'jasmine';
 
 import * as React from 'react';
 
-import { action, createStore, initializeTestMode, resetTestMode } from '../../../src';
+import { action, createStoreSelector, initializeTestMode, resetTestMode } from '../../../src';
 import { mount, shallow } from 'enzyme';
 
 import { isObservable } from 'mobx';
@@ -13,9 +13,9 @@ let sequenceOfEvents: any[];
 
 describe('reactive decorator', () => {
     it('observes changes from store', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         let renderSpy = jasmine.createSpy(null);
 
@@ -46,9 +46,9 @@ describe('reactive decorator', () => {
     });
 
     it('passes through to @observer if no args are passed', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         let TestComponent = reactive(
             class extends React.Component<any, any> {
@@ -71,9 +71,9 @@ describe('reactive decorator', () => {
     });
 
     it('creates a mountable classical component', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         let Wrapped = reactive({
             foo: () => store.foo,
@@ -96,9 +96,9 @@ describe('reactive decorator', () => {
     });
 
     it('injects subtree as props for classical components', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         @reactive({
             foo: () => store.foo,
@@ -121,9 +121,9 @@ describe('reactive decorator', () => {
     });
 
     it('allows classical components to be tested in a pure manner', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: null,
-        });
+        })();
 
         @reactive({
             foo: () => store.foo,
@@ -147,9 +147,9 @@ describe('reactive decorator', () => {
     });
 
     it('allows functional components to be tested in a pure manner', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: null,
-        });
+        })();
 
         let TestComponent = reactive({
             foo: () => store.foo,
@@ -172,9 +172,9 @@ describe('reactive decorator', () => {
     });
 
     it('creates a mountable functional component', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         let Wrapped = reactive({
             foo: () => store.foo,
@@ -193,9 +193,9 @@ describe('reactive decorator', () => {
     });
 
     it('injects subtree as props for functional components', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
-        });
+        })();
 
         let TestComponent = reactive({
             foo: () => store.foo,
@@ -216,9 +216,9 @@ describe('reactive decorator', () => {
     });
 
     it('injects props as param to the selector functions', () => {
-        let store: any = createStore('testStore', {
+        let store: any = createStoreSelector('testStore', {
             id0: 'value',
-        });
+        })();
 
         let TestComponent = reactive({
             foo: (p: any) => store[p.id],
@@ -260,10 +260,10 @@ describe('reactive decorator', () => {
     });
 
     it('allows for type checking for generic decorator with TS 2.1', () => {
-        let store = createStore('testStore', {
+        let store = createStoreSelector('testStore', {
             foo: 'value',
             dontuse: 2,
-        });
+        })();
 
         interface Props {
             foo: string;

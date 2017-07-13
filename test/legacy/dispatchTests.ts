@@ -1,7 +1,7 @@
 import 'jasmine';
 import { autorun, _ } from 'mobx';
 
-import rootStore from '../../src/rootStore';
+import getRootStore from '../../src/getRootStore';
 import initializeState from '../../src/initializeState';
 import dispatch from '../../src/legacy/dispatch';
 import * as legacyApplyMiddlewareImports from '../../src/legacy/legacyApplyMiddleware';
@@ -46,7 +46,7 @@ describe('dispatch', () => {
         // Count how many times the autorun gets executed
         let count = 0;
         autorun(() => {
-            rootStore.get('foo');
+            getRootStore().get('foo');
             count++;
         });
 
@@ -55,13 +55,13 @@ describe('dispatch', () => {
 
         // Change the state twice, once in middleware and once in the action
         legacyApplyMiddlewareImports.default((next, action, actionType, actionContext) => {
-            rootStore.set('foo', 1);
+            getRootStore().set('foo', 1);
             next(action, actionType, null, actionContext);
         });
 
         dispatch(
             () => {
-                rootStore.set('foo', 2);
+                getRootStore().set('foo', 2);
             },
             null,
             null,
