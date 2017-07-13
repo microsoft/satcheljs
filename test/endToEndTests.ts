@@ -2,7 +2,7 @@ import 'jasmine';
 import { boundActionCreator } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
-import { mutator } from '../src/mutator';
+import mutator from '../src/mutator';
 import { simpleMutator } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
 

@@ -6,7 +6,7 @@ import Subscriber from './interfaces/Subscriber';
 import { getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 
-export function mutator<T extends ActionMessage>(
+export default function mutator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
     target: Subscriber<T>
 ): Subscriber<T> {

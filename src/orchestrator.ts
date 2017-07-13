@@ -4,7 +4,7 @@ import Subscriber from './interfaces/Subscriber';
 import { getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 
-export function orchestrator<T extends ActionMessage>(
+export default function orchestrator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
     target: Subscriber<T>
 ) {
