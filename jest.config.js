@@ -12,7 +12,8 @@ module.exports = {
   transform: {
     '.(ts|tsx)': '<rootDir>/jest.preprocessor.js'
   },
-  testRegex: '/test/.*Tests.tsx?$',
+  transformIgnorePatterns: ['node_modules', 'build'],
+  testMatch: ['**/*Tests.ts'],
   coverageDirectory: 'build/coverage',
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx}',

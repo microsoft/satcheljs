@@ -1,5 +1,5 @@
 import 'jasmine';
-import { LegacyDispatchFunction, ActionContext } from '../../../src';
+import { LegacyDispatchFunction, ActionContext } from '../../../src/legacy';
 import { stitch, subscribe } from '../../../src/legacy/stitch';
 
 let sequenceOfEvents: any[];

@@ -17,17 +17,5 @@ export { default as getRootStore } from './getRootStore';
 export { simpleMutator, simpleOrchestrator } from './simpleSubscribers';
 export { useStrict };
 
-// Legacy API
-export { default as legacyApplyMiddleware } from './legacy/legacyApplyMiddleware';
-export { default as LegacyMiddleware } from './legacy/LegacyMiddleware';
-export { default as ActionFunction } from './legacy/ActionFunction';
-export { default as ActionContext } from './legacy/ActionContext';
-export { default as LegacyDispatchFunction } from './legacy/LegacyDispatchFunction';
-export { default as action } from './legacy/action';
-export { default as select, SelectorFunction } from './legacy/select';
-export { default as createUndo, UndoResult, CreateUndoReturnValue } from './legacy/createUndo';
-export { getActionType } from './legacy/functionInternals';
-export { initializeTestMode, resetTestMode } from './legacy/testMode';
-
 // Default to MobX strict mode
 useStrict(true);

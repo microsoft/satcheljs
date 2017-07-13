@@ -15,7 +15,7 @@ describe('select', () => {
                 obj1Key2: 'obj1_value2',
             },
             array1: ['array1_value1', 'array1_value2'],
-        });
+        })();
 
         interface ReadOnlyActionState {
             key1: string;
@@ -47,7 +47,7 @@ describe('select', () => {
     it('can update observable value', () => {
         let fooStore = createStore('foo', {
             k: 'v',
-        });
+        })();
 
         interface ActionState {
             key: string;
@@ -70,7 +70,7 @@ describe('select', () => {
     it('can update observable map', () => {
         let fooStore = createStore('foo', {
             map: map({ k: 'v' }),
-        });
+        })();
 
         interface ActionState {
             map: ObservableMap<string>;
@@ -92,7 +92,7 @@ describe('select', () => {
     it('can update observable arrays', () => {
         let fooStore = createStore('foo', {
             array: ['v'],
-        });
+        })();
 
         interface ActionState {
             array: string[];
@@ -116,7 +116,7 @@ describe('select', () => {
     it('can update atoms', () => {
         let fooStore = createStore('foo', {
             array: ['v'],
-        });
+        })();
 
         interface ActionState {
             array: string[];
@@ -141,7 +141,7 @@ describe('select', () => {
             obj: {
                 k: 'v',
             },
-        });
+        })();
 
         interface ActionState {
             obj: { [key: string]: string };
@@ -166,7 +166,7 @@ describe('select', () => {
         let fooStore: any = createStore('foo', {
             id0: 'value',
             array0: ['a', 'b', 'c'],
-        });
+        })();
 
         let readAction = action('read')(function readAction(
             id: string,
@@ -188,7 +188,7 @@ describe('select', () => {
     it('places state at the right argument position even if the wrapped function has optional arguments before state', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let someAction = action(
             'someAction'
@@ -208,7 +208,7 @@ describe('select', () => {
     it('can handle having action be the outer decorator', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let functionIsCalled = false;
 
@@ -231,7 +231,7 @@ describe('select', () => {
     it('allows tests to passthrough state param', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let someAction = select({
             key: () => fooStore.key,
@@ -249,7 +249,7 @@ describe('select', () => {
     it('can use new TS 2.1 mapped types to describe selector functions', () => {
         let fooStore = createStore('foo', {
             k: 'v',
-        });
+        })();
 
         interface ActionState {
             key: string;

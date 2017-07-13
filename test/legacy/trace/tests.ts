@@ -1,6 +1,6 @@
 import 'jasmine';
 import trace from '../../../src/legacy/trace/trace';
-import { ActionContext } from '../../../src';
+import { ActionContext } from '../../../src/legacy';
 
 describe('trace', () => {
     beforeEach(() => {
