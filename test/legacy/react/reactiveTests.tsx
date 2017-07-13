@@ -3,7 +3,7 @@ import 'jasmine';
 
 import * as React from 'react';
 
-import { action, createStoreSelector, initializeTestMode, resetTestMode } from '../../../src';
+import { action, createStore, initializeTestMode, resetTestMode } from '../../../src';
 import { mount, shallow } from 'enzyme';
 
 import { isObservable } from 'mobx';
@@ -13,7 +13,7 @@ let sequenceOfEvents: any[];
 
 describe('reactive decorator', () => {
     it('observes changes from store', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -46,7 +46,7 @@ describe('reactive decorator', () => {
     });
 
     it('passes through to @observer if no args are passed', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -71,7 +71,7 @@ describe('reactive decorator', () => {
     });
 
     it('creates a mountable classical component', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -96,7 +96,7 @@ describe('reactive decorator', () => {
     });
 
     it('injects subtree as props for classical components', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -121,7 +121,7 @@ describe('reactive decorator', () => {
     });
 
     it('allows classical components to be tested in a pure manner', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: null,
         })();
 
@@ -147,7 +147,7 @@ describe('reactive decorator', () => {
     });
 
     it('allows functional components to be tested in a pure manner', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: null,
         })();
 
@@ -172,7 +172,7 @@ describe('reactive decorator', () => {
     });
 
     it('creates a mountable functional component', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -193,7 +193,7 @@ describe('reactive decorator', () => {
     });
 
     it('injects subtree as props for functional components', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
         })();
 
@@ -216,7 +216,7 @@ describe('reactive decorator', () => {
     });
 
     it('injects props as param to the selector functions', () => {
-        let store: any = createStoreSelector('testStore', {
+        let store: any = createStore('testStore', {
             id0: 'value',
         })();
 
@@ -260,7 +260,7 @@ describe('reactive decorator', () => {
     });
 
     it('allows for type checking for generic decorator with TS 2.1', () => {
-        let store = createStoreSelector('testStore', {
+        let store = createStore('testStore', {
             foo: 'value',
             dontuse: 2,
         })();
