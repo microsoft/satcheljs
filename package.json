@@ -12,15 +12,14 @@
     "precommit": "lint-staged",
     "clean": "rimraf build lib",
     "lint": "tslint -t stylish --project tsconfig.json",
-    "build:source": "tsc",
-    "watch:source": "tsc -w",
-    "watch:jest": "jest --watch",
+    "build:source": "tsc -p tsconfig.release.json",
+    "watch": "tsc -w -p tsconfig.release.json",
     "test:unit": "jest",
+
     "build": "run-s clean build:source",
-    "build:release": "run-s clean build:release",
-    "start": "run-s clean build:watch",
+    "start": "run-s clean watch",
     "test": "run-s lint build test:unit",
-    "test:start": "npm-run-all clean --parallel watch:*"
+    "test:start": "jest --watch"
   },
   "devDependencies": {
     "@types/enzyme": "2.8.1",

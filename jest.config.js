@@ -4,10 +4,15 @@ module.exports = {
     "node_modules"
   ],
   moduleFileExtensions: [
+    'ts',
+    'tsx',
     'js',
-    'jsx',
+    'jsx'
   ],
-  testRegex: '/build/test/.*Tests.js$',
+  transform: {
+    '.(ts|tsx)': '<rootDir>/jest.preprocessor.js'
+  },
+  testRegex: '/test/.*Tests.tsx?$',
   coverageDirectory: 'build/coverage',
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx}',
