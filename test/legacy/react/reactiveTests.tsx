@@ -3,7 +3,8 @@ import 'jasmine';
 
 import * as React from 'react';
 
-import { action, createStore, initializeTestMode, resetTestMode } from '../../../src';
+import { action, initializeTestMode, resetTestMode } from '../../../src/legacy';
+import { createStore } from '../../../src';
 import { mount, shallow } from 'enzyme';
 
 import { isObservable } from 'mobx';

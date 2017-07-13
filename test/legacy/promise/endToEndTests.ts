@@ -1,5 +1,6 @@
 import 'jasmine';
-import { action, legacyApplyMiddleware, createStore } from '../../../src';
+import { action, legacyApplyMiddleware } from '../../../src/legacy';
+import { createStore } from '../../../src';
 import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
 
 let testAction = action('testAction')(function testAction(store: any, newValue: any) {
