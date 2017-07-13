@@ -1,5 +1,5 @@
 import 'jasmine';
-import rootStore from '../src/rootStore';
+import getRootStore from '../src/getRootStore';
 import initializeState from '../src/initializeState';
 import { __resetGlobalContext } from '../src/globalContext';
 
@@ -13,6 +13,6 @@ describe('initializeState', () => {
         initializeState(initialState);
 
         // Assert
-        expect(rootStore.get('testStore')).toEqual(1);
+        expect(getRootStore().get('testStore')).toEqual(1);
     });
 });

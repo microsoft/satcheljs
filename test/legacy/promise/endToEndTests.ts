@@ -13,7 +13,7 @@ describe('promiseMiddleware', () => {
     it('wraps callbacks in promises when applied', done => {
         // Arrange
         legacyApplyMiddleware(promiseMiddleware);
-        let store = createStore('testStore', { testValue: null, currentAction: null });
+        let store = createStore('testStore', { testValue: null, currentAction: null })();
         let newValue = {};
 
         // Act
@@ -39,7 +39,7 @@ describe('promiseMiddleware', () => {
     it('does not wrap callbacks in promises when not applied', done => {
         // Arrange
         legacyApplyMiddleware();
-        let store = createStore('testStore', { testValue: null });
+        let store = createStore('testStore', { testValue: null })();
         let newValue = {};
 
         // Act

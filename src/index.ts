@@ -13,7 +13,7 @@ export { dispatch } from './dispatcher';
 export { default as initializeState } from './initializeState';
 export { mutator } from './mutator';
 export { orchestrator } from './orchestrator';
-export { default as rootStore } from './rootStore';
+export { default as getRootStore } from './getRootStore';
 export { simpleMutator, simpleOrchestrator } from './simpleSubscribers';
 export { useStrict };
 
