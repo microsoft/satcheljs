@@ -9,34 +9,47 @@ describe('install', () => {
     let wrappedThen = () => {};
     let wrappedCatch = () => {};
 
-    beforeEach(() => {
+    it('wraps Promise.then and Promise.catch', () => {
+        try {
+            // Arrange
+            setupPromise();
+
+            // Act
+            install();
+
+            // Assert
+            expect(Promise.prototype.then).toBe(wrappedThen);
+            expect(Promise.prototype.catch).toBe(wrappedCatch);
+        } finally {
+            resetPromise();
+        }
+    });
+
+    it('returns an uninstall function to restore the original then and catch', () => {
+        try {
+            // Arrange
+            setupPromise();
+            let uninstall = install();
+
+            // Act
+            uninstall();
+
+            // Assert
+            expect(Promise.prototype.then).toBe(originalThen);
+            expect(Promise.prototype.catch).toBe(originalCatch);
+        } finally {
+            resetPromise();
+        }
+    });
+
+    // NOTE!!!! Promise can only be overridden INSIDE the test function body, or else jest will not finish
+    function setupPromise() {
         spyOn(actionWrappers, 'wrapThen').and.returnValue(wrappedThen);
         spyOn(actionWrappers, 'wrapCatch').and.returnValue(wrappedCatch);
-    });
+    }
 
-    afterEach(() => {
+    function resetPromise() {
         Promise.prototype.then = originalThen;
         Promise.prototype.catch = originalCatch;
-    });
-
-    xit('wraps Promise.then and Promise.catch', () => {
-        // Act
-        install();
-
-        // Assert
-        expect(Promise.prototype.then).toBe(wrappedThen);
-        expect(Promise.prototype.catch).toBe(wrappedCatch);
-    });
-
-    xit('returns an uninstall function to restore the original then and catch', () => {
-        // Arrange
-        let uninstall = install();
-
-        // Act
-        uninstall();
-
-        // Assert
-        expect(Promise.prototype.then).toBe(originalThen);
-        expect(Promise.prototype.catch).toBe(originalCatch);
-    });
+    }
 });
