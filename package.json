@@ -18,7 +18,7 @@
 
     "build": "run-s clean build:source",
     "start": "run-s clean watch",
-    "test": "run-s lint build test:unit",
+    "test": "run-s lint test:unit",
     "test:start": "jest --watch"
   },
   "devDependencies": {
