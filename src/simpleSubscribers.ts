@@ -5,18 +5,7 @@ import { boundActionCreator } from './actionCreator';
 import mutator from './mutator';
 import orchestrator from './orchestrator';
 
-interface SimpleActionMessage {
-    args: IArguments;
-}
-
-interface SubscriberDecorator {
-    (
-        actionCreator: ActionCreator<SimpleActionMessage>,
-        target: Subscriber<SimpleActionMessage>
-    ): Subscriber<SimpleActionMessage>;
-}
-
-function createSimpleSubscriber(decorator: SubscriberDecorator) {
+export function createSimpleSubscriber(decorator: Function) {
     return function simpleSubscriber<T extends SimpleAction>(actionType: string, target: T): T {
         // Create the action creator
         let simpleActionCreator = boundActionCreator(actionType, function simpleActionCreator() {
