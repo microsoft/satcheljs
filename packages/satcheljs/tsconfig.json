@@ -1,26 +1,34 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "outDir": "../../dist/satcheljs",
-        "sourceMap": true,
-        "declaration": true,
-        "removeComments": false,
-        "noImplicitAny": true,
-        "experimentalDecorators": true,
-        "baseUrl": "../../",
-        "paths": {
-            "*": ["*", "dist/*"]
-        },
-        "rootDir": ".",
-        "lib": ["es6", "dom"]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "../../dist/satcheljs",
+    "sourceMap": true,
+    "declaration": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "baseUrl": "../../",
+    "paths": {
+      "*": [
+        "*",
+        "dist/*"
+      ]
     },
-    "include": [
-        "lib/**/*.ts",
-        "lib/**/*.tsx",
-        "test/**/*.ts",
-        "test/**/*.tsx",
-        "typings/**/*.d.ts"
-    ],
-    "exclude": ["../../dist"]
+    "rootDir": ".",
+    "lib": [
+      "es6",
+      "dom"
+    ]
+  },
+  "include": [
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "typings/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../dist"
+  ]
 }
