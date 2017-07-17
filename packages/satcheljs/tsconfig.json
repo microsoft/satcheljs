@@ -27,5 +27,8 @@
     "test/**/*.ts",
     "test/**/*.tsx",
     "typings/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../dist"
   ]
 }
