@@ -2,12 +2,10 @@ import 'jasmine';
 import action from '../../src/legacy/action';
 import createUndo, { UndoResult } from '../../src/legacy/createUndo';
 import { extendObservable, observable, map, _ } from 'mobx';
-import initializeState from '../../src/initializeState';
 import { __resetGlobalContext } from '../../src/globalContext';
 
 function resetState() {
     _.resetGlobalState();
-    initializeState({});
     __resetGlobalContext();
 }
 

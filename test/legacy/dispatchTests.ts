@@ -2,7 +2,6 @@ import 'jasmine';
 import { autorun, _ } from 'mobx';
 
 import getRootStore from '../../src/getRootStore';
-import initializeState from '../../src/initializeState';
 import dispatch from '../../src/legacy/dispatch';
 import * as legacyApplyMiddlewareImports from '../../src/legacy/legacyApplyMiddleware';
 import { __resetGlobalContext } from '../../src/globalContext';
@@ -12,7 +11,6 @@ var backupConsoleError = console.error;
 describe('dispatch', () => {
     beforeEach(() => {
         _.resetGlobalState();
-        initializeState({});
         __resetGlobalContext();
     });
 
@@ -41,7 +39,7 @@ describe('dispatch', () => {
     });
 
     it('executes middleware in the same transaction as the action', () => {
-        initializeState({ foo: 0 });
+        getRootStore().set('foo', 0);
 
         // Count how many times the autorun gets executed
         let count = 0;

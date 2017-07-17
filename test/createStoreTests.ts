@@ -1,7 +1,6 @@
 import 'jasmine';
 import getRootStore from '../src/getRootStore';
 import createStore from '../src/createStore';
-import initializeState from '../src/initializeState';
 import { __resetGlobalContext } from '../src/globalContext';
 
 describe('createStore', () => {

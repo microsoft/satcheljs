@@ -10,7 +10,6 @@ export { actionCreator, boundActionCreator } from './actionCreator';
 export { default as applyMiddleware } from './applyMiddleware';
 export { default as createStore } from './createStore';
 export { dispatch } from './dispatcher';
-export { default as initializeState } from './initializeState';
 export { default as mutator } from './mutator';
 export { default as orchestrator } from './orchestrator';
 export { default as getRootStore } from './getRootStore';
