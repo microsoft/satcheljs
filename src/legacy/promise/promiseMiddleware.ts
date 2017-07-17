@@ -2,8 +2,8 @@ import LegacyDispatchFunction from '../LegacyDispatchFunction';
 import ActionFunction from '../ActionFunction';
 import ActionContext from '../ActionContext';
 import install from './install';
-import actionStack from './actionStack';
 
+let actionStack: string[] = [];
 let isInstalled = false;
 let uninstall: () => void;
 
