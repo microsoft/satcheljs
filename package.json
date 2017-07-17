@@ -1,35 +1,47 @@
 {
-  "name": "satcheljs-suite",
-  "version": "2.14.1",
+  "name": "satcheljs",
+  "version": "3.0.0-beta2",
   "description": "Store implementation for functional reactive flux.",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote",
+      "git add"
+    ]
+  },
   "scripts": {
-    "clean": "rimraf dist",
-    "link-all": "node tools/npm-link.js",
-    "publish-all": "node tools/publish-all.js",
-    "normalize": "node tools/normalize-packages.js",
-    "build": "npm run clean && npm run normalize && node tools/build-all.js",
-    "test": "npm run build && npm run link-all && node tools/test-all.js"
+    "precommit": "lint-staged",
+    "clean": "rimraf build lib",
+    "lint": "tslint -t stylish --project tsconfig.json",
+    "build:source": "tsc -p tsconfig.release.json",
+    "watch": "tsc -w -p tsconfig.release.json",
+    "test:unit": "jest",
+
+    "build": "run-s clean build:source",
+    "start": "run-s clean watch",
+    "test": "run-s lint test:unit",
+    "test:start": "jest --watch"
   },
   "devDependencies": {
-    "@types/enzyme": "~2.8.1",
+    "@types/enzyme": "2.8.1",
     "@types/jasmine": "~2.5.53",
-    "@types/jsdom": "~2.0.32",
+    "@types/jsdom": "^11.0.1",
     "@types/node": "~6.0.78",
-    "@types/react": "~15.0.27",
+    "@types/react": "15.0.37",
     "@types/react-addons-perf": "~0.14.18",
     "@types/react-addons-test-utils": "~0.14.19",
     "@types/react-dom": "~15.5.1",
-    "enzyme": "~2.6.0",
-    "glob": "^7.0.6",
-    "jasmine": "~2.5.3",
-    "jsdom": "~9.8.3",
-    "mkdirp": "^0.5.1",
-    "react-addons-test-utils": "~15.6.0",
+    "enzyme": "^2.9.1",
+    "husky": "~0.14.3",
+    "jasmine": "^2.6.0",
+    "jest": "20.0.4",
+    "lint-staged": "~4.0.1",
+    "npm-run-all": "^4.0.2",
+    "prettier": "~1.5.2",
+    "react-test-renderer": "^15.6.1",
     "rimraf": "^2.5.4",
-    "toposort": "~1.0.0",
-    "tslint": "^4.0.2",
-    "tslint-eslint-rules": "^3.2.0",
-    "tslint-microsoft-contrib": "^4.0.0",
+    "tslint": "~5.5.0",
+    "tslint-eslint-rules": "~4.1.1",
+    "tslint-microsoft-contrib": "~5.0.1",
     "typescript": "~2.3.4"
   },
   "dependencies": {
@@ -39,5 +51,10 @@
     "react": "^15.6.1",
     "react-addons-perf": "^15.4.2",
     "react-dom": "^15.6.1"
+  },
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

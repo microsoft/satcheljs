@@ -37,7 +37,6 @@
     "no-string-based-set-immediate": true,
     "no-string-based-set-interval": true,
     "no-string-based-set-timeout": true,
-    "no-unused-imports": true,
     "no-with-statement": true,
     "prefer-array-literal": false,
     "promise-must-complete": true,
@@ -71,7 +70,7 @@
     "no-switch-case-fall-through": true,
     "trailing-comma": true,
     "no-trailing-whitespace": true,
-    "no-unused-expression": true,
+    "no-unused-expression": false,
     "no-use-before-declare": true,
     "no-var-requires": false,
     "one-line": [
@@ -82,12 +81,11 @@
       "check-whitespace"
     ],
     "quotemark": [false],
-    "require-full-import": [true, "owa-attachment", "owa-upnext"],
     "semicolon": [true],
     "triple-equals": false,
     "typedef": [
-      true,
-      "parameter"],
+      false
+    ],
     "variable-name": [
       true,
       "check-format",
