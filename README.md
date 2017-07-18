@@ -134,11 +134,9 @@ let requestAddTodo = boundActionCreator(
     (text: string) => ({ text: text })
 );
 
-orchestrator(requestAddTodo, (actionMessage) => {
-    addTodoOnServer(actionMessage.text)
-        .then((response) => {
-            addTodo(actionMessage.text);
-        });
+orchestrator(requestAddTodo, async (actionMessage) => {
+    let response = await addTodoOnServer(actionMessage.text);
+    addTodo(actionMessage.text);
 };
 ```
 
@@ -165,11 +163,9 @@ Simple orchestrators can be created similarly:
 ```typescript
 let requestAddTodo = simpleOrchestrator(
     'REQUEST_ADD_TODO',
-    function requestAddTodo(text: string) {
-        addTodoOnServer(actionMessage.text)
-            .then((response) => {
-                addTodo(actionMessage.text);
-            });
+    async function requestAddTodo(text: string) {
+        let response = await addTodoOnServer(actionMessage.text);
+        addTodo(actionMessage.text);
     });
 ```
 
