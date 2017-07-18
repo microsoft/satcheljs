@@ -42,11 +42,10 @@ The following examples assume you're developing in Typescript.
 ```typescript
 import { createStore } from 'satcheljs';
 
-var store = createStore(
-    'scoreboardStore',
-    {
-        score: 0
-    });
+let getStore = createStore(
+    'todoStore',
+    { todos: [] }
+);
 ```
 
 ### Create a component that consumes your state
@@ -54,10 +53,16 @@ var store = createStore(
 Notice the `@observer` decorator on the component—this is what tells MobX to rerender the component whenever the data it relies on changes.
 
 ```javascript
+import { observer } from 'mobx-react';
+
 @observer
-class ApplicationComponent extends React.Component<any, any> {
+class TodoListComponent extends React.Component<any, any> {
     render() {
-        return (<div>Score = {store.score}</div>);
+        return (
+            <div>
+                getStore().todos.map(todo => <div>{todo.text}</div>)
+            </div>
+        );
     }
 }
 ```
@@ -67,10 +72,10 @@ class ApplicationComponent extends React.Component<any, any> {
 ```typescript
 import { actionCreator } from 'satcheljs';
 
-let addPoints = actionCreator('ADD_POINTS',
-    (points: number) => ({
-        points: points
-    }));
+let addTodo = actionCreator(
+    'ADD_TODO',
+    (text: string) => ({ text: text })
+);
 ```
 
 ### Implement a mutator
@@ -81,8 +86,11 @@ If you're using TypeScript, the type of `actionMessage` is automatically inferre
 ```typescript
 import { mutator } from 'satcheljs';
 
-mutator(addPoints, (actionMessage) => {
-    store.score += actionMessage.points;
+mutator(addTodo, (actionMessage) => {
+    getStore().todos.push({
+        id: Math.random(),
+        text: actionMessage.text
+    });
 };
 ```
 
@@ -91,22 +99,23 @@ mutator(addPoints, (actionMessage) => {
 ```typescript
 import { dispatch } from 'satcheljs';
 
-dispatch(addPoints(2));
+dispatch(addTodo('Take out trash'));
 ```
 
 ### Bound action creators
 
 Bound action creators create and dispatch the action in one call.
-Also notice that if the action doesn't need any arguments then you don't need to supply an action creator function.
 
 ```typescript
 import { boundActionCreator } from 'satcheljs';
 
-let resetScore = boundActionCreator('RESET_SCORE');
+let addTodo = boundActionCreator(
+    'ADD_TODO',
+    (text: string) => ({ text: text })
+);
 
-// This dispatches a RESET_SCORE action.  Of course, you'd still need a mutator
-// to subscribe to it to update the store.
-resetScore();
+// This creates and dispatches an ADD_TODO action
+addTodo('Take out trash');
 ```
 
 ### Orchestrators
@@ -120,45 +129,47 @@ The following example shows how an orchestrator can persist a value to a server 
 ```typescript
 import { boundActionCreator, orchestrator } from 'satcheljs';
 
-let requestAddPoints = boundActionCreator('REQUEST_ADD_POINTS',
-    (points: number) => ({
-    }));
+let requestAddTodo = boundActionCreator(
+    'REQUEST_ADD_TODO',
+    (text: string) => ({ text: text })
+);
 
-orchestrator(requestAddPoints, (actionMessage) => {
-    updatePointsOnServer(store.score + actionMessage.points)
-    .then((response) => {
-        if (response.result == 200) {
-            addPoints(actionMessage.points);
-        }
-    });
+orchestrator(requestAddTodo, (actionMessage) => {
+    addTodoOnServer(actionMessage.text)
+        .then((response) => {
+            addTodo(actionMessage.text);
+        });
 };
 ```
 
 ### Simple mutators and orchestrators
 
-In many cases a given action only needs to be handled by one mutator.
-Satchel provides the concept of a simple mutator which ecapsulates action creation, dispatch, and handling in one simple function call.
-The `addPoints` mutator above could be implemented as follows:
+In many cases a given action only needs to be handled by one mutator or orchestrator.
+Satchel provides the concept of simple subscribers which encapsulate action creation, dispatch, and handling in one simple function call.
+
+The `addTodo` mutator above could be implemented as follows:
 
 ```typescript
-let addPoints = simpleMutator(
-    'addPoints',
-    function addPoints(points: number) {
-        store.score += points;
+let addTodo = simpleMutator(
+    'ADD_TODO',
+    function addTodo(text: string) {
+        getStore().todos.push({
+            id: Math.random(),
+            text: actionMessage.text
+        });
     });
 ```
 
 Simple orchestrators can be created similarly:
 
 ```typescript
-let requestAddPoints = simpleOrchestrator(
-    'requestAddPoints',
-    function requestAddPoints(points: number) {
-        .then((response) => {
-            if (response.result == 200) {
-                addPoints(points);
-            }
-        });
+let requestAddTodo = simpleOrchestrator(
+    'REQUEST_ADD_TODO',
+    function requestAddTodo(text: string) {
+        addTodoOnServer(actionMessage.text)
+            .then((response) => {
+                addTodo(actionMessage.text);
+            });
     });
 ```
 
