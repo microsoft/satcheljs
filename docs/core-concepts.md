@@ -1,4 +1,4 @@
-# Satchel and Flux
+# Core Concepts
 
 Satchel is an opinionated implementation of Flux.
 For an introduction to Flux as a pattern and the reasoning behind it, you can see [Facebook's overview](https://facebook.github.io/flux/docs/overview.html).

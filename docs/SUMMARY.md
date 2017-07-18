@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Satchel and Flux](satchel-and-flux.md)
+* [Core Concepts](core-concepts.md)
 
 * Usage
   * [Getting Started](usage/getting-started.md)
