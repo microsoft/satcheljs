@@ -135,7 +135,7 @@ let requestAddTodo = boundActionCreator(
 );
 
 orchestrator(requestAddTodo, async (actionMessage) => {
-    let response = await addTodoOnServer(actionMessage.text);
+    await addTodoOnServer(actionMessage.text);
     addTodo(actionMessage.text);
 };
 ```
@@ -164,7 +164,7 @@ Simple orchestrators can be created similarly:
 let requestAddTodo = simpleOrchestrator(
     'REQUEST_ADD_TODO',
     async function requestAddTodo(text: string) {
-        let response = await addTodoOnServer(actionMessage.text);
+        await addTodoOnServer(actionMessage.text);
         addTodo(actionMessage.text);
     });
 ```
