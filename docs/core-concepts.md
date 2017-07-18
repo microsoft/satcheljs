@@ -61,7 +61,7 @@ They are also consumed by mutators and orchestrators in order to subscribe to th
 
 The dispatcher is effectively just an event aggregator.
 Handlers (mutators and orchestrators) get subscribed to the dispatcher and are called back when the appropriate actions are dispatched.
-The dispatcher also provides [middleware](usage/middleware.md) an opportunity to process each dispatched action.
+The dispatcher also provides [middleware](middleware.md) an opportunity to process each dispatched action.
 
 The entire dispatch process is wrapped in a [MobX transaction](https://mobxjs.github.io/mobx/refguide/transaction.html) which means any UI updates are deferred until all state changes are complete.
 
