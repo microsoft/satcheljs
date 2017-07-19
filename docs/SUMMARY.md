@@ -13,3 +13,4 @@
   * [mutator](api/mutator.md)
   * [orchestrator](api/orchestrator.md)
   * [simpleMutator](api/simpleMutator.md)
+  * [simpleOrchestrator](api/simpleOrchestrator.md)

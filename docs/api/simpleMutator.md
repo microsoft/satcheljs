@@ -25,6 +25,8 @@ let addTodo = simpleMutator(
             text: actionMessage.text
         });
     });
+
+addTodo('Take out trash');
 ```
 
 ## Notes
