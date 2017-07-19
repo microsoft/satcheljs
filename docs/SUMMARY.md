@@ -6,4 +6,4 @@
 * satcheljs API
   * [applyMiddleware](api/applyMiddleware.md)
   * [createStore](api/createStore.md)
-  * [rootStore](api/rootStore.md)
+  * [getRootStore](api/getRootStore.md)
