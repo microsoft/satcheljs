@@ -11,6 +11,10 @@ Registers a function as an orchestrator.
 * `actionCreator` *(`ActionCreator`)*: The action creator of the action to subscribe to.
 * `target` *(`(ActionMessage) => void`)*: The function to register as an orchestrator.
 
+### Return value
+
+* *(`(ActionMessage) => void`)*: The `target` function.
+
 ## Example
 
 ```typescript
@@ -30,3 +34,4 @@ orchestrator(addTodo, (actionMessage) => {
 * Orchestrators cannot modify the store directly, but they can dispatch further actions which, indirectly, will cause the store to get modified.
 * In a large app with many stores, orchestrators provide a way to coordinate between the different stores.  For example, in response to an action an orchestrator might dispatch a series of additional actions in a specific order, or it might read data from one store and conditionally dispatch actions to affect another store.
 * Note that an orchestrator is registered to an action by passing that action's *action creator* as the first argument.  This is a little unusual, but convenient because it allows TypeScript to infer the type of the action message.
+* For convenience, `orchestrator` returns `target`.  While you don't need to export a orchestrator function, it may be convenient to do so for testing purposes.
