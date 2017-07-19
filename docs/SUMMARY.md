@@ -12,3 +12,4 @@
   * [getRootStore](api/getRootStore.md)
   * [mutator](api/mutator.md)
   * [orchestrator](api/orchestrator.md)
+  * [simpleMutator](api/simpleMutator.md)
