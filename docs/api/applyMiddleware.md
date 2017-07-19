@@ -1,20 +1,29 @@
 # `applyMiddleware`
 
-`applyMiddleware` specifies one or more middleware that will be called for each action that is dispatched.
-For more about what middleware is and how to implement it, see [the section on middleware](../usage/middleware.md).
-
+Applies one or more middleware that will be called for each dispatched action message.
+For more about what middleware is and how to implement it, see [the section on middleware](../middleware.md).
 
 ## Usage
 
-**`applyMiddleware(...middlewares)`**
+**`applyMiddleware([...middlewares])`**
 
-* `middlewares` are a set of middleware functions.
-They will replace any existing middleware and will be called in the order they are provided.
-(To remove all middleware, call `applyMiddleware` with no arguments.)
+### Arguments
 
+* `middlewares` *(`Middleware`)*: Optional.  One or more middleware functions to apply.
 
 ## Example
 
 ```typescript
-applyMiddleware(middleware0, middleware1, middleware2);
+function traceMiddleware(next: DispatchFunction, actionMessage: ActionMessage) {
+    console.log("Dispatching action: " + actionMessage.type);
+    next(actionMessage);
+}
+
+applyMiddleware(traceMiddleware);
 ```
+
+## Notes
+
+* Calling `applyMiddleware` *replaces* any existing middleware.
+* If called without arguments, `applyMiddleware` removes all middleware.
+* Dispatched actions pass through each middleware in the order they are provided.
