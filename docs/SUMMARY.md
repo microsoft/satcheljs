@@ -11,3 +11,4 @@
   * [dispatch](api/dispatch.md)
   * [getRootStore](api/getRootStore.md)
   * [mutator](api/mutator.md)
+  * [orchestrator](api/orchestrator.md)
