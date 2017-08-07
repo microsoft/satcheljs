@@ -56,5 +56,6 @@
   "typings": "lib/index.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "license": "MIT"
 }
