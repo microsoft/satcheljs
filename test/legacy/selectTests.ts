@@ -14,7 +14,7 @@ describe('select', () => {
                 obj1Key2: 'obj1_value2',
             },
             array1: ['array1_value1', 'array1_value2'],
-        });
+        })();
 
         interface ReadOnlyActionState {
             key1: string;
@@ -52,7 +52,7 @@ describe('select', () => {
         let fooStore: any = createStore('foo', {
             id0: 'value',
             array0: ['a', 'b', 'c'],
-        });
+        })();
 
         let readAction = action('read')(function readAction(
             id: string,
@@ -74,7 +74,7 @@ describe('select', () => {
     it('places state at the right argument position even if the wrapped function has optional arguments before state', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let someAction = action(
             'someAction'
@@ -94,7 +94,7 @@ describe('select', () => {
     it('can handle having action be the outer decorator', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let functionIsCalled = false;
 
@@ -117,7 +117,7 @@ describe('select', () => {
     it('allows tests to passthrough state param', () => {
         let fooStore: any = createStore('foo', {
             key: 'value',
-        });
+        })();
 
         let someAction = select({
             key: () => fooStore.key,
