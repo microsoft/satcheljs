@@ -1,18 +1,34 @@
 language: node_js
 node_js:
-- '6.1'
+- "node"
 before_install:
-- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
 - npm config set spin false
+- npm i -g makeshift && makeshift -r https://registry.npmjs.org
 install:
 - npm install
 script:
-- | 
+- |
   if [ -n "$TRAVIS_TAG" ]; then
     npm run build
-    npm run publish-all
   fi
-- if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash npm run test; fi
-env:
-  # NPM_AUTH_TOKEN
-  - secure: "b0e1i4dSUkSJ/RQOcjIHslvZO3RtS87vqo3FyYCSVbW3vOJk+F34U4swmDqNLjGNAhWdYSYYZH/0qrpWaDPizPu0dB6ofxO1ZmRck91rAA1o4vB19kQs6gmcO7lrpe+U+fIoZALYY4NWeokEGG2QPUg424XIWxmi2nS4RWwS9Hs7axzLYPtocy0raZnO1qgj7H0mYE/satV4DxDoEkUO5vezjT/h+Dl9nq7SPYfHo/0eth1NppgIFUihEa8uRQhl75GLMVzP7UgDhPZnCWBhs6R8Chb6FqCQNjaUE7b5BBkvE6+/vGU9VFDmoQxB+tp0u/MiCc9JdT1n1jMrzuQFs30HK50ZAzGiByqgIYyJJjVj65r7vyhCaR3XvqjEx+LPTUBA2x8PJ1ZxJrLzYnSgd7ME7dLVVM+EtBDte6kIkNLoY84ra0oxgrU2Ne/umytONG9aHIOGzRQMnIlscBlXDWng8yYmCQdk/Kf//QjWhW4d8/HO/px7ETp2T7J06xl0GmfnhYo5zcow6mMxCxAErpH7swDqPgtqsoaGIpV86DzYh9m1Y8umvr9FbLf0yK/X6HACwwMmn9cuF2E0Cgom5MGH04jm1c2b5w47hC41KV9fnnUIQUlwx+xdU6wMmeFhsM7uSG65oxu5G/mS7gKoVZA7wJIK8XTmGYpLoezBYx4="
+- |
+  if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then
+    bash npm run test
+  fi
+deploy:
+  - provider: npm
+    email: kchau@microsoft.com
+    api_key: $NPM_TOKEN
+    tag: latest
+    on:
+      tags: true
+      condition: >
+        "$TRAVIS_TAG" != *"-"*
+  - provider: npm
+    email: kchau@microsoft.com
+    api_key: $NPM_TOKEN
+    tag: next
+    on:
+      tags: true
+      condition: >
+        "$TRAVIS_TAG" == *"-"*
