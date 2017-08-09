@@ -1,4 +1,4 @@
-import action from '../action';
+import { action } from 'satcheljs';
 import { getCurrentAction } from './promiseMiddleware';
 
 export function wrapThen(originalThen: any) {
