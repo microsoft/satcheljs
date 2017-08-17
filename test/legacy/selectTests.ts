@@ -195,4 +195,23 @@ describe('select', () => {
         // Assert
         expect(getActionType(wrappedAction)).toBe(actionName);
     });
+
+    it('throws if state is being changed inside a select-decorated function', () => {
+        // Arrange
+        let store = {
+            foo: 'foo',
+            bar: 5,
+        };
+
+        // Act
+        let wrapped = select({
+            foo: () => store.foo,
+            bar: () => store.bar,
+        })((state: typeof store) => {
+            state.foo = 'bar';
+        });
+
+        // Assert
+        expect(wrapped).toThrow();
+    });
 });
