@@ -60,7 +60,7 @@ class TodoListComponent extends React.Component<any, any> {
     render() {
         return (
             <div>
-                getStore().todos.map(todo => <div>{todo.text}</div>)
+                {getStore().todos.map(todo => <div>{todo.text}</div>)}
             </div>
         );
     }
