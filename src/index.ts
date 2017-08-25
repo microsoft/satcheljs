@@ -6,7 +6,7 @@ export { default as ActionMessage } from './interfaces/ActionMessage';
 export { default as DispatchFunction } from './interfaces/DispatchFunction';
 export { default as Middleware } from './interfaces/Middleware';
 export { default as Subscriber } from './interfaces/Subscriber';
-export { actionCreatorWithoutDispatch, boundActionCreator } from './actionCreator';
+export { actionCreator, actionCreatorWithoutDispatch } from './actionCreator';
 export { default as applyMiddleware } from './applyMiddleware';
 export { default as createStore } from './createStore';
 export { dispatch } from './dispatcher';

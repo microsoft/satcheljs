@@ -10,7 +10,7 @@ export function actionCreatorWithoutDispatch<
     return createActionCreator(actionType, target, false);
 }
 
-export function boundActionCreator<
+export function actionCreator<
     T extends ActionMessage = {},
     TActionCreator extends ActionCreator<T> = () => T
 >(actionType: string, target?: TActionCreator): TActionCreator {

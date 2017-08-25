@@ -110,9 +110,9 @@ Side effects might include making a server call or even dispatching further acti
 The following example shows how an orchestrator can persist a value to a server before updating the store.
 
 ```typescript
-import { boundActionCreator, orchestrator } from 'satcheljs';
+import { actionCreator, orchestrator } from 'satcheljs';
 
-let requestAddTodo = boundActionCreator(
+let requestAddTodo = actionCreator(
     'REQUEST_ADD_TODO',
     (text: string) => ({ text: text })
 );

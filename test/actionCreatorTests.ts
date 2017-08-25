@@ -1,7 +1,7 @@
 import 'jasmine';
 import {
     actionCreatorWithoutDispatch,
-    boundActionCreator,
+    actionCreator,
     getPrivateActionId,
 } from '../src/actionCreator';
 import * as createActionId from '../src/createActionId';
@@ -84,11 +84,11 @@ describe('actionCreatorWithoutDispatch', () => {
     });
 });
 
-describe('boundActionCreator', () => {
+describe('actionCreator', () => {
     it('dispatches the action message', () => {
         // Arrange
         let actionMessage = {};
-        const testAction = boundActionCreator('testAction', () => actionMessage);
+        const testAction = actionCreator('testAction', () => actionMessage);
         spyOn(dispatcher, 'dispatch');
 
         // Act

@@ -10,7 +10,7 @@ describe('simpleSubscribers', () => {
 
     beforeEach(() => {
         __resetGlobalContext();
-        actionCreatorSpy = spyOn(actionCreator, 'boundActionCreator').and.callThrough();
+        actionCreatorSpy = spyOn(actionCreator, 'actionCreator').and.callThrough();
         decoratorSpy = jasmine.createSpy('decoratorSpy');
         simpleSubscriber = createSimpleSubscriber(decoratorSpy);
     });
