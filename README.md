@@ -69,6 +69,10 @@ class TodoListComponent extends React.Component<any, any> {
 
 ### Implement an action creator
 
+Note that, as a convenience, Satchel action creators both *create* and *dispatch* the action.
+This is typically how you want to use action creators.
+If you want to create and dispatch the actions separately you can use the `actionCreatorWithoutDispatch` and `dispatch` APIs.
+
 ```typescript
 import { actionCreator } from 'satcheljs';
 
@@ -76,6 +80,9 @@ let addTodo = actionCreator(
     'ADD_TODO',
     (text: string) => ({ text: text })
 );
+
+// This creates and dispatches an ADD_TODO action
+addTodo('Take out trash');
 ```
 
 ### Implement a mutator
@@ -92,30 +99,6 @@ mutator(addTodo, (actionMessage) => {
         text: actionMessage.text
     });
 };
-```
-
-### Create and dispatch an action
-
-```typescript
-import { dispatch } from 'satcheljs';
-
-dispatch(addTodo('Take out trash'));
-```
-
-### Bound action creators
-
-Bound action creators create and dispatch the action in one call.
-
-```typescript
-import { boundActionCreator } from 'satcheljs';
-
-let addTodo = boundActionCreator(
-    'ADD_TODO',
-    (text: string) => ({ text: text })
-);
-
-// This creates and dispatches an ADD_TODO action
-addTodo('Take out trash');
 ```
 
 ### Orchestrators

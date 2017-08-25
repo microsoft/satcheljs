@@ -1,12 +1,16 @@
 import 'jasmine';
-import { actionCreator, boundActionCreator, getPrivateActionId } from '../src/actionCreator';
+import {
+    actionCreatorWithoutDispatch,
+    boundActionCreator,
+    getPrivateActionId,
+} from '../src/actionCreator';
 import * as createActionId from '../src/createActionId';
 import * as dispatcher from '../src/dispatcher';
 
-describe('actionCreator', () => {
+describe('actionCreatorWithoutDispatch', () => {
     it('returns the created action message', () => {
         // Arrange
-        const testAction = actionCreator('testAction', (arg0, arg1) => {
+        const testAction = actionCreatorWithoutDispatch('testAction', (arg0, arg1) => {
             return {
                 arg0,
                 arg1,
@@ -23,7 +27,7 @@ describe('actionCreator', () => {
 
     it('returns a default action message if no factory is provided', () => {
         // Arrange
-        const testAction = actionCreator('testAction');
+        const testAction = actionCreatorWithoutDispatch('testAction');
 
         // Act
         let actionMessage = testAction();
@@ -36,7 +40,7 @@ describe('actionCreator', () => {
         // Arrange
         spyOn(createActionId, 'default').and.returnValue('id0');
         let actionType = 'testAction';
-        const testAction = actionCreator(actionType);
+        const testAction = actionCreatorWithoutDispatch(actionType);
 
         // Act
         let actionMessage = testAction();
@@ -48,7 +52,7 @@ describe('actionCreator', () => {
 
     it('does not dispatch the action message', () => {
         // Arrange
-        const testAction = actionCreator('testAction');
+        const testAction = actionCreatorWithoutDispatch('testAction');
         spyOn(dispatcher, 'dispatch');
 
         // Act
@@ -60,7 +64,7 @@ describe('actionCreator', () => {
 
     it('throws if the action message already has a type', () => {
         // Arrange
-        const testAction = actionCreator('testAction', () => {
+        const testAction = actionCreatorWithoutDispatch('testAction', () => {
             return { type: 'testAction' };
         });
 
@@ -73,7 +77,7 @@ describe('actionCreator', () => {
         spyOn(createActionId, 'default').and.returnValue('id1');
 
         // Act
-        const testAction = actionCreator('testAction');
+        const testAction = actionCreatorWithoutDispatch('testAction');
 
         // Assert
         expect(getPrivateActionId(testAction)).toBe('id1');

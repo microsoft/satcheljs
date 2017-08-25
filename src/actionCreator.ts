@@ -3,7 +3,7 @@ import ActionCreator from './interfaces/ActionCreator';
 import { dispatch } from './dispatcher';
 import createActionId from './createActionId';
 
-export function actionCreator<
+export function actionCreatorWithoutDispatch<
     T extends ActionMessage = {},
     TActionCreator extends ActionCreator<T> = () => T
 >(actionType: string, target?: TActionCreator): TActionCreator {
