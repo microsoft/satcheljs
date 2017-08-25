@@ -69,6 +69,10 @@ class TodoListComponent extends React.Component<any, any> {
 
 ### Implement an action creator
 
+Note that, as a convenience, Satchel action creators both *create* and *dispatch* the action.
+This is typically how you want to use action creators.
+If you want to create and dispatch the actions separately you can use the `actionCreatorWithoutDispatch` and `dispatch` APIs.
+
 ```typescript
 import { actionCreator } from 'satcheljs';
 
@@ -76,6 +80,9 @@ let addTodo = actionCreator(
     'ADD_TODO',
     (text: string) => ({ text: text })
 );
+
+// This creates and dispatches an ADD_TODO action
+addTodo('Take out trash');
 ```
 
 ### Implement a mutator
@@ -94,30 +101,6 @@ mutator(addTodo, (actionMessage) => {
 };
 ```
 
-### Create and dispatch an action
-
-```typescript
-import { dispatch } from 'satcheljs';
-
-dispatch(addTodo('Take out trash'));
-```
-
-### Bound action creators
-
-Bound action creators create and dispatch the action in one call.
-
-```typescript
-import { boundActionCreator } from 'satcheljs';
-
-let addTodo = boundActionCreator(
-    'ADD_TODO',
-    (text: string) => ({ text: text })
-);
-
-// This creates and dispatches an ADD_TODO action
-addTodo('Take out trash');
-```
-
 ### Orchestrators
 
 Orchestrators are like mutators—they subscribe to actions—but they serve a different purpose.
@@ -127,9 +110,9 @@ Side effects might include making a server call or even dispatching further acti
 The following example shows how an orchestrator can persist a value to a server before updating the store.
 
 ```typescript
-import { boundActionCreator, orchestrator } from 'satcheljs';
+import { actionCreator, orchestrator } from 'satcheljs';
 
-let requestAddTodo = boundActionCreator(
+let requestAddTodo = actionCreator(
     'REQUEST_ADD_TODO',
     (text: string) => ({ text: text })
 );
@@ -140,15 +123,15 @@ orchestrator(requestAddTodo, async (actionMessage) => {
 };
 ```
 
-### Simple mutators and orchestrators
+### mutatorAction and orchestratorAction
 
 In many cases a given action only needs to be handled by one mutator or orchestrator.
-Satchel provides the concept of simple subscribers which encapsulate action creation, dispatch, and handling in one simple function call.
+Satchel provides these utility APIs which encapsulate action creation, dispatch, and handling in one simple function call.
 
 The `addTodo` mutator above could be implemented as follows:
 
 ```typescript
-let addTodo = simpleMutator(
+let addTodo = mutatorAction(
     'ADD_TODO',
     function addTodo(text: string) {
         getStore().todos.push({
@@ -158,10 +141,10 @@ let addTodo = simpleMutator(
     });
 ```
 
-Simple orchestrators can be created similarly:
+An orchestrator can be created similarly:
 
 ```typescript
-let requestAddTodo = simpleOrchestrator(
+let requestAddTodo = orchestratorAction(
     'REQUEST_ADD_TODO',
     async function requestAddTodo(text: string) {
         await addTodoOnServer(actionMessage.text);
@@ -169,8 +152,8 @@ let requestAddTodo = simpleOrchestrator(
     });
 ```
 
-These simple mutators and orchestrators are succinct and easy to write, but they come with a restriction:
-the action creator is not exposed, so no other mutators or orchestrators can subscribe to it.
+This is a succinct and easy way to write mutators and orchestrators, but it comes with a restriction:
+the action creator is not exposed, so no *other* mutators or orchestrators can subscribe to it.
 If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
 
 ## License - MIT

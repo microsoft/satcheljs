@@ -1,9 +1,9 @@
 import 'jasmine';
-import { boundActionCreator } from '../src/actionCreator';
+import { actionCreator } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
 import mutator from '../src/mutator';
-import { simpleMutator } from '../src/simpleSubscribers';
+import { mutatorAction } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
 
 describe('satcheljs', () => {
@@ -11,7 +11,7 @@ describe('satcheljs', () => {
         let actualValue;
 
         // Create an action creator
-        let testAction = boundActionCreator('testAction', function testAction(value: string) {
+        let testAction = actionCreator('testAction', function testAction(value: string) {
             return {
                 value: value,
             };
@@ -29,12 +29,12 @@ describe('satcheljs', () => {
         expect(actualValue).toBe('test');
     });
 
-    it('simpleMutator dispatches an action and subscribes to it', () => {
+    it('mutatorAction dispatches an action and subscribes to it', () => {
         // Arrange
         let arg1Value;
         let arg2Value;
 
-        let testSimpleMutator = simpleMutator('testSimpleMutator', function testSimpleMutator(
+        let testMutatorAction = mutatorAction('testMutatorAction', function testMutatorAction(
             arg1: string,
             arg2: number
         ) {
@@ -43,7 +43,7 @@ describe('satcheljs', () => {
         });
 
         // Act
-        testSimpleMutator('testValue', 2);
+        testMutatorAction('testValue', 2);
 
         // Assert
         expect(arg1Value).toBe('testValue');
@@ -53,7 +53,7 @@ describe('satcheljs', () => {
     it('mutators can modify the store', () => {
         // Arrange
         let store = createStore('testStore', { testProperty: 'testValue' })();
-        let modifyStore = boundActionCreator('modifyStore');
+        let modifyStore = actionCreator('modifyStore');
 
         let onModifyStore = mutator(modifyStore, actionMessage => {
             store.testProperty = 'newValue';
