@@ -24,5 +24,5 @@ export function createSimpleSubscriber(decorator: Function) {
     };
 }
 
-export const simpleMutator = createSimpleSubscriber(mutator);
-export const simpleOrchestrator = createSimpleSubscriber(orchestrator);
+export const mutatorAction = createSimpleSubscriber(mutator);
+export const orchestratorAction = createSimpleSubscriber(orchestrator);

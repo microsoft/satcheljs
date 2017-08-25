@@ -13,7 +13,7 @@ export { dispatch } from './dispatcher';
 export { default as mutator } from './mutator';
 export { default as orchestrator } from './orchestrator';
 export { default as getRootStore } from './getRootStore';
-export { simpleMutator, simpleOrchestrator } from './simpleSubscribers';
+export { mutatorAction, orchestratorAction } from './simpleSubscribers';
 export { useStrict };
 
 // Default to MobX strict mode

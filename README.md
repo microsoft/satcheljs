@@ -140,15 +140,15 @@ orchestrator(requestAddTodo, async (actionMessage) => {
 };
 ```
 
-### Simple mutators and orchestrators
+### mutatorAction and orchestratorAction
 
 In many cases a given action only needs to be handled by one mutator or orchestrator.
-Satchel provides the concept of simple subscribers which encapsulate action creation, dispatch, and handling in one simple function call.
+Satchel provides these utility APIs which encapsulate action creation, dispatch, and handling in one simple function call.
 
 The `addTodo` mutator above could be implemented as follows:
 
 ```typescript
-let addTodo = simpleMutator(
+let addTodo = mutatorAction(
     'ADD_TODO',
     function addTodo(text: string) {
         getStore().todos.push({
@@ -158,10 +158,10 @@ let addTodo = simpleMutator(
     });
 ```
 
-Simple orchestrators can be created similarly:
+An orchestrator can be created similarly:
 
 ```typescript
-let requestAddTodo = simpleOrchestrator(
+let requestAddTodo = orchestratorAction(
     'REQUEST_ADD_TODO',
     async function requestAddTodo(text: string) {
         await addTodoOnServer(actionMessage.text);
@@ -169,8 +169,8 @@ let requestAddTodo = simpleOrchestrator(
     });
 ```
 
-These simple mutators and orchestrators are succinct and easy to write, but they come with a restriction:
-the action creator is not exposed, so no other mutators or orchestrators can subscribe to it.
+This is a succinct and easy way to write mutators and orchestrators, but it comes with a restriction:
+the action creator is not exposed, so no *other* mutators or orchestrators can subscribe to it.
 If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
 
 ## License - MIT
