@@ -1,14 +1,14 @@
 import ActionCreator from './interfaces/ActionCreator';
 import SimpleAction from './interfaces/SimpleAction';
 import Subscriber from './interfaces/Subscriber';
-import { boundActionCreator } from './actionCreator';
+import { action } from './actionCreator';
 import mutator from './mutator';
 import orchestrator from './orchestrator';
 
 export function createSimpleSubscriber(decorator: Function) {
     return function simpleSubscriber<T extends SimpleAction>(actionType: string, target: T): T {
         // Create the action creator
-        let simpleActionCreator = boundActionCreator(actionType, function simpleActionCreator() {
+        let simpleActionCreator = action(actionType, function simpleActionCreator() {
             return {
                 args: arguments,
             };

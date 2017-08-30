@@ -1,5 +1,5 @@
 import 'jasmine';
-import { boundActionCreator } from '../src/actionCreator';
+import { action } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
 import mutator from '../src/mutator';
@@ -11,7 +11,7 @@ describe('satcheljs', () => {
         let actualValue;
 
         // Create an action creator
-        let testAction = boundActionCreator('testAction', function testAction(value: string) {
+        let testAction = action('testAction', function testAction(value: string) {
             return {
                 value: value,
             };
@@ -53,7 +53,7 @@ describe('satcheljs', () => {
     it('mutators can modify the store', () => {
         // Arrange
         let store = createStore('testStore', { testProperty: 'testValue' })();
-        let modifyStore = boundActionCreator('modifyStore');
+        let modifyStore = action('modifyStore');
 
         let onModifyStore = mutator(modifyStore, actionMessage => {
             store.testProperty = 'newValue';

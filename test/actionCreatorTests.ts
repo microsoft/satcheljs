@@ -1,5 +1,5 @@
 import 'jasmine';
-import { actionCreator, boundActionCreator, getPrivateActionId } from '../src/actionCreator';
+import { action, actionCreator, getPrivateActionId } from '../src/actionCreator';
 import * as createActionId from '../src/createActionId';
 import * as dispatcher from '../src/dispatcher';
 
@@ -80,11 +80,11 @@ describe('actionCreator', () => {
     });
 });
 
-describe('boundActionCreator', () => {
+describe('action', () => {
     it('dispatches the action message', () => {
         // Arrange
         let actionMessage = {};
-        const testAction = boundActionCreator('testAction', () => actionMessage);
+        const testAction = action('testAction', () => actionMessage);
         spyOn(dispatcher, 'dispatch');
 
         // Act
