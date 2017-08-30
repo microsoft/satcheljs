@@ -10,7 +10,7 @@ export function actionCreator<
     return createActionCreator(actionType, target, false);
 }
 
-export function boundActionCreator<
+export function action<
     T extends ActionMessage = {},
     TActionCreator extends ActionCreator<T> = () => T
 >(actionType: string, target?: TActionCreator): TActionCreator {
