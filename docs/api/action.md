@@ -1,11 +1,10 @@
-# `boundActionCreator`
+# `action`
 
-Decorates a function as a bound action creator.
-A bound action creator automatically dispatches an action message after creating it.
+Decorates a function as an action creator which also dispatches the action message after creating it.
 
 ## Usage
 
-**`boundActionCreator<T>(actionType, [target])`**
+**`action<T>(actionType, [target])`**
 
 ### Arguments
 
@@ -20,7 +19,7 @@ A bound action creator automatically dispatches an action message after creating
 ## Example
 
 ```typescript
-let addTodo = boundActionCreator(
+let addTodo = action(
     'ADD_TODO',
     (text: string) => ({ text: text }));
 
