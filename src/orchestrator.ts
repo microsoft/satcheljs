@@ -1,12 +1,12 @@
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
-import Subscriber from './interfaces/Subscriber';
+import OrchestratorFunction from './interfaces/OrchestratorFunction';
 import { getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 
 export default function orchestrator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
-    target: Subscriber<T>
+    target: OrchestratorFunction<T>
 ) {
     let actionId = getPrivateActionId(actionCreator);
     if (!actionId) {
