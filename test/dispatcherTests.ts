@@ -97,4 +97,42 @@ describe('dispatcher', () => {
             dispatcher.finalDispatch({});
         }).not.toThrow();
     });
+
+    it('if one subscriber returns a Promise, finalDispatch returns it', () => {
+        // Arrange
+        let actionId = 'testActionId';
+        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+
+        let promise = Promise.resolve();
+        let callback = () => promise;
+        mockGlobalContext.subscriptions[actionId] = [callback];
+
+        // Act
+        let returnValue = dispatcher.finalDispatch({});
+
+        // Assert
+        expect(returnValue).toBe(promise);
+    });
+
+    it('if multiple subscribers returns Promises, finalDispatch returns an aggregate Promise', () => {
+        // Arrange
+        let actionId = 'testActionId';
+        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+
+        let promise1 = Promise.resolve();
+        let callback1 = () => promise1;
+        let promise2 = Promise.resolve();
+        let callback2 = () => promise2;
+        mockGlobalContext.subscriptions[actionId] = [callback1, callback2];
+
+        let aggregatePromise = Promise.resolve();
+        spyOn(Promise, 'all').and.returnValue(aggregatePromise);
+
+        // Act
+        let returnValue = dispatcher.finalDispatch({});
+
+        // Assert
+        expect(Promise.all).toHaveBeenCalledWith([promise1, promise2]);
+        expect(returnValue).toBe(aggregatePromise);
+    });
 });
