@@ -3,6 +3,7 @@ import { action } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
 import mutator from '../src/mutator';
+import orchestrator from '../src/orchestrator';
 import { mutatorAction } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
 
@@ -81,5 +82,24 @@ describe('satcheljs', () => {
 
         // Assert
         expect(actualValue).toBe(expectedValue);
+    });
+
+    it('middleware can handle promises returned from orchestrators', async () => {
+        // Arrange
+        let testAction = action('testAction');
+        orchestrator(testAction, () => Promise.resolve(1));
+        orchestrator(testAction, () => Promise.resolve(2));
+
+        let returnedPromise;
+        applyMiddleware((next, actionMessage) => {
+            returnedPromise = next(actionMessage);
+        });
+
+        // Act
+        testAction();
+        let promiseValues = await returnedPromise;
+
+        // Assert
+        expect(promiseValues).toEqual([1, 2]);
     });
 });
