@@ -41,7 +41,6 @@ describe('mutator', () => {
 
         // Assert
         expect(mobx.action).toHaveBeenCalledWith(callback);
-        expect((<jasmine.Spy>dispatcher.subscribe).calls.argsFor(0)[1]).toBe(wrappedCallback);
     });
 
     it('returns the target function', () => {
