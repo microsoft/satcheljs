@@ -14,6 +14,7 @@ export interface GlobalContext {
     nextActionId: number;
     subscriptions: { [key: string]: Subscriber<ActionMessage>[] };
     dispatchWithMiddleware: DispatchFunction;
+    inMutator: boolean;
 
     // Legacy properties
     legacyInDispatch: number;
@@ -38,6 +39,7 @@ export function __resetGlobalContext() {
         nextActionId: 0,
         subscriptions: {},
         dispatchWithMiddleware: null,
+        inMutator: false,
         legacyInDispatch: 0,
         legacyDispatchWithMiddleware: null,
         legacyTestMode: false,

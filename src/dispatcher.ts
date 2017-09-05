@@ -13,6 +13,10 @@ export function subscribe(actionId: string, callback: Subscriber<any>) {
 }
 
 export function dispatch(actionMessage: ActionMessage) {
+    if (getGlobalContext().inMutator) {
+        throw new Error('Mutators cannot dispatch further actions.');
+    }
+
     let dispatchWithMiddleware = getGlobalContext().dispatchWithMiddleware || finalDispatch;
     dispatchWithMiddleware(actionMessage);
 }

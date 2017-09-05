@@ -10,6 +10,7 @@ describe('dispatcher', () => {
         mockGlobalContext = {
             subscriptions: {},
             dispatchWithMiddleware: jasmine.createSpy('dispatchWithMiddleware'),
+            inMutator: false,
         };
 
         spyOn(globalContext, 'getGlobalContext').and.returnValue(mockGlobalContext);
@@ -68,6 +69,16 @@ describe('dispatcher', () => {
 
         // Assert
         expect(callback).toHaveBeenCalled();
+    });
+
+    it('dispatch throws if called within a mutator', () => {
+        // Arrange
+        mockGlobalContext.inMutator = true;
+
+        // Act / Assert
+        expect(() => {
+            dispatcher.dispatch({});
+        }).toThrow();
     });
 
     it('finalDispatch calls all subscribers for a given action', () => {
