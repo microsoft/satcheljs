@@ -41,7 +41,6 @@ describe('mutator', () => {
 
         // Assert
         expect(mobx.action).toHaveBeenCalledWith(callback);
-        expect((<jasmine.Spy>dispatcher.subscribe).calls.argsFor(0)[1]).toBe(wrappedCallback);
     });
 
     it('returns the target function', () => {
@@ -54,5 +53,18 @@ describe('mutator', () => {
 
         // Assert
         expect(returnValue).toBe(callback);
+    });
+
+    it('throws if the target function is async', () => {
+        // Arrange
+        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
+        let callback = async () => {};
+        spyOn(dispatcher, 'subscribe');
+
+        mutator(actionCreator, callback);
+        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
+
+        // Act / Assert
+        expect(subscribedCallback).toThrow();
     });
 });
