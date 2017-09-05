@@ -5,6 +5,7 @@ import ActionMessage from './interfaces/ActionMessage';
 import MutatorFunction from './interfaces/MutatorFunction';
 import { getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
+import { getGlobalContext } from './globalContext';
 
 export default function mutator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
@@ -20,8 +21,13 @@ export default function mutator<T extends ActionMessage>(
 
     // Subscribe to the action
     subscribe(actionId, (actionMessage: T) => {
-        if (wrappedTarget(actionMessage)) {
-            throw new Error('Mutators cannot return a value and cannot be async.');
+        try {
+            getGlobalContext().inMutator = true;
+            if (wrappedTarget(actionMessage)) {
+                throw new Error('Mutators cannot return a value and cannot be async.');
+            }
+        } finally {
+            getGlobalContext().inMutator = false;
         }
     });
 
