@@ -1,6 +1,6 @@
 {
     "name": "satcheljs",
-    "version": "3.0.0-beta6",
+    "version": "3.0.0-beta7",
     "description": "Store implementation for functional reactive flux.",
     "lint-staged": {
         "*.{ts,tsx}": [
