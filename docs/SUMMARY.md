@@ -16,6 +16,7 @@
   * [orchestratorAction](api/orchestratorAction.md)
 
 * Best Practices
-  * [MobX](best-practices/mobx.md)
+  * [Action Creators](best-practices/action-creators.md)
   * [Mutators and Orchestrators](best-practices/mutators-and-orchestrators.md)
   * [Selectors](best-practices/selectors.md)
+  * [MobX](best-practices/mobx.md)
