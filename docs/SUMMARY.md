@@ -18,3 +18,4 @@
 * Best Practices
   * [MobX](best-practices/mobx.md)
   * [Mutators and Orchestrators](best-practices/mutators-and-orchestrators.md)
+  * [Selectors](best-practices/selectors.md)
