@@ -46,4 +46,4 @@ export function getFullName() {
       return person.firstName + ' ' + person.lastName;
   }
   ```
-  **Pro-tip: avoid passing an entire subtree of the tree into a selector.**
+  **Pro-tip: avoid passing an entire subtree of the store into a selector.**
