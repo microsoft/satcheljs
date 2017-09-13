@@ -17,7 +17,8 @@ The following table shows when each API for responding to an action is appropria
 
 ## Mutators
 
-* **Mutators should be targeted**. They are typically small, scoped to a single store or portion of a store and only concerned with setting or updating data in that store.
+* **Mutators should be targeted**.
+  They are typically small, scoped to a single store or portion of a store and only concerned with setting or updating data in that store.
 * **Mutators should maintain the internal consistency of a store.**
   For example, if a store contains several tables with related data, the mutators should make sure all applicable tables get updated.
 * **Mutators should not throw exceptions.**

@@ -30,7 +30,7 @@ export function getFullName() {
 
 ## Tips and Tricks
 
-* **Think of selectors as a public interface on top the private store.**
+* **Think of selectors as a public interface on top of the private store.**
   Selectors should be called from views, mutators, orchestrators, or even other higher-level selectors.
   Note that the `createStore` API doesn't actually return the store itself, it returns a `getStore` selector.
 
