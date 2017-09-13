@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>action · GitBook</title>
+        <title>orchestrator · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,8 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="actionCreator.html" />
+    <link rel="next" href="orchestratorAction.html" />
     
+    
+    <link rel="prev" href="mutatorAction.html" />
     
 
     </head>
@@ -140,7 +142,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.4.1" data-path="action.html">
+        <li class="chapter " data-level="1.4.1" data-path="action.html">
             
                 <a href="action.html">
             
@@ -244,7 +246,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.9" data-path="orchestrator.html">
+        <li class="chapter active" data-level="1.4.9" data-path="orchestrator.html">
             
                 <a href="orchestrator.html">
             
@@ -376,7 +378,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >action</a>
+        <a href=".." >orchestrator</a>
     </h1>
 </div>
 
@@ -391,25 +393,30 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="action"><code>action</code></h1><p>Decorates a function as an action creator which also dispatches the action message after creating it.</p><h2 id="usage">Usage</h2><p><strong><code>action&lt;T&gt;(actionType, [target])</code></strong></p><h3 id="arguments">Arguments</h3><ul><li><code>T</code> <em>(type parameter)</em>: An interface describing the shape of the action message to create.
+                                <h1 id="orchestrator"><code>orchestrator</code></h1><p>Registers a function as an orchestrator.</p><h2 id="usage">Usage</h2><p><strong><code>orchestrator(actionCreator, target)</code></strong></p><h3 id="arguments">Arguments</h3><ul><li><code>actionCreator</code> <em>(<code>ActionCreator</code>)</em>: The action creator of the action to subscribe to.
 </li>
-<li><code>actionType</code> <em>(<code>string</code>)</em>: A string which identifies the type of the action.
-</li>
-<li><code>target</code> <em>(<code>(...) =&gt; T</code>)</em>: Optional. A function which creates and returns an action message.
+<li><code>target</code> <em>(<code>(ActionMessage) =&gt; void</code>)</em>: The function to register as an orchestrator.
 </li></ul>
-<h3 id="return-value">Return value</h3><ul><li><em>(<code>(...) =&gt; T</code>)</em>: An action creator.
+<h3 id="return-value">Return value</h3><ul><li><em>(<code>(ActionMessage) =&gt; void</code>)</em>: The <code>target</code> function.
 </li></ul>
-<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = action(
+<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = actionCreator(
     <span class="hljs-string">&apos;ADD_TODO&apos;</span>,
     (text: <span class="hljs-built_in">string</span>) =&gt; ({ text: text }));
 
-<span class="hljs-comment">// This creates AND dispatches the ADD_TODO action message</span>
-addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pre>
-<h2 id="notes">Notes</h2><ul><li>Typically the type of the action message (<code>T</code>) is inferred from the return type of <code>target</code>, so it is not necessary to explicitly supply it.
+orchestrator(addTodo, (actionMessage) =&gt; {
+    addTodoOnServer(actionMessage.text);
+};</code></pre>
+<h2 id="notes">Notes</h2><ul><li>The <code>target</code> function gets called whenever an action of the subscribed type is dispatched.
 </li>
-<li>Do not include the <code>type</code> property on the created action message.  It will automatically be set by the action creator.
+<li>Orchestrators are responsible for dealing with side effects and any other coordination the app may require.  Side effects might include service calls, setting timers, dealing with browser local storage, etc.
 </li>
-<li>If the <code>target</code> is absent the action creator will create an action message with no properties (except the <code>type</code> property).
+<li>Orchestrators cannot modify the store directly, but they can dispatch further actions which, indirectly, will cause the store to get modified.
+</li>
+<li>In a large app with many stores, orchestrators provide a way to coordinate between the different stores.  For example, in response to an action an orchestrator might dispatch a series of additional actions in a specific order, or it might read data from one store and conditionally dispatch actions to affect another store.
+</li>
+<li>Note that an orchestrator is registered to an action by passing that action&apos;s <em>action creator</em> as the first argument.  This is a little unusual, but convenient because it allows TypeScript to infer the type of the action message.
+</li>
+<li>For convenience, <code>orchestrator</code> returns <code>target</code>.  While you don&apos;t need to export a orchestrator function, it may be convenient to do so for testing purposes.
 </li></ul>
 
                                 
@@ -438,8 +445,12 @@ addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pr
 
             
                 
+                <a href="mutatorAction.html" class="navigation navigation-prev " aria-label="Previous page: mutatorAction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
                 
-                <a href="actionCreator.html" class="navigation navigation-next navigation-unique" aria-label="Next page: actionCreator">
+                
+                <a href="orchestratorAction.html" class="navigation navigation-next " aria-label="Next page: orchestratorAction">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -450,7 +461,7 @@ addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pr
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"action","level":"1.4.1","depth":2,"next":{"title":"actionCreator","level":"1.4.2","depth":2,"path":"api/actionCreator.md","ref":"api/actionCreator.md","articles":[]},"previous":{"title":"API","level":"1.4","depth":1,"ref":"","articles":[{"title":"action","level":"1.4.1","depth":2,"path":"api/action.md","ref":"api/action.md","articles":[]},{"title":"actionCreator","level":"1.4.2","depth":2,"path":"api/actionCreator.md","ref":"api/actionCreator.md","articles":[]},{"title":"applyMiddleware","level":"1.4.3","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},{"title":"createStore","level":"1.4.4","depth":2,"path":"api/createStore.md","ref":"api/createStore.md","articles":[]},{"title":"dispatch","level":"1.4.5","depth":2,"path":"api/dispatch.md","ref":"api/dispatch.md","articles":[]},{"title":"getRootStore","level":"1.4.6","depth":2,"path":"api/getRootStore.md","ref":"api/getRootStore.md","articles":[]},{"title":"mutator","level":"1.4.7","depth":2,"path":"api/mutator.md","ref":"api/mutator.md","articles":[]},{"title":"mutatorAction","level":"1.4.8","depth":2,"path":"api/mutatorAction.md","ref":"api/mutatorAction.md","articles":[]},{"title":"orchestrator","level":"1.4.9","depth":2,"path":"api/orchestrator.md","ref":"api/orchestrator.md","articles":[]},{"title":"orchestratorAction","level":"1.4.10","depth":2,"path":"api/orchestratorAction.md","ref":"api/orchestratorAction.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/action.md","mtime":"2017-09-13T18:26:09.246Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"orchestrator","level":"1.4.9","depth":2,"next":{"title":"orchestratorAction","level":"1.4.10","depth":2,"path":"api/orchestratorAction.md","ref":"api/orchestratorAction.md","articles":[]},"previous":{"title":"mutatorAction","level":"1.4.8","depth":2,"path":"api/mutatorAction.md","ref":"api/mutatorAction.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/orchestrator.md","mtime":"2017-09-13T18:26:09.254Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

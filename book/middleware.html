@@ -1,0 +1,484 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Middleware · GitBook</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.0">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="core-concepts.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="core-concepts.html">
+            
+                <a href="core-concepts.html">
+            
+                    
+                    Core Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="middleware.html">
+            
+                <a href="middleware.html">
+            
+                    
+                    Middleware
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="api/action.html">
+            
+                <a href="api/action.html">
+            
+                    
+                    action
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="api/actionCreator.html">
+            
+                <a href="api/actionCreator.html">
+            
+                    
+                    actionCreator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="api/applyMiddleware.html">
+            
+                <a href="api/applyMiddleware.html">
+            
+                    
+                    applyMiddleware
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="api/createStore.html">
+            
+                <a href="api/createStore.html">
+            
+                    
+                    createStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="api/dispatch.html">
+            
+                <a href="api/dispatch.html">
+            
+                    
+                    dispatch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="api/getRootStore.html">
+            
+                <a href="api/getRootStore.html">
+            
+                    
+                    getRootStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="api/mutator.html">
+            
+                <a href="api/mutator.html">
+            
+                    
+                    mutator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="api/mutatorAction.html">
+            
+                <a href="api/mutatorAction.html">
+            
+                    
+                    mutatorAction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="api/orchestrator.html">
+            
+                <a href="api/orchestrator.html">
+            
+                    
+                    orchestrator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="api/orchestratorAction.html">
+            
+                <a href="api/orchestratorAction.html">
+            
+                    
+                    orchestratorAction
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    Best Practices
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="best-practices/action-creators.html">
+            
+                <a href="best-practices/action-creators.html">
+            
+                    
+                    Action Creators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="best-practices/mutators-and-orchestrators.html">
+            
+                <a href="best-practices/mutators-and-orchestrators.html">
+            
+                    
+                    Mutators and Orchestrators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="best-practices/selectors.html">
+            
+                <a href="best-practices/selectors.html">
+            
+                    
+                    Selectors
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="best-practices/mobx.html">
+            
+                <a href="best-practices/mobx.html">
+            
+                    
+                    MobX
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Middleware</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="middleware">Middleware</h2><p>Middleware allows you to hook into the dispatch pipeline in order to be notified of every action that is dispatched, and even modify or intercept the action.</p><h3 id="creating-middleware">Creating middleware</h3><p>Middleware is simply a function with the following signature:</p><pre><code class="lang-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sampleMiddleware</span>(<span class="hljs-params">next, actionMessage</span>)</span></code></pre>
+<p><code>next</code>:
+The next step in the dispatch pipeline.
+It is a function that takes <code>actionMessage</code> as a parameter.
+<strong>Every middleware should call <code>next</code> at some point</strong> (unless it wants to prevent the action from being dispatched further).</p><p><code>actionMessage</code>:
+The action message object.</p><h3 id="example">Example</h3><p>The following is a simple middleware that traces each action to the console:</p><pre><code class="lang-typescript"><span class="hljs-keyword">import</span> { ActionMessage, DispatchFunction } from <span class="hljs-string">&apos;satcheljs&apos;</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traceMiddleware</span>(<span class="hljs-params">next: DispatchFunction, actionMessage: ActionMessage</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Dispatching action: &quot;</span> + actionMessage.type);
+    next(actionMessage);
+}</code></pre>
+<h3 id="installing-middleware">Installing middleware</h3><p>You tell Satchel to use your middleware by calling <code>applyMiddleware</code>.
+Calling <code>applyMiddleware</code> will <em>replace</em> any current middleware with the list of middleware you provide.</p><pre><code class="lang-typescript"><span class="hljs-keyword">import</span> { applyMiddleware } from <span class="hljs-string">&apos;satcheljs&apos;</span>;
+
+applyMiddleware(traceMiddleware, middleware2, middleware3);</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="core-concepts.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Core Concepts">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Middleware","level":"1.3","depth":1,"next":{"title":"API","level":"1.4","depth":1,"ref":"","articles":[{"title":"action","level":"1.4.1","depth":2,"path":"api/action.md","ref":"api/action.md","articles":[]},{"title":"actionCreator","level":"1.4.2","depth":2,"path":"api/actionCreator.md","ref":"api/actionCreator.md","articles":[]},{"title":"applyMiddleware","level":"1.4.3","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},{"title":"createStore","level":"1.4.4","depth":2,"path":"api/createStore.md","ref":"api/createStore.md","articles":[]},{"title":"dispatch","level":"1.4.5","depth":2,"path":"api/dispatch.md","ref":"api/dispatch.md","articles":[]},{"title":"getRootStore","level":"1.4.6","depth":2,"path":"api/getRootStore.md","ref":"api/getRootStore.md","articles":[]},{"title":"mutator","level":"1.4.7","depth":2,"path":"api/mutator.md","ref":"api/mutator.md","articles":[]},{"title":"mutatorAction","level":"1.4.8","depth":2,"path":"api/mutatorAction.md","ref":"api/mutatorAction.md","articles":[]},{"title":"orchestrator","level":"1.4.9","depth":2,"path":"api/orchestrator.md","ref":"api/orchestrator.md","articles":[]},{"title":"orchestratorAction","level":"1.4.10","depth":2,"path":"api/orchestratorAction.md","ref":"api/orchestratorAction.md","articles":[]}]},"previous":{"title":"Core Concepts","level":"1.2","depth":1,"path":"core-concepts.md","ref":"core-concepts.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"middleware.md","mtime":"2017-09-13T18:26:09.264Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

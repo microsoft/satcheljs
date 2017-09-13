@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>action · GitBook</title>
+        <title>actionCreator · GitBook</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -57,8 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="actionCreator.html" />
+    <link rel="next" href="applyMiddleware.html" />
     
+    
+    <link rel="prev" href="action.html" />
     
 
     </head>
@@ -140,7 +142,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.4.1" data-path="action.html">
+        <li class="chapter " data-level="1.4.1" data-path="action.html">
             
                 <a href="action.html">
             
@@ -153,7 +155,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="actionCreator.html">
+        <li class="chapter active" data-level="1.4.2" data-path="actionCreator.html">
             
                 <a href="actionCreator.html">
             
@@ -376,7 +378,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >action</a>
+        <a href=".." >actionCreator</a>
     </h1>
 </div>
 
@@ -391,7 +393,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="action"><code>action</code></h1><p>Decorates a function as an action creator which also dispatches the action message after creating it.</p><h2 id="usage">Usage</h2><p><strong><code>action&lt;T&gt;(actionType, [target])</code></strong></p><h3 id="arguments">Arguments</h3><ul><li><code>T</code> <em>(type parameter)</em>: An interface describing the shape of the action message to create.
+                                <h1 id="actioncreator"><code>actionCreator</code></h1><p>Decorates a function as an action creator.</p><h2 id="usage">Usage</h2><p><strong><code>actionCreator&lt;T&gt;(actionType, [target])</code></strong></p><h3 id="arguments">Arguments</h3><ul><li><code>T</code> <em>(type parameter)</em>: An interface describing the shape of the action message to create.
 </li>
 <li><code>actionType</code> <em>(<code>string</code>)</em>: A string which identifies the type of the action.
 </li>
@@ -399,12 +401,11 @@
 </li></ul>
 <h3 id="return-value">Return value</h3><ul><li><em>(<code>(...) =&gt; T</code>)</em>: An action creator.
 </li></ul>
-<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = action(
+<h2 id="example">Example</h2><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = actionCreator(
     <span class="hljs-string">&apos;ADD_TODO&apos;</span>,
     (text: <span class="hljs-built_in">string</span>) =&gt; ({ text: text }));
 
-<span class="hljs-comment">// This creates AND dispatches the ADD_TODO action message</span>
-addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pre>
+dispatch(addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>));</code></pre>
 <h2 id="notes">Notes</h2><ul><li>Typically the type of the action message (<code>T</code>) is inferred from the return type of <code>target</code>, so it is not necessary to explicitly supply it.
 </li>
 <li>Do not include the <code>type</code> property on the created action message.  It will automatically be set by the action creator.
@@ -438,8 +439,12 @@ addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pr
 
             
                 
+                <a href="action.html" class="navigation navigation-prev " aria-label="Previous page: action">
+                    <i class="fa fa-angle-left"></i>
+                </a>
                 
-                <a href="actionCreator.html" class="navigation navigation-next navigation-unique" aria-label="Next page: actionCreator">
+                
+                <a href="applyMiddleware.html" class="navigation navigation-next " aria-label="Next page: applyMiddleware">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -450,7 +455,7 @@ addTodo(<span class="hljs-string">&apos;Take out trash&apos;</span>);</code></pr
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"action","level":"1.4.1","depth":2,"next":{"title":"actionCreator","level":"1.4.2","depth":2,"path":"api/actionCreator.md","ref":"api/actionCreator.md","articles":[]},"previous":{"title":"API","level":"1.4","depth":1,"ref":"","articles":[{"title":"action","level":"1.4.1","depth":2,"path":"api/action.md","ref":"api/action.md","articles":[]},{"title":"actionCreator","level":"1.4.2","depth":2,"path":"api/actionCreator.md","ref":"api/actionCreator.md","articles":[]},{"title":"applyMiddleware","level":"1.4.3","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},{"title":"createStore","level":"1.4.4","depth":2,"path":"api/createStore.md","ref":"api/createStore.md","articles":[]},{"title":"dispatch","level":"1.4.5","depth":2,"path":"api/dispatch.md","ref":"api/dispatch.md","articles":[]},{"title":"getRootStore","level":"1.4.6","depth":2,"path":"api/getRootStore.md","ref":"api/getRootStore.md","articles":[]},{"title":"mutator","level":"1.4.7","depth":2,"path":"api/mutator.md","ref":"api/mutator.md","articles":[]},{"title":"mutatorAction","level":"1.4.8","depth":2,"path":"api/mutatorAction.md","ref":"api/mutatorAction.md","articles":[]},{"title":"orchestrator","level":"1.4.9","depth":2,"path":"api/orchestrator.md","ref":"api/orchestrator.md","articles":[]},{"title":"orchestratorAction","level":"1.4.10","depth":2,"path":"api/orchestratorAction.md","ref":"api/orchestratorAction.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/action.md","mtime":"2017-09-13T18:26:09.246Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"actionCreator","level":"1.4.2","depth":2,"next":{"title":"applyMiddleware","level":"1.4.3","depth":2,"path":"api/applyMiddleware.md","ref":"api/applyMiddleware.md","articles":[]},"previous":{"title":"action","level":"1.4.1","depth":2,"path":"api/action.md","ref":"api/action.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/actionCreator.md","mtime":"2017-09-13T18:26:09.247Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
