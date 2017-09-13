@@ -1,19 +1,22 @@
 # Table of contents
 
-* [Satchel and Flux](satchel-and-flux.md)
+* [Core Concepts](core-concepts.md)
+* [Middleware](middleware.md)
 
-* Usage
-  * [Getting Started](usage/getting-started.md)
-  * [Asynchronous Actions](usage/async-actions.md)
-  * [Middleware](usage/middleware.md)
-
-* satcheljs API
+* API
   * [action](api/action.md)
+  * [actionCreator](api/actionCreator.md)
   * [applyMiddleware](api/applyMiddleware.md)
   * [createStore](api/createStore.md)
-  * [initializeStore](api/initializeStore.md)
-  * [rootStore](api/rootStore.md)
-  * [select](api/select.md)
+  * [dispatch](api/dispatch.md)
+  * [getRootStore](api/getRootStore.md)
+  * [mutator](api/mutator.md)
+  * [mutatorAction](api/mutatorAction.md)
+  * [orchestrator](api/orchestrator.md)
+  * [orchestratorAction](api/orchestratorAction.md)
 
-* satcheljs-react API
-  * [@reactive](api/satcheljs-react/reactive.md)
+* Best Practices
+  * [Action Creators](best-practices/action-creators.md)
+  * [Mutators and Orchestrators](best-practices/mutators-and-orchestrators.md)
+  * [Selectors](best-practices/selectors.md)
+  * [MobX](best-practices/mobx.md)

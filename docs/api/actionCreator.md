@@ -1,10 +1,10 @@
-# `action`
+# `actionCreator`
 
-Decorates a function as an action creator which also dispatches the action message after creating it.
+Decorates a function as an action creator.
 
 ## Usage
 
-**`action<T>(actionType, [target])`**
+**`actionCreator<T>(actionType, [target])`**
 
 ### Arguments
 
@@ -19,12 +19,11 @@ Decorates a function as an action creator which also dispatches the action messa
 ## Example
 
 ```typescript
-let addTodo = action(
+let addTodo = actionCreator(
     'ADD_TODO',
     (text: string) => ({ text: text }));
 
-// This creates AND dispatches the ADD_TODO action message
-addTodo('Take out trash');
+dispatch(addTodo('Take out trash'));
 ```
 
 ## Notes
