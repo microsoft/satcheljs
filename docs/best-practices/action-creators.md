@@ -14,10 +14,15 @@ Action creators are conceptually pretty simple, but there are a few best practic
 
 * **Action creators can be used to decouple disparate parts of an app.**
 
-  For example, say you want Component A and Component B to be decoupled from each other, but Component A needs to be able to trigger some mutator in Component B.
+  For example, say you want Component A and Component B to be decoupled from each other.
+  However, Component A needs to be able to trigger some mutator in Component B.
 
-  Component A can call an action creator (C) to dispatch an action which Component B subscribes to.
-  Now both A and B depend on C, but they don't need to know about each other.
+  Using an action creator solves this problem:
+  Component A calls the action creator to dispatch an action;
+  Component B subscribes to the action.
+  Now the components can interact indirectly without either one depending on the other.
+
+  ![Decoupling components via an action creator](decoupled-components.png)
 
 * **If only one mutator or orchestrator subscribes to an action creator, consider using a `mutatorAction` or `orchestratorAction`.**
 
