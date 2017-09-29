@@ -5,7 +5,7 @@ before_install:
 - npm config set spin false
 - npm i -g makeshift && makeshift -r https://registry.npmjs.org
 install:
-- npm install
+- yarn
 script:
 - |
   if [ -n "$TRAVIS_TAG" ]; then
