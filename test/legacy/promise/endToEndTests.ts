@@ -21,13 +21,13 @@ describe('promiseMiddleware', () => {
         testAction(store, newValue)
             .then(() => {
                 // The new value should have been set
-                expect(store.testValue).toBe(newValue);
+                expect(store.testValue).toEqual(newValue);
 
                 // The action name should indicate that it was a promise's "then" callback
-                expect(store.currentAction).toBe('testAction => then');
+                expect(store.currentAction).toEqual('testAction => then');
 
                 // At this point there should be no current action
-                expect(getCurrentAction()).toBe(null);
+                expect(getCurrentAction()).toEqual(null);
                 done();
             })
             .catch(error => {
