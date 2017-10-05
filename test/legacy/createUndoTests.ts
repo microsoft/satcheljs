@@ -1,11 +1,11 @@
 import 'jasmine';
 import action from '../../src/legacy/action';
 import createUndo, { UndoResult } from '../../src/legacy/createUndo';
-import { extendObservable, observable, map, _ } from 'mobx';
+import { extendObservable, observable, extras } from 'mobx';
 import { __resetGlobalContext } from '../../src/globalContext';
 
 function resetState() {
-    _.resetGlobalState();
+    extras.resetGlobalState();
     __resetGlobalContext();
 }
 
@@ -39,7 +39,7 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({ key: oldValue });
+            let object = observable.map({ key: oldValue });
             let undoableAction = action('updateMap')(() => {
                 object.set(index, newValue);
             });
@@ -90,7 +90,7 @@ describe('createUndo', () => {
             let index = 'key';
             let newValue = 5;
 
-            let object = map({});
+            let object = observable.map({});
             let undoableAction = action('addMap')(() => {
                 object.set(index, newValue);
             });
@@ -126,7 +126,7 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({ [index]: oldValue });
+            let object = observable.map({ [index]: oldValue });
             let undoableAction = action('deleteMap')(() => {
                 object.delete(index);
             });
@@ -168,7 +168,7 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({ key: oldValue });
+            let object = observable.map({ key: oldValue });
             let undoableAction = action('updateMap')(() => {
                 object.set(index, newValue);
             });
@@ -219,7 +219,7 @@ describe('createUndo', () => {
             let index = 'key';
             let newValue = 5;
 
-            let object = map({});
+            let object = observable.map({});
             let undoableAction = action('addMap')(() => {
                 object.set(index, newValue);
             });
@@ -255,7 +255,7 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({ [index]: oldValue });
+            let object = observable.map({ [index]: oldValue });
             let undoableAction = action('deleteMap')(() => {
                 object.delete(index);
             });
@@ -296,7 +296,7 @@ describe('createUndo', () => {
             let newValue = 5;
             let oldValue = 2;
 
-            let object = map({ key: oldValue });
+            let object = observable.map({ key: oldValue });
             let undoableAction = action('updateMap')(() => {
                 object.set(index, newValue);
             });
@@ -344,7 +344,7 @@ describe('createUndo', () => {
             let index = 'key';
             let newValue = 5;
 
-            let object = map({});
+            let object = observable.map({});
             let undoableAction = action('addMap')(() => {
                 object.set(index, newValue);
             });
@@ -378,7 +378,7 @@ describe('createUndo', () => {
             let index = 'key';
             let oldValue = 5;
 
-            let object = map({ [index]: oldValue });
+            let object = observable.map({ [index]: oldValue });
             let undoableAction = action('deleteMap')(() => {
                 object.delete(index);
             });
@@ -423,7 +423,7 @@ describe('createUndo', () => {
     });
 
     it('throws if an undo instance is called twice', () => {
-        let object = map({ key: 2 });
+        let object = observable.map({ key: 2 });
         let undoableAction = action('updateMap')(() => {
             object.set('key', 5);
         });

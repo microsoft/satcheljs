@@ -1,5 +1,5 @@
 import 'jasmine';
-import { autorun, _ } from 'mobx';
+import { autorun, extras } from 'mobx';
 
 import getRootStore from '../../src/getRootStore';
 import dispatch from '../../src/legacy/dispatch';
@@ -10,7 +10,7 @@ var backupConsoleError = console.error;
 
 describe('dispatch', () => {
     beforeEach(() => {
-        _.resetGlobalState();
+        extras.resetGlobalState();
         __resetGlobalContext();
     });
 
