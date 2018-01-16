@@ -33,6 +33,10 @@ In order to use Satchel with React, you'll also need MobX and the MobX React bin
 
 `npm install mobx-react --save`
 
+## Cookbook
+
+Because a data flow library is best shown in a non-trivial example, we have included a [recipe-based cookbook](https://github.com/Microsoft/satcheljs-cookbook) to illustrate some of the best practices in using SatchelJS in a small application.
+
 ## Usage
 
 The following examples assume you're developing in Typescript.
