@@ -6,11 +6,11 @@ The following table shows when each API for responding to an action is appropria
 
 |                                                                     | You need to modify the application state | You need to make a server call, dispatch further actions, or trigger other side effects |
 |---------------------------------------------------------------------|------------------------------------------|---|
-| Your action has exactly one subscriber                              | `mutatorAction`                          | `orchestratorAction` |
+| Your action has exactly one subscriber                              | `mutatorAction`                          | `orchestrator` |
 | Your action may be subscribed to by other mutators or orchestrators | `mutator`                                | `orchestrator` |
 
-> Note: The `mutatorAction` and `orchestratorAction` APIs provide a concise and convenient way to create mutators and orchestrators when there is a 1:1 correspondence between the action and the handler of that action.
-> There's no requirement to use them, and it would be fine to build a Satchel app entirely with traditional Flux action creators for every action.
+> Note: The `mutatorAction` API provides a concise and convenient way to create a mutator when there is a 1:1 correspondence between the action and the handler of that action.
+> There's no requirement to use it, and it would be fine to build a Satchel app entirely with traditional Flux action creators for every action.
 
 ## Mutators
 

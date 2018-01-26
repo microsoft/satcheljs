@@ -257,19 +257,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.10" data-path="api/orchestratorAction.html">
-            
-                <a href="api/orchestratorAction.html">
-            
-                    
-                    orchestratorAction
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -456,8 +443,8 @@ orchestrator(requestAddTodo, async (actionMessage) =&gt; {
     await addTodoOnServer(actionMessage.text);
     addTodo(actionMessage.text);
 };</code></pre>
-<h3 id="mutatoraction-and-orchestratoraction">mutatorAction and orchestratorAction</h3><p>In many cases a given action only needs to be handled by one mutator or orchestrator.
-Satchel provides these utility APIs which encapsulate action creation, dispatch, and handling in one simple function call.</p><p>The <code>addTodo</code> mutator above could be implemented as follows:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = mutatorAction(
+<h3 id="mutatoraction">mutatorAction</h3><p>In many cases a given action only needs to be handled by one mutator.
+Satchel provides this utility API which encapsulates action creation, dispatch, and handling in one simple function call.</p><p>The <code>addTodo</code> mutator above could be implemented as follows:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> addTodo = mutatorAction(
     <span class="hljs-string">&apos;ADD_TODO&apos;</span>,
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addTodo</span>(<span class="hljs-params">text: <span class="hljs-built_in">string</span></span>) </span>{
         getStore().todos.push({
@@ -465,13 +452,7 @@ Satchel provides these utility APIs which encapsulate action creation, dispatch,
             text: actionMessage.text
         });
     });</code></pre>
-<p>An orchestrator can be created similarly:</p><pre><code class="lang-typescript"><span class="hljs-keyword">let</span> requestAddTodo = orchestratorAction(
-    <span class="hljs-string">&apos;REQUEST_ADD_TODO&apos;</span>,
-    async <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requestAddTodo</span>(<span class="hljs-params">text: <span class="hljs-built_in">string</span></span>) </span>{
-        await addTodoOnServer(actionMessage.text);
-        addTodo(actionMessage.text);
-    });</code></pre>
-<p>This is a succinct and easy way to write mutators and orchestrators, but it comes with a restriction:
+<p>This is a succinct and easy way to write mutators, but it comes with a restriction:
 the action creator is not exposed, so no <em>other</em> mutators or orchestrators can subscribe to it.
 If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.</p><h2 id="license---mit">License - MIT</h2>
                                 
@@ -512,7 +493,7 @@ If an action needs multiple handlers then it must use the full pattern with acti
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Core Concepts","level":"1.2","depth":1,"path":"core-concepts.md","ref":"core-concepts.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2017-09-13T18:26:09.243Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Core Concepts","level":"1.2","depth":1,"path":"core-concepts.md","ref":"core-concepts.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-01-26T22:38:22.524Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2018-01-26T22:44:06.760Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

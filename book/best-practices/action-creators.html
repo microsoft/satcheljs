@@ -257,19 +257,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.10" data-path="../api/orchestratorAction.html">
-            
-                <a href="../api/orchestratorAction.html">
-            
-                    
-                    orchestratorAction
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -401,7 +388,7 @@ However, Component A needs to be able to trigger some mutator in Component B.</p
 Component A calls the action creator to dispatch an action;
 Component B subscribes to the action.
 Now the components can interact indirectly without either one depending on the other.</p><p><img alt="Decoupling components via an action creator" src="decoupled-components.png"></p></li>
-<li><p><strong>If only one mutator or orchestrator subscribes to an action creator, consider using a <code>mutatorAction</code> or <code>orchestratorAction</code>.</strong></p><p>For simple cases these convenience APIs can cut down on a lot of boilerplate code.</p></li></ul>
+<li><p><strong>If only one mutator subscribes to an action creator, consider using a <code>mutatorAction</code>.</strong></p><p>For simple cases this convenience API can cut down on a lot of boilerplate code.</p></li></ul>
 
                                 
                                 </section>
@@ -441,7 +428,7 @@ Now the components can interact indirectly without either one depending on the o
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Action Creators","level":"1.5.1","depth":2,"next":{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"path":"best-practices/mutators-and-orchestrators.md","ref":"best-practices/mutators-and-orchestrators.md","articles":[]},"previous":{"title":"Best Practices","level":"1.5","depth":1,"ref":"","articles":[{"title":"Action Creators","level":"1.5.1","depth":2,"path":"best-practices/action-creators.md","ref":"best-practices/action-creators.md","articles":[]},{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"path":"best-practices/mutators-and-orchestrators.md","ref":"best-practices/mutators-and-orchestrators.md","articles":[]},{"title":"Selectors","level":"1.5.3","depth":2,"path":"best-practices/selectors.md","ref":"best-practices/selectors.md","articles":[]},{"title":"MobX","level":"1.5.4","depth":2,"path":"best-practices/mobx.md","ref":"best-practices/mobx.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"best-practices/action-creators.md","mtime":"2017-09-13T18:26:09.256Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Action Creators","level":"1.5.1","depth":2,"next":{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"path":"best-practices/mutators-and-orchestrators.md","ref":"best-practices/mutators-and-orchestrators.md","articles":[]},"previous":{"title":"Best Practices","level":"1.5","depth":1,"ref":"","articles":[{"title":"Action Creators","level":"1.5.1","depth":2,"path":"best-practices/action-creators.md","ref":"best-practices/action-creators.md","articles":[]},{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"path":"best-practices/mutators-and-orchestrators.md","ref":"best-practices/mutators-and-orchestrators.md","articles":[]},{"title":"Selectors","level":"1.5.3","depth":2,"path":"best-practices/selectors.md","ref":"best-practices/selectors.md","articles":[]},{"title":"MobX","level":"1.5.4","depth":2,"path":"best-practices/mobx.md","ref":"best-practices/mobx.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"best-practices/action-creators.md","mtime":"2018-01-26T22:36:36.596Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2018-01-26T22:44:06.760Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
