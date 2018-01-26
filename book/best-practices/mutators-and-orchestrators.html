@@ -259,19 +259,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.10" data-path="../api/orchestratorAction.html">
-            
-                <a href="../api/orchestratorAction.html">
-            
-                    
-                    orchestratorAction
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -403,14 +390,14 @@ The following table shows when each API for responding to an action is appropria
 </tr></thead><tbody>
 <tr><td>Your action has exactly one subscriber</td>
 <td><code>mutatorAction</code></td>
-<td><code>orchestratorAction</code></td>
+<td><code>orchestrator</code></td>
 </tr><tr><td>Your action may be subscribed to by other mutators or orchestrators</td>
 <td><code>mutator</code></td>
 <td><code>orchestrator</code></td>
 </tr></tbody></table>
 
-<blockquote><p>Note: The <code>mutatorAction</code> and <code>orchestratorAction</code> APIs provide a concise and convenient way to create mutators and orchestrators when there is a 1:1 correspondence between the action and the handler of that action.
-There&apos;s no requirement to use them, and it would be fine to build a Satchel app entirely with traditional Flux action creators for every action.</p></blockquote><h2 id="mutators">Mutators</h2><ul><li><strong>Mutators should be targeted</strong>.
+<blockquote><p>Note: The <code>mutatorAction</code> API provides a concise and convenient way to create a mutator when there is a 1:1 correspondence between the action and the handler of that action.
+There&apos;s no requirement to use it, and it would be fine to build a Satchel app entirely with traditional Flux action creators for every action.</p></blockquote><h2 id="mutators">Mutators</h2><ul><li><strong>Mutators should be targeted</strong>.
 They are typically small, scoped to a single store or portion of a store and only concerned with setting or updating data in that store.
 </li>
 <li><strong>Mutators should maintain the internal consistency of a store.</strong>
@@ -470,7 +457,7 @@ This might be necessary if a series of mutators need to be triggered in a partic
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"next":{"title":"Selectors","level":"1.5.3","depth":2,"path":"best-practices/selectors.md","ref":"best-practices/selectors.md","articles":[]},"previous":{"title":"Action Creators","level":"1.5.1","depth":2,"path":"best-practices/action-creators.md","ref":"best-practices/action-creators.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"best-practices/mutators-and-orchestrators.md","mtime":"2017-09-13T18:26:09.259Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2017-09-13T18:29:15.814Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Mutators and Orchestrators","level":"1.5.2","depth":2,"next":{"title":"Selectors","level":"1.5.3","depth":2,"path":"best-practices/selectors.md","ref":"best-practices/selectors.md","articles":[]},"previous":{"title":"Action Creators","level":"1.5.1","depth":2,"path":"best-practices/action-creators.md","ref":"best-practices/action-creators.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"best-practices/mutators-and-orchestrators.md","mtime":"2018-01-26T22:37:41.510Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2018-01-26T22:44:06.760Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

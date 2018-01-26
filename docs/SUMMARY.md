@@ -13,7 +13,6 @@
   * [mutator](api/mutator.md)
   * [mutatorAction](api/mutatorAction.md)
   * [orchestrator](api/orchestrator.md)
-  * [orchestratorAction](api/orchestratorAction.md)
 
 * Best Practices
   * [Action Creators](best-practices/action-creators.md)

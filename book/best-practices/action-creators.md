@@ -24,6 +24,6 @@ Action creators are conceptually pretty simple, but there are a few best practic
 
   ![Decoupling components via an action creator](decoupled-components.png)
 
-* **If only one mutator or orchestrator subscribes to an action creator, consider using a `mutatorAction` or `orchestratorAction`.**
+* **If only one mutator subscribes to an action creator, consider using a `mutatorAction`.**
 
-  For simple cases these convenience APIs can cut down on a lot of boilerplate code.
+  For simple cases this convenience API can cut down on a lot of boilerplate code.
