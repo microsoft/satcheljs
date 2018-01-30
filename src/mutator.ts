@@ -16,20 +16,17 @@ export default function mutator<T extends ActionMessage>(
         throw new Error('Mutators can only subscribe to action creators.');
     }
 
-    // Wrap the callback in a MobX action so it can modify the store
-    let wrappedTarget = action(target);
-
     // Subscribe to the action
-    subscribe(actionId, (actionMessage: T) => {
+    subscribe(actionId, action((actionMessage: T) => {
         try {
             getGlobalContext().inMutator = true;
-            if (wrappedTarget(actionMessage)) {
+            if (target(actionMessage)) {
                 throw new Error('Mutators cannot return a value and cannot be async.');
             }
         } finally {
             getGlobalContext().inMutator = false;
         }
-    });
+    }));
 
     return target;
 }
