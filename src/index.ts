@@ -12,10 +12,14 @@ export { default as applyMiddleware } from './applyMiddleware';
 export { default as createStore } from './createStore';
 export { dispatch } from './dispatcher';
 export { default as mutator } from './mutator';
-export { default as orchestrator } from './orchestrator';
+import { default as orchestrator } from './orchestrator';
 export { default as getRootStore } from './getRootStore';
 export { mutatorAction, orchestratorAction } from './simpleSubscribers';
 export { useStrict };
+
+// exporting an alias for orchestrator called "flow"
+export const flow = orchestrator;
+export { orchestrator };
 
 // Default to MobX strict mode
 useStrict(true);

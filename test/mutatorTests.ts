@@ -47,7 +47,7 @@ describe('mutator', () => {
         mutator(actionCreator, callback);
 
         // Assert
-        expect(mobx.action).toHaveBeenCalledWith(callback);
+        expect(mobx.action).toHaveBeenCalled();
     });
 
     it('returns the target function', () => {
