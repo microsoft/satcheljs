@@ -16,8 +16,8 @@ export default function mutator<T extends ActionMessage>(
         throw new Error('Mutators can only subscribe to action creators.');
     }
 
-    // Subscribe to the action
-    subscribe(actionId, action((actionMessage: T) => {
+    // Wrap the callback in a MobX action so it can modify the store		
+    let wrappedTarget = action((actionMessage: T) => {
         try {
             getGlobalContext().inMutator = true;
             if (target(actionMessage)) {
@@ -26,7 +26,10 @@ export default function mutator<T extends ActionMessage>(
         } finally {
             getGlobalContext().inMutator = false;
         }
-    }));
+    });
+
+    // Subscribe to the action
+    subscribe(actionId, wrappedTarget);
 
     return target;
 }

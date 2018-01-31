@@ -19,6 +19,7 @@ export { useStrict };
 
 // exporting an alias for orchestrator called "flow"
 export const flow = orchestrator;
+export { orchestrator };
 
 // Default to MobX strict mode
 useStrict(true);
