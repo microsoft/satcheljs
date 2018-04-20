@@ -8,11 +8,11 @@ const actionB = action('b');
 
 // Simple scalar value
 const reducer1 = createReducer<string>('x')
-    .addReduction(actionA, (state, actionMessage) => {
+    .handle(actionA, (state, actionMessage) => {
         // Return value means we *replace* the state
         return 'a';
     })
-    .addReduction(actionB, (state, actionMessage) => {
+    .handle(actionB, (state, actionMessage) => {
         return 'b';
     });
 
@@ -20,7 +20,7 @@ const reducer1 = createReducer<string>('x')
 // Schema could live in same file as it's associated reducer
 const reducer2 = createReducer<any>({
     someValue: 'x',
-}).addReduction(actionA, (state, actionMessage) => {
+}).handle(actionA, (state, actionMessage) => {
     // No return value means that we've mutated the draft state
     state.someValue = 'a';
 });
@@ -35,7 +35,7 @@ const getStore = createV4Store({
 // Probably it's a good thing that we force a shallow structure.
 
 // The store would do this, reducer would handle (or ignore) action
-reducer1.giveAction({ thisIsAnAction: true });
+reducer1.handleAction({ thisIsAnAction: true });
 
 // Test cases could do the same; just need a good way to create a mock action (satcheljs/testUtils)
 let mockAction = createMockAction(actionA, { payloadGoesHere: true });
@@ -43,4 +43,4 @@ reducer1.dispatchAction(mockAction);
 
 // Or better yet, if TS isn't too annoying about the typing:
 actionA.create(1, 2, 3);
-// ...but this probably will require all actionc reator files to rexport some satchel typings
+// ...but this probably will require all action creator files to rexport some satchel typings
