@@ -21,7 +21,7 @@ const reducer1 = createReducer<string>('x')
 const reducer2 = createReducer<any>({
     someValue: 'x',
 }).handle(actionA, (state, actionMessage) => {
-    // No return value means that we've mutated the draft state
+    // No return value means that we've mutated the state, just like current mutators
     state.someValue = 'a';
 });
 
