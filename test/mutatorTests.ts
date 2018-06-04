@@ -1,9 +1,18 @@
 import 'jasmine';
 import mutator from '../src/mutator';
 import * as dispatcher from '../src/dispatcher';
+import * as globalContext from '../src/globalContext';
 import * as mobx from 'mobx';
 
 describe('mutator', () => {
+    let mockGlobalContext: any;
+
+    beforeEach(() => {
+        mockGlobalContext = { inMutator: false };
+        spyOn(globalContext, 'getGlobalContext').and.returnValue(mockGlobalContext);
+        spyOn(dispatcher, 'subscribe');
+    });
+
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
         let actionCreator: any = {};
@@ -18,7 +27,6 @@ describe('mutator', () => {
         // Arrange
         let actionId = 'testAction';
         let actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
-        spyOn(dispatcher, 'subscribe');
 
         // Act
         mutator(actionCreator, () => {});
@@ -33,15 +41,13 @@ describe('mutator', () => {
         let callback = () => {};
         let wrappedCallback = () => {};
         let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
-        spyOn(dispatcher, 'subscribe');
         spyOn(mobx, 'action').and.returnValue(wrappedCallback);
 
         // Act
         mutator(actionCreator, callback);
 
         // Assert
-        expect(mobx.action).toHaveBeenCalledWith(callback);
-        expect((<jasmine.Spy>dispatcher.subscribe).calls.argsFor(0)[1]).toBe(wrappedCallback);
+        expect(mobx.action).toHaveBeenCalled();
     });
 
     it('returns the target function', () => {
@@ -54,5 +60,34 @@ describe('mutator', () => {
 
         // Assert
         expect(returnValue).toBe(callback);
+    });
+
+    it('throws if the target function is async', () => {
+        // Arrange
+        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
+        let callback = async () => {};
+
+        mutator(actionCreator, callback);
+        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
+
+        // Act / Assert
+        expect(subscribedCallback).toThrow();
+    });
+
+    it('sets the inMutator flag to true for the duration of the mutator callback', () => {
+        // Arrange
+        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
+        let inMutatorValue;
+        let callback = () => {
+            expect(mockGlobalContext.inMutator).toBeTruthy();
+        };
+        mutator(actionCreator, callback);
+
+        // Act
+        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
+        subscribedCallback();
+
+        // Assert
+        expect(mockGlobalContext.inMutator).toBeFalsy();
     });
 });

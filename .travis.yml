@@ -5,7 +5,7 @@ before_install:
 - npm config set spin false
 - npm i -g makeshift && makeshift -r https://registry.npmjs.org
 install:
-- npm install
+- yarn
 script:
 - |
   if [ -n "$TRAVIS_TAG" ]; then
@@ -17,6 +17,7 @@ script:
   fi
 deploy:
   - provider: npm
+    skip_cleanup: true
     email: kchau@microsoft.com
     api_key: $NPM_TOKEN
     tag: latest
@@ -25,6 +26,7 @@ deploy:
       condition: >
         "$TRAVIS_TAG" != *"-"*
   - provider: npm
+    skip_cleanup: true
     email: kchau@microsoft.com
     api_key: $NPM_TOKEN
     tag: next

@@ -16,6 +16,8 @@ function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) 
         }
     });
 
+    Object.freeze(state);
+
     return state;
 }
 
