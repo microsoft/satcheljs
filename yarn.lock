@@ -1061,9 +1061,9 @@ hoek@4.x.x:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
 
-hoist-non-react-statics@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+hoist-non-react-statics@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.0.tgz#d2ca2dfc19c5a91c5a6615ce8e564ef0347e2a40"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
@@ -1929,15 +1929,16 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx-react@~4.0.3:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.0.4.tgz#5d979d8b67b7bfd3f093b5b06a50ed5b552c3410"
+mobx-react@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.2.0.tgz#d1fc36d6231a84d0ca54ebeaaa692872859d3629"
   dependencies:
-    hoist-non-react-statics "^1.2.0"
+    hoist-non-react-statics "^2.5.0"
+    react-lifecycles-compat "^3.0.2"
 
-mobx@~2.6.5:
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-2.6.5.tgz#9ea2a7f049c886b943981ea491bfcfba301dec49"
+mobx@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.3.1.tgz#334e5aab4916b1d43f0faf3605a64b1b4b3ccb8d"
 
 ms@2.0.0:
   version "2.0.0"
@@ -2321,6 +2322,10 @@ react-dom@15.4.2:
     fbjs "^0.8.1"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
+
+react-lifecycles-compat@^3.0.2:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
 react@15.4.2:
   version "15.4.2"

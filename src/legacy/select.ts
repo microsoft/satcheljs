@@ -1,4 +1,4 @@
-import { Reaction, Atom, IObservableValue, isObservableArray } from 'mobx';
+import { Reaction, IObservableValue, isObservableArray } from 'mobx';
 import { getOriginalTarget, getActionType, setActionType } from './functionInternals';
 import { getGlobalContext } from '../globalContext';
 

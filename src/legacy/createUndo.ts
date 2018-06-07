@@ -43,7 +43,7 @@ function spyOnChanges(event: any) {
                 // update (array)
                 undoStep = {
                     verify: () => modifiedObject[event.index] === event.newValue,
-                    objectName: modifiedObject.$mobx.name,
+                    objectName: event.name,
                     propertyName: event.index,
                     undo: () => {
                         modifiedObject[event.index] = event.oldValue;
@@ -52,21 +52,21 @@ function spyOnChanges(event: any) {
             } else if (typeof modifiedObject.get !== 'undefined') {
                 // update (map)
                 undoStep = {
-                    verify: () => modifiedObject.get(event.name) === event.newValue,
-                    objectName: modifiedObject.$mobx.name,
-                    propertyName: event.name,
+                    verify: () => modifiedObject.get(event.key) === event.newValue,
+                    objectName: event.name,
+                    propertyName: event.key,
                     undo: () => {
-                        modifiedObject.set(event.name, event.oldValue);
+                        modifiedObject.set(event.key, event.oldValue);
                     },
                 };
             } else {
                 // update (object)
                 undoStep = {
-                    verify: () => modifiedObject[event.name] === event.newValue,
-                    objectName: modifiedObject.$mobx.name,
-                    propertyName: event.name,
+                    verify: () => modifiedObject[event.key] === event.newValue,
+                    objectName: event.name,
+                    propertyName: event.key,
                     undo: () => {
-                        modifiedObject[event.name] = event.oldValue;
+                        modifiedObject[event.key] = event.oldValue;
                     },
                 };
             }
@@ -81,7 +81,7 @@ function spyOnChanges(event: any) {
                     }
                     return true;
                 },
-                objectName: modifiedObject.$mobx.name,
+                objectName: event.name,
                 propertyName: event.index,
                 undo: () => {
                     // First, remove the added items.
@@ -97,32 +97,32 @@ function spyOnChanges(event: any) {
             if (typeof modifiedObject.get !== 'undefined') {
                 // add (map)
                 undoStep = {
-                    verify: () => modifiedObject.get(event.name) === event.newValue,
-                    objectName: modifiedObject.$mobx.name,
-                    propertyName: event.name,
+                    verify: () => modifiedObject.get(event.key) === event.newValue,
+                    objectName: event.name,
+                    propertyName: event.key,
                     undo: () => {
-                        modifiedObject.delete(event.name);
+                        modifiedObject.delete(event.key);
                     },
                 };
             } else {
                 // add (object)
                 undoStep = {
-                    verify: () => modifiedObject[event.name] === event.newValue,
-                    objectName: modifiedObject.$mobx.name,
-                    propertyName: event.name,
+                    verify: () => modifiedObject[event.key] === event.newValue,
+                    objectName: event.name,
+                    propertyName: event.key,
                     undo: () => {
-                        delete modifiedObject[event.name];
+                        delete modifiedObject[event.key];
                     },
                 };
             }
             break;
         case 'delete':
             undoStep = {
-                verify: () => !modifiedObject.has(event.name),
-                objectName: modifiedObject.$mobx.name,
-                propertyName: event.name,
+                verify: () => !modifiedObject.has(event.key),
+                objectName: event.name,
+                propertyName: event.key,
                 undo: () => {
-                    modifiedObject.set(event.name, event.oldValue);
+                    modifiedObject.set(event.key, event.oldValue);
                 },
             };
             break;

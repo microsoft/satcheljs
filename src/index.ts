@@ -1,4 +1,4 @@
-import { useStrict } from 'mobx';
+import useStrict from './useStrict';
 
 // Current API
 export { default as ActionCreator } from './interfaces/ActionCreator';

@@ -13,7 +13,7 @@ describe('createStore', () => {
         let store = createStore('testStore', initialState)();
 
         // Assert
-        expect(store).toBe(initialState);
-        expect(getRootStore().get('testStore')).toBe(initialState);
+        expect(store).toEqual(initialState);
+        expect(getRootStore().get('testStore')).toEqual(initialState);
     });
 });
