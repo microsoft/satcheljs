@@ -1,10 +1,7 @@
 import { actionCreator } from '../src/index';
-import { createMutator } from '../src/createMutator';
+import { createMutator } from '../src/Mutator';
 
 describe('createMutator', () => {
-    const testAction = actionCreator('testAction');
-    const actionToDispatch = testAction();
-
     it('returns a mutator with the given initial value', () => {
         // Arrange
         const initialValue = {};
@@ -15,6 +12,11 @@ describe('createMutator', () => {
         // Assert
         expect(mutator.getInitialValue()).toBe(initialValue);
     });
+});
+
+describe('Mutator', () => {
+    const testAction = actionCreator('testAction');
+    const actionToDispatch = testAction();
 
     it('can modify the state when handling an action', () => {
         // Arrange
