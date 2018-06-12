@@ -1,5 +1,5 @@
 import 'jasmine';
-import orchestrator from '../src/orchestrator';
+import orchestrator from '../src/orchestratorDecorator';
 import * as dispatcher from '../src/dispatcher';
 
 describe('orchestrator', () => {

@@ -1,7 +1,5 @@
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
-import Subscriber from './interfaces/Subscriber';
-import mutator from './mutator';
 import { getPrivateActionId } from './actionCreator';
 
 export type MutatorHandler<TState, TAction extends ActionMessage> = (

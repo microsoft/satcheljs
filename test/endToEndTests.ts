@@ -2,8 +2,8 @@ import 'jasmine';
 import { action } from '../src/actionCreator';
 import applyMiddleware from '../src/applyMiddleware';
 import { dispatch } from '../src/dispatcher';
-import mutator from '../src/mutator';
-import orchestrator from '../src/orchestrator';
+import mutator from '../src/mutatorDecorator';
+import orchestrator from '../src/orchestratorDecorator';
 import { mutatorAction } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
 
