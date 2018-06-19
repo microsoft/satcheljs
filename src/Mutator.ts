@@ -7,7 +7,8 @@ export type MutatorHandler<TState, TAction extends ActionMessage> = (
     action: TAction
 ) => TState | void;
 
-export class Mutator<TState> {
+// Represents a mutator for a leaf node in the state tree
+export default class MutatorInternal<TState> {
     private handlers: { [actionId: string]: MutatorHandler<TState, ActionMessage> } = {};
 
     constructor(private initialValue: TState) {}
@@ -39,13 +40,8 @@ export class Mutator<TState> {
         if (handler) {
             let returnValue = handler(currentState, actionMessage);
             if (returnValue !== undefined) {
-                // TODO: does checking for undefined work??
                 replaceState(<TState>returnValue);
             }
         }
     }
-}
-
-export function createMutator<TState>(initialValue: TState) {
-    return new Mutator(initialValue);
 }

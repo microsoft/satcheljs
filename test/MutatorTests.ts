@@ -1,18 +1,5 @@
 import { actionCreator } from '../src/index';
-import { createMutator } from '../src/Mutator';
-
-describe('createMutator', () => {
-    it('returns a mutator with the given initial value', () => {
-        // Arrange
-        const initialValue = {};
-
-        // Act
-        const mutator = createMutator(initialValue);
-
-        // Assert
-        expect(mutator.getInitialValue()).toBe(initialValue);
-    });
-});
+import Mutator from '../src/Mutator';
 
 describe('Mutator', () => {
     const testAction = actionCreator('testAction');
@@ -21,7 +8,7 @@ describe('Mutator', () => {
     it('can modify the state when handling an action', () => {
         // Arrange
         const state = { a: 1 };
-        const mutator = createMutator(state);
+        const mutator = new Mutator(state);
         const replaceState = jasmine.createSpy('replaceState');
 
         mutator.handles(testAction, (state, actionMessage) => {
@@ -38,7 +25,7 @@ describe('Mutator', () => {
     it('can replace the state when handling an action', () => {
         // Arrange
         const state = { a: 1 };
-        const mutator = createMutator(state);
+        const mutator = new Mutator(state);
         const replaceState = jasmine.createSpy('replaceState');
 
         mutator.handles(testAction, (state, actionMessage) => {
