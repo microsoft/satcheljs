@@ -39,6 +39,21 @@ describe('CombinedMutator', () => {
     });
 
     it('replaces a child state when the replaceState callback gets called', () => {
-        fail();
+        // Arrange
+        spyOn(
+            mutatorA,
+            'handleAction'
+        ).and.callFake((state: any, actionMessage: any, replaceState: Function) => {
+            replaceState('x');
+        });
+
+        let state = { A: 'a' };
+        let combinedMutator = new CombinedMutator({ A: mutatorA });
+
+        // Act
+        combinedMutator.handleAction(state, {}, null);
+
+        // Assert
+        expect(state.A).toBe('x');
     });
 });
