@@ -6,6 +6,7 @@ import mutator from '../src/mutatorDecorator';
 import orchestrator from '../src/orchestratorDecorator';
 import { mutatorAction } from '../src/simpleSubscribers';
 import createStore from '../src/createStore';
+import createMutator from '../src/createMutator';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
@@ -101,5 +102,21 @@ describe('satcheljs', () => {
 
         // Assert
         expect(promiseValues).toEqual([1, 2]);
+    });
+
+    it('stores created from mutators handle actions as expected', () => {
+        // Arrange
+        const testAction = action('testAction');
+        const testMutator = createMutator({ testProperty: 1 }).handles(testAction, state => {
+            state.testProperty = 2;
+        });
+
+        const testStore = createStore('testStore', testMutator)();
+
+        // Act
+        testAction();
+
+        // Assert
+        expect(testStore.testProperty).toBe(2);
     });
 });
