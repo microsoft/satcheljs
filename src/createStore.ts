@@ -2,6 +2,8 @@ import { action } from 'mobx';
 import getRootStore from './getRootStore';
 import CombinedMutator from './CombinedMutator';
 import Mutator from './Mutator';
+import { subscribeAll } from './dispatcher';
+import wrapMutator from './wrapMutator';
 
 let createStoreAction = action('createStore', function createStoreAction(
     key: string,
@@ -12,14 +14,34 @@ let createStoreAction = action('createStore', function createStoreAction(
 
 export default function createStore<TState>(
     key: string,
-    initialStateOrMutator: TState | Mutator<TState> | CombinedMutator<TState>
+    arg2: TState | Mutator<TState> | CombinedMutator<TState>
 ): () => TState {
-    let initialState = initialStateOrMutator;
-    let mutator = initialStateOrMutator as Mutator<TState>;
-    if (mutator.handleAction && typeof mutator.handleAction == 'function') {
-        initialState = mutator.getInitialValue();
+    // Get the initial state (from the mutator, if necessary)
+    let mutator = getMutator(arg2);
+    let initialState = mutator ? mutator.getInitialValue() : arg2;
+
+    // Create the store under the root store
+    createStoreAction(key, initialState);
+    let getStore = () => <TState>getRootStore().get(key);
+
+    // If necessary, hook the mutator up to the dispatcher
+    if (mutator) {
+        subscribeAll(
+            wrapMutator(actionMessage => {
+                mutator.handleAction(getStore(), actionMessage, newState => {
+                    getRootStore().set(key, newState);
+                });
+            })
+        );
     }
 
-    createStoreAction(key, initialState);
-    return () => <TState>getRootStore().get(key);
+    return getStore;
+}
+
+function getMutator<TState>(mutator: TState | Mutator<TState> | CombinedMutator<TState>) {
+    if ((<any>mutator).handleAction) {
+        return <Mutator<TState> | CombinedMutator<TState>>mutator;
+    }
+
+    return null;
 }

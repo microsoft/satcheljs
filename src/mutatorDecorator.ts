@@ -6,6 +6,7 @@ import MutatorFunction from './interfaces/MutatorFunction';
 import { getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 import { getGlobalContext } from './globalContext';
+import wrapMutator from './wrapMutator';
 
 export default function mutator<T extends ActionMessage>(
     actionCreator: ActionCreator<T>,
@@ -16,20 +17,9 @@ export default function mutator<T extends ActionMessage>(
         throw new Error('Mutators can only subscribe to action creators.');
     }
 
-    // Wrap the callback in a MobX action so it can modify the store
-    let wrappedTarget = action((actionMessage: T) => {
-        try {
-            getGlobalContext().inMutator = true;
-            if (target(actionMessage)) {
-                throw new Error('Mutators cannot return a value and cannot be async.');
-            }
-        } finally {
-            getGlobalContext().inMutator = false;
-        }
-    });
-
     // Subscribe to the action
-    subscribe(actionId, wrappedTarget);
+    subscribe(actionId, wrapMutator(target));
 
+    // Return the original function so it can be exported for tests
     return target;
 }
