@@ -1,12 +1,14 @@
 import 'jasmine';
-import { action } from '../src/actionCreator';
-import applyMiddleware from '../src/applyMiddleware';
-import { dispatch } from '../src/dispatcher';
-import mutator from '../src/mutatorDecorator';
-import orchestrator from '../src/orchestratorDecorator';
-import { mutatorAction } from '../src/simpleSubscribers';
-import createStore from '../src/createStore';
-import createMutator from '../src/createMutator';
+import {
+    action,
+    applyMiddleware,
+    createMutator,
+    createStore,
+    dispatch,
+    mutator,
+    mutatorAction,
+    orchestrator,
+} from '../src/index';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
