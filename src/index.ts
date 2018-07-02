@@ -10,9 +10,11 @@ export { default as OrchestratorFunction } from './interfaces/OrchestratorFuncti
 export { action, actionCreator } from './actionCreator';
 export { default as applyMiddleware } from './applyMiddleware';
 export { default as createMutator } from './createMutator';
+export { default as combineMutators } from './combineMutators';
 export { default as createStore } from './createStore';
 export { dispatch } from './dispatcher';
 export { default as mutator } from './mutatorDecorator';
+export { default as Mutator } from './Mutator';
 import { default as orchestrator } from './orchestratorDecorator';
 export { default as getRootStore } from './getRootStore';
 export { mutatorAction, orchestratorAction } from './simpleSubscribers';
