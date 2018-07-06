@@ -8,7 +8,7 @@ export type MutatorHandler<TState, TAction extends ActionMessage> = (
 ) => TState | void;
 
 // Represents a mutator for a leaf node in the state tree
-export default class Mutator<TState> {
+export default class LeafMutator<TState> {
     private handlers: { [actionId: string]: MutatorHandler<TState, ActionMessage> } = {};
 
     constructor(private initialValue: TState) {}

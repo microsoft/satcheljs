@@ -14,7 +14,7 @@ export { default as combineMutators } from './combineMutators';
 export { default as createStore } from './createStore';
 export { dispatch } from './dispatcher';
 export { default as mutator } from './mutatorDecorator';
-export { default as Mutator } from './Mutator';
+export { default as LeafMutator } from './LeafMutator';
 import { default as orchestrator } from './orchestratorDecorator';
 export { default as getRootStore } from './getRootStore';
 export { mutatorAction, orchestratorAction } from './simpleSubscribers';

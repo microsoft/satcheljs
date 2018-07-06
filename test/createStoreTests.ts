@@ -2,7 +2,7 @@ import 'jasmine';
 import getRootStore from '../src/getRootStore';
 import createStore from '../src/createStore';
 import { __resetGlobalContext } from '../src/globalContext';
-import Mutator from '../src/Mutator';
+import LeafMutator from '../src/LeafMutator';
 import * as dispatcher from '../src/dispatcher';
 import * as wrapMutator from '../src/wrapMutator';
 
@@ -26,7 +26,7 @@ describe('createStore', () => {
     it('can create a store from a mutator', () => {
         // Arrange
         let initialState = { testProp: 'testValue' };
-        let mutator = new Mutator(initialState);
+        let mutator = new LeafMutator(initialState);
 
         // Act
         let store = createStore('testStore', mutator)();
@@ -40,7 +40,7 @@ describe('createStore', () => {
         // Arrange
         let testAction = {};
         let initialState = { testProp: 'testValue' };
-        let mutator = new Mutator(initialState);
+        let mutator = new LeafMutator(initialState);
 
         let subscribeAllSpy = spyOn(dispatcher, 'subscribeAll');
         let wrapMutatorSpy = spyOn(wrapMutator, 'default').and.callFake((target: any) => target);

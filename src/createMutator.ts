@@ -1,5 +1,5 @@
-import Mutator from './Mutator';
+import LeafMutator from './LeafMutator';
 
 export default function createMutator<TState>(initialValue: TState) {
-    return new Mutator(initialValue);
+    return new LeafMutator(initialValue);
 }

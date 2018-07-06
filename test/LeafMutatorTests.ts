@@ -1,14 +1,14 @@
 import { actionCreator } from '../src/index';
-import Mutator from '../src/Mutator';
+import LeafMutator from '../src/LeafMutator';
 
-describe('Mutator', () => {
+describe('LeafMutator', () => {
     const testAction = actionCreator('testAction');
     const actionToDispatch = testAction();
 
     it('can modify the state when handling an action', () => {
         // Arrange
         const state = { a: 1 };
-        const mutator = new Mutator(state);
+        const mutator = new LeafMutator(state);
         const replaceState = jasmine.createSpy('replaceState');
 
         mutator.handles(testAction, (state, actionMessage) => {
@@ -25,7 +25,7 @@ describe('Mutator', () => {
     it('can replace the state when handling an action', () => {
         // Arrange
         const state = { a: 1 };
-        const mutator = new Mutator(state);
+        const mutator = new LeafMutator(state);
         const replaceState = jasmine.createSpy('replaceState');
 
         mutator.handles(testAction, (state, actionMessage) => {

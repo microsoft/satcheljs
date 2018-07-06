@@ -1,7 +1,7 @@
 import { action } from 'mobx';
 import getRootStore from './getRootStore';
 import CombinedMutator from './CombinedMutator';
-import Mutator from './Mutator';
+import LeafMutator from './LeafMutator';
 import { subscribeAll } from './dispatcher';
 import wrapMutator from './wrapMutator';
 
@@ -14,7 +14,7 @@ let createStoreAction = action('createStore', function createStoreAction(
 
 export default function createStore<TState>(
     key: string,
-    arg2: TState | Mutator<TState> | CombinedMutator<TState>
+    arg2: TState | LeafMutator<TState> | CombinedMutator<TState>
 ): () => TState {
     // Get the initial state (from the mutator, if necessary)
     let mutator = getMutator(arg2);
@@ -38,9 +38,9 @@ export default function createStore<TState>(
     return getStore;
 }
 
-function getMutator<TState>(mutator: TState | Mutator<TState> | CombinedMutator<TState>) {
+function getMutator<TState>(mutator: TState | LeafMutator<TState> | CombinedMutator<TState>) {
     if ((<any>mutator).handleAction) {
-        return <Mutator<TState> | CombinedMutator<TState>>mutator;
+        return <LeafMutator<TState> | CombinedMutator<TState>>mutator;
     }
 
     return null;
