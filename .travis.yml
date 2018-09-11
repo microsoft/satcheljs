@@ -19,12 +19,11 @@ deploy:
   - provider: npm
     skip_cleanup: true
     email: kchau@microsoft.com
-    api_key: $NPM_TOKEN
+    api_key: $NPM_TOKENx
     tag: latest
     on:
       tags: true
-      condition: >
-        "$TRAVIS_TAG" != *"-"*
+      condition: $TRAVIS_TAG != *-*
   - provider: npm
     skip_cleanup: true
     email: kchau@microsoft.com
@@ -32,5 +31,4 @@ deploy:
     tag: next
     on:
       tags: true
-      condition: >
-        "$TRAVIS_TAG" == *"-"*
+      condition: $TRAVIS_TAG == *-*
