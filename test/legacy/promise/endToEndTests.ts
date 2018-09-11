@@ -1,4 +1,5 @@
 import 'jasmine';
+import { autorun } from 'mobx';
 import { action, legacyApplyMiddleware } from '../../../src/legacy';
 import { createStore } from '../../../src';
 import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
@@ -16,6 +17,7 @@ describe('promiseMiddleware', () => {
         legacyApplyMiddleware(promiseMiddleware);
         let store = createStore('testStore', { testValue: 1, currentAction: null })();
         let newValue = 2;
+        observeStore(store);
 
         // Act
         testAction(store, newValue)
@@ -42,6 +44,7 @@ describe('promiseMiddleware', () => {
         legacyApplyMiddleware();
         let store = createStore('testStore', { testValue: null })();
         let newValue = {};
+        observeStore(store);
 
         // Act
         testAction(store, newValue)
@@ -57,3 +60,10 @@ describe('promiseMiddleware', () => {
             });
     });
 });
+
+function observeStore(store: any) {
+    // Strict mode only requires actions if the store is actually observed
+    autorun(() => {
+        store.testValue;
+    });
+}
