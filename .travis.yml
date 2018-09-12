@@ -19,16 +19,7 @@ deploy:
   - provider: npm
     skip_cleanup: true
     email: kchau@microsoft.com
-    api_key: BAD_TOKEN
-    tag: latest
-    on:
-      tags: true
-      all_branches: true
-      condition: $TRAVIS_TAG != *-*
-  - provider: npm
-    skip_cleanup: true
-    email: kchau@microsoft.com
-    api_key: BAD_TOKEN
+    api_key: ABCD
     tag: next
     on:
       tags: true
