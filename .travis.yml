@@ -32,5 +32,3 @@ deploy:
     tag: next
     on:
       tags: true
-      all_branches: true
-      condition: $TRAVIS_TAG == *-*
