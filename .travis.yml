@@ -19,7 +19,7 @@ deploy:
   - provider: npm
     skip_cleanup: true
     email: kchau@microsoft.com
-    api_key: $NPM_TOKENx
+    api_key: BAD_TOKEN
     tag: latest
     on:
       tags: true
@@ -27,7 +27,7 @@ deploy:
   - provider: npm
     skip_cleanup: true
     email: kchau@microsoft.com
-    api_key: $NPM_TOKEN
+    api_key: BAD_TOKEN
     tag: next
     on:
       tags: true
