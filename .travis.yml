@@ -20,6 +20,14 @@ deploy:
     skip_cleanup: true
     email: kchau@microsoft.com
     api_key: ABCD
+    tag: latest
+    on:
+      tags: true
+      condition: $TRAVIS_TAG != *"-"*
+  - provider: npm
+    skip_cleanup: true
+    email: kchau@microsoft.com
+    api_key: ABCD
     tag: next
     on:
       tags: true
