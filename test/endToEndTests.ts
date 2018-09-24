@@ -1,11 +1,14 @@
 import 'jasmine';
-import { action } from '../src/actionCreator';
-import applyMiddleware from '../src/applyMiddleware';
-import { dispatch } from '../src/dispatcher';
-import mutator from '../src/mutator';
-import orchestrator from '../src/orchestrator';
-import { mutatorAction } from '../src/simpleSubscribers';
-import createStore from '../src/createStore';
+import {
+    action,
+    applyMiddleware,
+    createMutator,
+    createStore,
+    dispatch,
+    mutator,
+    mutatorAction,
+    orchestrator,
+} from '../src/index';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
@@ -101,5 +104,21 @@ describe('satcheljs', () => {
 
         // Assert
         expect(promiseValues).toEqual([1, 2]);
+    });
+
+    it('stores created from mutators handle actions as expected', () => {
+        // Arrange
+        const testAction = action('testAction');
+        const testMutator = createMutator({ testProperty: 1 }).handles(testAction, state => {
+            state.testProperty = 2;
+        });
+
+        const testStore = createStore('testStore', testMutator)();
+
+        // Act
+        testAction();
+
+        // Assert
+        expect(testStore.testProperty).toBe(2);
     });
 });

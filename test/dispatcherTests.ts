@@ -9,6 +9,7 @@ describe('dispatcher', () => {
     beforeEach(() => {
         mockGlobalContext = {
             subscriptions: {},
+            subscriptionsToAll: [],
             dispatchWithMiddleware: jasmine.createSpy('dispatchWithMiddleware'),
             inMutator: false,
         };
@@ -145,5 +146,23 @@ describe('dispatcher', () => {
         // Assert
         expect(Promise.all).toHaveBeenCalledWith([promise1, promise2]);
         expect(returnValue).toBe(aggregatePromise);
+    });
+
+    it('finalDispatch calls subscribers that are subscribed to all actions', () => {
+        // Arrange
+        let actionMessage = {};
+        let actionId = 'testActionId';
+        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+
+        let callback0 = jasmine.createSpy('callback0');
+        let callback1 = jasmine.createSpy('callback1');
+        mockGlobalContext.subscriptionsToAll = [callback0, callback1];
+
+        // Act
+        dispatcher.finalDispatch(actionMessage);
+
+        // Assert
+        expect(callback0).toHaveBeenCalledWith(actionMessage);
+        expect(callback1).toHaveBeenCalledWith(actionMessage);
     });
 });

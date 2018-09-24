@@ -13,6 +13,7 @@ export interface GlobalContext {
     rootStore: ObservableMap<any>;
     nextActionId: number;
     subscriptions: { [key: string]: Subscriber<ActionMessage>[] };
+    subscriptionsToAll: Subscriber<ActionMessage>[];
     dispatchWithMiddleware: DispatchFunction;
     inMutator: boolean;
 
@@ -38,6 +39,7 @@ export function __resetGlobalContext() {
         rootStore: observable.map({}),
         nextActionId: 0,
         subscriptions: {},
+        subscriptionsToAll: [],
         dispatchWithMiddleware: null,
         inMutator: false,
         legacyInDispatch: 0,

@@ -1,5 +1,5 @@
 import 'jasmine';
-import mutator from '../src/mutator';
+import mutator from '../src/mutatorDecorator';
 import * as dispatcher from '../src/dispatcher';
 import * as globalContext from '../src/globalContext';
 import * as mobx from 'mobx';
