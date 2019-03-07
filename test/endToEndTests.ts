@@ -78,8 +78,7 @@ describe('satcheljs', () => {
         let modifyStore = action('modifyStore');
 
         orchestrator(modifyStore, () => {
-            console.log(store);
-            store.testProperty = 'newValue2';
+            store.testProperty = 'newValue';
         });
 
         // Act / Assert
