@@ -87,6 +87,31 @@ describe('satcheljs', () => {
         }).toThrow();
     });
 
+    it('all subscribers are handled in one transaction', () => {
+        // Arrange
+        let store = createStore('testStore', { testProperty: 0 })();
+        let modifyStore = action('modifyStore');
+
+        mutator(modifyStore, () => {
+            store.testProperty++;
+        });
+
+        mutator(modifyStore, () => {
+            store.testProperty++;
+        });
+
+        let values: number[] = [];
+        autorun(() => {
+            values.push(store.testProperty);
+        });
+
+        // Act
+        modifyStore();
+
+        // Assert
+        expect(values).toEqual([0, 2]);
+    });
+
     it('middleware gets called during dispatch', () => {
         // Arrange
         let actualValue;
