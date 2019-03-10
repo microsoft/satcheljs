@@ -4,8 +4,13 @@ import select from '../../src/legacy/select';
 import createStore from '../../src/createStore';
 import { initializeTestMode, resetTestMode } from '../../src/legacy/testMode';
 import { getActionType } from '../../src/legacy/functionInternals';
+import { __resetGlobalContext } from '../../src/globalContext';
 
 describe('select', () => {
+    beforeEach(function() {
+        __resetGlobalContext();
+    });
+
     it('creates a state scoped to subset of state tree', () => {
         let fooStore = createStore('foo', {
             key1: 'value1',

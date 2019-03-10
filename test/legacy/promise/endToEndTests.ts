@@ -3,6 +3,7 @@ import { autorun } from 'mobx';
 import { action, legacyApplyMiddleware } from '../../../src/legacy';
 import { createStore } from '../../../src';
 import { getCurrentAction, promiseMiddleware } from '../../../src/legacy/promise/promiseMiddleware';
+import { __resetGlobalContext } from '../../../src/globalContext';
 
 let testAction = action('testAction')(function testAction(store: any, newValue: any) {
     return Promise.resolve(newValue).then(value => {
@@ -12,6 +13,10 @@ let testAction = action('testAction')(function testAction(store: any, newValue: 
 });
 
 describe('promiseMiddleware', () => {
+    beforeEach(function() {
+        __resetGlobalContext();
+    });
+
     it('wraps callbacks in promises when applied', done => {
         // Arrange
         legacyApplyMiddleware(promiseMiddleware);

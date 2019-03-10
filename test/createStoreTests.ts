@@ -4,9 +4,12 @@ import createStore from '../src/createStore';
 import { __resetGlobalContext } from '../src/globalContext';
 
 describe('createStore', () => {
+    beforeEach(function() {
+        __resetGlobalContext();
+    });
+
     it('creates a subtree under rootStore', () => {
         // Arrange
-        __resetGlobalContext();
         let initialState = { testProp: 'testValue' };
 
         // Act
@@ -19,7 +22,6 @@ describe('createStore', () => {
 
     it('prevents creating a store with the same name', () => {
         // Arrange
-        __resetGlobalContext();
         let initialState = { testProp: 'testValue' };
 
         let secondaryState = { testProp: 'overwritten' };
