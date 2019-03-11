@@ -1,3 +1,4 @@
+import { transaction } from 'mobx';
 import ActionMessage from './interfaces/ActionMessage';
 import Subscriber from './interfaces/Subscriber';
 import { getPrivateActionId } from './actionCreator';
@@ -18,7 +19,10 @@ export function dispatch(actionMessage: ActionMessage) {
     }
 
     let dispatchWithMiddleware = getGlobalContext().dispatchWithMiddleware || finalDispatch;
-    dispatchWithMiddleware(actionMessage);
+
+    transaction(() => {
+        dispatchWithMiddleware(actionMessage);
+    });
 }
 
 export function finalDispatch(actionMessage: ActionMessage): void | Promise<void> {

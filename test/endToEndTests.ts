@@ -1,11 +1,14 @@
 import 'jasmine';
-import { action } from '../src/actionCreator';
-import applyMiddleware from '../src/applyMiddleware';
-import { dispatch } from '../src/dispatcher';
-import mutator from '../src/mutator';
-import orchestrator from '../src/orchestrator';
-import { mutatorAction } from '../src/simpleSubscribers';
-import createStore from '../src/createStore';
+import { autorun } from 'mobx';
+import {
+    action,
+    applyMiddleware,
+    createStore,
+    dispatch,
+    mutator,
+    mutatorAction,
+    orchestrator,
+} from '../src/index';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
@@ -19,7 +22,7 @@ describe('satcheljs', () => {
         });
 
         // Create a mutator that subscribes to it
-        let onTestAction = mutator(testAction, function(actionMessage) {
+        mutator(testAction, function(actionMessage) {
             actualValue = actionMessage.value;
         });
 
@@ -54,9 +57,10 @@ describe('satcheljs', () => {
     it('mutators can modify the store', () => {
         // Arrange
         let store = createStore('testStore', { testProperty: 'testValue' })();
+        autorun(() => store.testProperty); // strict mode only applies if store is observed
         let modifyStore = action('modifyStore');
 
-        let onModifyStore = mutator(modifyStore, actionMessage => {
+        mutator(modifyStore, () => {
             store.testProperty = 'newValue';
         });
 
@@ -65,6 +69,47 @@ describe('satcheljs', () => {
 
         // Assert
         expect(store.testProperty).toBe('newValue');
+    });
+
+    it('orchestrators cannot modify the store', () => {
+        // Arrange
+        let store = createStore('testStore', { testProperty: 'testValue' })();
+        autorun(() => store.testProperty); // strict mode only applies if store is observed
+        let modifyStore = action('modifyStore');
+
+        orchestrator(modifyStore, () => {
+            store.testProperty = 'newValue';
+        });
+
+        // Act / Assert
+        expect(() => {
+            modifyStore();
+        }).toThrow();
+    });
+
+    it('all subscribers are handled in one transaction', () => {
+        // Arrange
+        let store = createStore('testStore', { testProperty: 0 })();
+        let modifyStore = action('modifyStore');
+
+        mutator(modifyStore, () => {
+            store.testProperty++;
+        });
+
+        mutator(modifyStore, () => {
+            store.testProperty++;
+        });
+
+        let values: number[] = [];
+        autorun(() => {
+            values.push(store.testProperty);
+        });
+
+        // Act
+        modifyStore();
+
+        // Assert
+        expect(values).toEqual([0, 2]);
     });
 
     it('middleware gets called during dispatch', () => {
