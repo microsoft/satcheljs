@@ -14,7 +14,7 @@ export { dispatch } from './dispatcher';
 export { default as mutator } from './mutator';
 import { default as orchestrator } from './orchestrator';
 export { default as getRootStore } from './getRootStore';
-export { mutatorAction, orchestratorAction } from './simpleSubscribers';
+export { mutatorAction } from './simpleSubscribers';
 export { useStrict };
 
 // exporting an alias for orchestrator called "flow"

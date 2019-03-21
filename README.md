@@ -2,7 +2,9 @@
 
 Satchel is a dataflow framework based on the [Flux architecture](http://facebook.github.io/react/blog/2014/05/06/flux.html).  It is characterized by exposing an observable state that makes view updates painless and efficient.
 
+[![npm](https://img.shields.io/npm/v/satcheljs.svg)](https://www.npmjs.com/package/satcheljs)
 [![Build Status](https://travis-ci.org/Microsoft/satcheljs.svg?branch=master)](https://travis-ci.org/Microsoft/satcheljs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Influences
 
@@ -123,10 +125,10 @@ orchestrator(requestAddTodo, async (actionMessage) => {
 };
 ```
 
-### mutatorAction and orchestratorAction
+### mutatorAction
 
-In many cases a given action only needs to be handled by one mutator or orchestrator.
-Satchel provides these utility APIs which encapsulate action creation, dispatch, and handling in one simple function call.
+In many cases a given action only needs to be handled by one mutator.
+Satchel provides this utility API which encapsulates action creation, dispatch, and handling in one simple function call.
 
 The `addTodo` mutator above could be implemented as follows:
 
@@ -141,18 +143,7 @@ let addTodo = mutatorAction(
     });
 ```
 
-An orchestrator can be created similarly:
-
-```typescript
-let requestAddTodo = orchestratorAction(
-    'REQUEST_ADD_TODO',
-    async function requestAddTodo(text: string) {
-        await addTodoOnServer(actionMessage.text);
-        addTodo(actionMessage.text);
-    });
-```
-
-This is a succinct and easy way to write mutators and orchestrators, but it comes with a restriction:
+This is a succinct and easy way to write mutators, but it comes with a restriction:
 the action creator is not exposed, so no *other* mutators or orchestrators can subscribe to it.
 If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
 
