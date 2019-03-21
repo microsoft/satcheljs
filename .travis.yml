@@ -7,14 +7,8 @@ before_install:
 install:
 - yarn
 script:
-- |
-  if [ -n "$TRAVIS_TAG" ]; then
-    npm run build
-  fi
-- |
-  if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then
-    bash npm run test
-  fi
+- npm run build
+- npm run test
 deploy:
   - provider: npm
     skip_cleanup: true
