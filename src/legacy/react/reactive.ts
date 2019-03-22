@@ -16,8 +16,8 @@ function setPropAccessors<T>(props: any, selector: SelectorFunction<T>) {
         newProps[key] = props[key];
     });
 
-    Object.keys(selector).forEach((key: keyof T) => {
-        let getter = selector[key];
+    Object.keys(selector).forEach((key: string) => {
+        let getter = selector[key as keyof T];
 
         if (typeof newProps[key] === typeof undefined) {
             Object.defineProperty(newProps, key, {

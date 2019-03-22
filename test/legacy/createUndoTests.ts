@@ -437,7 +437,7 @@ describe('createUndo', () => {
     it('handles nested undo windows called out of order', () => {
         let array = observable([1, 2, 3, 4, 5]);
 
-        let innerUndo;
+        let innerUndo: Function;
         let outerUndo = createUndo('outerUndo')(
             action('outerUndo')(() => {
                 array[0] = 0;
