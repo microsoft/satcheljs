@@ -19,6 +19,7 @@ describe('actionCreator', () => {
         // Assert
         expect(actionMessage.arg0).toBe('value0');
         expect(actionMessage.arg1).toBe('value1');
+        fail();
     });
 
     it('returns a default action message if no factory is provided', () => {

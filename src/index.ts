@@ -23,5 +23,3 @@ export { orchestrator };
 
 // Default to MobX strict mode
 useStrict(true);
-
-foo();
