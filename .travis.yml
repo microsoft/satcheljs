@@ -7,8 +7,8 @@ before_install:
 install:
 - yarn
 script:
-- npm run build
-- bash npm run test
+- yarn build
+- yarn test
 deploy:
   - provider: npm
     skip_cleanup: true
