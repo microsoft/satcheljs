@@ -7,11 +7,11 @@ export type SelectorFunction<T> = { [key in keyof T]?: (...args: any[]) => T[key
 function createCursorFromSelector<T>(selector: SelectorFunction<T>, args?: any) {
     let state: any = {};
 
-    Object.keys(selector).forEach((key: keyof T) => {
+    Object.keys(selector).forEach((key: string) => {
         if (typeof state[key] === typeof undefined) {
             Object.defineProperty(state, key, {
                 enumerable: true,
-                get: () => selector[key].apply(null, args),
+                get: () => selector[key as keyof T].apply(null, args),
             });
         }
     });

@@ -20,7 +20,7 @@ export default function mutator<T extends ActionMessage>(
     let wrappedTarget = action((actionMessage: T) => {
         try {
             getGlobalContext().inMutator = true;
-            if (target(actionMessage)) {
+            if (target(actionMessage) as any) {
                 throw new Error('Mutators cannot return a value and cannot be async.');
             }
         } finally {

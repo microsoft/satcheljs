@@ -1,4 +1,3 @@
-import './setupJsdom';
 import 'jasmine';
 
 import * as React from 'react';
