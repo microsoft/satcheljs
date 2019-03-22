@@ -1,5 +1,6 @@
 import 'jasmine';
 import { autorun } from 'mobx';
+import { __resetGlobalContext } from '../src/globalContext';
 import {
     action,
     applyMiddleware,
@@ -11,6 +12,10 @@ import {
 } from '../src/index';
 
 describe('satcheljs', () => {
+    beforeEach(function() {
+        __resetGlobalContext();
+    });
+
     it('mutators subscribe to actions', () => {
         let actualValue;
 

@@ -5,6 +5,10 @@ let createStoreAction = action('createStore', function createStoreAction(
     key: string,
     initialState: any
 ) {
+    if (getRootStore().get(key)) {
+        throw new Error(`A store named ${key} has already been created.`);
+    }
+
     getRootStore().set(key, initialState);
 });
 

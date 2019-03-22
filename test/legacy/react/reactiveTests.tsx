@@ -9,9 +9,15 @@ import { mount, shallow } from 'enzyme';
 import { isObservable } from 'mobx';
 import reactive from '../../../src/legacy/react/reactive';
 
+import { __resetGlobalContext } from '../../../src/globalContext';
+
 let sequenceOfEvents: any[];
 
 describe('reactive decorator', () => {
+    beforeEach(function() {
+        __resetGlobalContext();
+    });
+
     it('observes changes from store', () => {
         let store = createStore('testStore', {
             foo: 'value',
