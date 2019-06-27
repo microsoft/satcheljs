@@ -12,9 +12,10 @@ export default function dispatch(
 ): void {
     getGlobalContext().legacyInDispatch++;
 
-    mobxAction(actionType ? actionType : '(anonymous action)', () => {
-        dispatchWithMiddleware(action, actionType, args, actionContext);
-    })();
+    mobxAction(
+        actionType ? actionType : '(anonymous action)',
+        dispatchWithMiddleware.bind(null, action, actionType, args, actionContext)
+    )();
 
     getGlobalContext().legacyInDispatch--;
 }

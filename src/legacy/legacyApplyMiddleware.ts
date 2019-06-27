@@ -17,8 +17,7 @@ function applyMiddlewareInternal(
     middleware: LegacyMiddleware,
     next: LegacyDispatchFunction
 ): LegacyDispatchFunction {
-    return (action, actionType, args, actionContext) =>
-        middleware(next, action, actionType, args, actionContext);
+    return middleware.bind(null, next);
 }
 
 export function dispatchWithMiddleware(
