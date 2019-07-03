@@ -19,10 +19,7 @@ export function dispatch(actionMessage: ActionMessage) {
     }
 
     let dispatchWithMiddleware = getGlobalContext().dispatchWithMiddleware || finalDispatch;
-
-    transaction(() => {
-        dispatchWithMiddleware(actionMessage);
-    });
+    transaction(dispatchWithMiddleware.bind(null, actionMessage));
 }
 
 export function finalDispatch(actionMessage: ActionMessage): void | Promise<void> {
@@ -32,12 +29,12 @@ export function finalDispatch(actionMessage: ActionMessage): void | Promise<void
     if (subscribers) {
         let promises: Promise<any>[] = [];
 
-        subscribers.forEach(subscriber => {
+        for (const subscriber of subscribers) {
             let returnValue = subscriber(actionMessage);
             if (returnValue) {
                 promises.push(returnValue);
             }
-        });
+        }
 
         if (promises.length) {
             return promises.length == 1 ? promises[0] : Promise.all(promises);
