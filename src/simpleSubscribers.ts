@@ -16,7 +16,7 @@ export function createSimpleSubscriber(decorator: Function) {
 
         // Create the subscriber
         decorator(simpleActionCreator, function simpleSubscriberCallback(actionMessage: any) {
-            target.apply(null, actionMessage.args);
+            return target.apply(null, actionMessage.args);
         });
 
         // Return a function that dispatches that action

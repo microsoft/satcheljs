@@ -1,5 +1,5 @@
 import 'jasmine';
-import { createSimpleSubscriber } from '../src/simpleSubscribers';
+import { createSimpleSubscriber, mutatorAction } from '../src/simpleSubscribers';
 import { __resetGlobalContext } from '../src/globalContext';
 import * as actionCreator from '../src/actionCreator';
 
@@ -58,5 +58,14 @@ describe('simpleSubscribers', () => {
 
         // Assert
         expect(callback).toHaveBeenCalledWith(1, 2, 3);
+    });
+
+    it('throws if the target function is async', () => {
+        // Arrange
+        let callback = async () => {};
+        let actionCreator = mutatorAction('testMutator', callback);
+
+        // Act / Assert
+        expect(actionCreator).toThrow();
     });
 });
