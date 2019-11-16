@@ -3,7 +3,7 @@ import { action } from 'mobx';
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
 import MutatorFunction from './interfaces/MutatorFunction';
-import { getActionType, getPrivateActionId } from './actionCreator';
+import { getPrivateActionType, getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 import { getGlobalContext } from './globalContext';
 
@@ -17,7 +17,7 @@ export default function mutator<T extends ActionMessage>(
     }
 
     // Wrap the callback in a MobX action so it can modify the store
-    let wrappedTarget = action(getActionType(actionCreator), (actionMessage: T) => {
+    let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: T) => {
         try {
             getGlobalContext().inMutator = true;
             if (target(actionMessage) as any) {
