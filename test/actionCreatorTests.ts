@@ -1,5 +1,5 @@
 import 'jasmine';
-import { action, actionCreator, getPrivateActionId } from '../src/actionCreator';
+import { action, actionCreator, getActionType, getPrivateActionId } from '../src/actionCreator';
 import * as createActionId from '../src/createActionId';
 import * as dispatcher from '../src/dispatcher';
 
@@ -77,6 +77,14 @@ describe('actionCreator', () => {
 
         // Assert
         expect(getPrivateActionId(testAction)).toBe('id1');
+    });
+
+    it('gets stamped with the action type', () => {
+        // Act
+        const testAction = actionCreator('testAction');
+
+        // Assert
+        expect(getActionType(testAction)).toBe('testAction');
     });
 });
 
