@@ -47,6 +47,7 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
 
     // Stamp the action creator function with the private ID
     setPrivateActionId(decoratedTarget, actionId);
+    setActionType(decoratedTarget, actionType);
     return decoratedTarget;
 }
 
@@ -56,4 +57,12 @@ export function getPrivateActionId(target: any) {
 
 function setPrivateActionId(target: any, actionId: string) {
     target.__SATCHELJS_ACTION_ID = actionId;
+}
+
+export function getPrivateActionType(target: any): string {
+    return target.__SATCHELJS_ACTION_TYPE || 'unknown action';
+}
+
+function setActionType(target: any, actionType: string) {
+    target.__SATCHELJS_ACTION_TYPE = actionType;
 }
