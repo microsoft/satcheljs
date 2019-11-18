@@ -4,7 +4,7 @@
     "description": "Store implementation for functional reactive flux.",
     "lint-staged": {
         "*.{ts,tsx}": [
-            "prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote",
+            "prettier --write",
             "git add"
         ]
     },
@@ -34,7 +34,7 @@
         "mobx": "^4.4.0",
         "mobx-react": "^5.2.0",
         "npm-run-all": "^4.0.2",
-        "prettier": "~1.5.2",
+        "prettier": "^1.19.1",
         "react": "15.4.2",
         "react-addons-test-utils": "~15.4.0",
         "react-dom": "15.4.2",
