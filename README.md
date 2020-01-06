@@ -122,7 +122,7 @@ let requestAddTodo = action(
 orchestrator(requestAddTodo, async (actionMessage) => {
     await addTodoOnServer(actionMessage.text);
     addTodo(actionMessage.text);
-};
+});
 ```
 
 ### mutatorAction
