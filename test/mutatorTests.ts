@@ -76,9 +76,9 @@ describe('mutator', () => {
 
     it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
+        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction', name: 'testName' };
         let callback = () => {
-            expect(mockGlobalContext.currentMutator).toBe('testAction');
+            expect(mockGlobalContext.currentMutator).toBe('testName');
         };
         mutator(actionCreator, callback);
 
