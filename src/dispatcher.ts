@@ -16,7 +16,9 @@ export function subscribe(actionId: string, callback: Subscriber<any>) {
 export function dispatch(actionMessage: ActionMessage) {
     const currentMutator = getGlobalContext().currentMutator;
     if (currentMutator) {
-        throw new Error(`Action(${actionMessage.type}) was call inside mutator(${currentMutator})`);
+        throw new Error(
+            `Mutator (${currentMutator}) may not dispatch action (${actionMessage.type})`
+        );
     }
 
     let dispatchWithMiddleware = getGlobalContext().dispatchWithMiddleware || finalDispatch;
