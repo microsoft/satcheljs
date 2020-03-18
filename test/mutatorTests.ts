@@ -8,7 +8,7 @@ describe('mutator', () => {
     let mockGlobalContext: any;
 
     beforeEach(() => {
-        mockGlobalContext = { inMutator: false };
+        mockGlobalContext = { currentMutator: null };
         spyOn(globalContext, 'getGlobalContext').and.returnValue(mockGlobalContext);
         spyOn(dispatcher, 'subscribe');
     });
@@ -74,12 +74,11 @@ describe('mutator', () => {
         expect(subscribedCallback).toThrow();
     });
 
-    it('sets the inMutator flag to true for the duration of the mutator callback', () => {
+    it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
-        let inMutatorValue;
+        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction', name: 'testName' };
         let callback = () => {
-            expect(mockGlobalContext.inMutator).toBeTruthy();
+            expect(mockGlobalContext.currentMutator).toBe('testName');
         };
         mutator(actionCreator, callback);
 
@@ -88,6 +87,6 @@ describe('mutator', () => {
         subscribedCallback();
 
         // Assert
-        expect(mockGlobalContext.inMutator).toBeFalsy();
+        expect(mockGlobalContext.currentMutator).toBe(null);
     });
 });

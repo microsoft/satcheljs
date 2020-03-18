@@ -19,12 +19,12 @@ export default function mutator<T extends ActionMessage>(
     // Wrap the callback in a MobX action so it can modify the store
     let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: T) => {
         try {
-            getGlobalContext().inMutator = true;
+            getGlobalContext().currentMutator = actionCreator.name;
             if (target(actionMessage) as any) {
                 throw new Error('Mutators cannot return a value and cannot be async.');
             }
         } finally {
-            getGlobalContext().inMutator = false;
+            getGlobalContext().currentMutator = null;
         }
     });
 
