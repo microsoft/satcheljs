@@ -27,7 +27,7 @@ describe('satcheljs', () => {
         });
 
         // Create a mutator that subscribes to it
-        mutator(testAction, function(actionMessage: any) {
+        mutator<any, void>(testAction, function(actionMessage: any) {
             actualValue = actionMessage.value;
         });
 
