@@ -1,2 +1,2 @@
-type SimpleAction<T> = void extends T ? (...args: any[]) => T : never;
+type SimpleAction<TReturn> = void extends TReturn ? (...args: any[]) => TReturn : never;
 export default SimpleAction;
