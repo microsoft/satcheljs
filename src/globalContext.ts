@@ -12,7 +12,7 @@ export interface GlobalContext {
     schemaVersion: number;
     rootStore: ObservableMap<any>;
     nextActionId: number;
-    subscriptions: { [key: string]: Subscriber<ActionMessage>[] };
+    subscriptions: { [key: string]: Subscriber<ActionMessage, void>[] };
     dispatchWithMiddleware: DispatchFunction;
     currentMutator: string | null;
 

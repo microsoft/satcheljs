@@ -4,7 +4,7 @@ import Subscriber from './interfaces/Subscriber';
 import { getPrivateActionId } from './actionCreator';
 import { getGlobalContext } from './globalContext';
 
-export function subscribe(actionId: string, callback: Subscriber<any>) {
+export function subscribe(actionId: string, callback: Subscriber<any, any>) {
     let subscriptions = getGlobalContext().subscriptions;
     if (!subscriptions[actionId]) {
         subscriptions[actionId] = [];

@@ -62,18 +62,6 @@ describe('mutator', () => {
         expect(returnValue).toBe(callback);
     });
 
-    it('throws if the target function is async', () => {
-        // Arrange
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
-        let callback = async () => {};
-
-        mutator(actionCreator, callback);
-        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
-
-        // Act / Assert
-        expect(subscribedCallback).toThrow();
-    });
-
     it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
         let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction', name: 'testName' };

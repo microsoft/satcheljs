@@ -7,22 +7,20 @@ import { getPrivateActionType, getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 import { getGlobalContext } from './globalContext';
 
-export default function mutator<T extends ActionMessage>(
-    actionCreator: ActionCreator<T>,
-    target: MutatorFunction<T>
-): MutatorFunction<T> {
+export default function mutator<TAction extends ActionMessage, TReturn>(
+    actionCreator: ActionCreator<TAction>,
+    target: MutatorFunction<TAction, TReturn>
+): MutatorFunction<TAction, TReturn> {
     let actionId = getPrivateActionId(actionCreator);
     if (!actionId) {
         throw new Error('Mutators can only subscribe to action creators.');
     }
 
     // Wrap the callback in a MobX action so it can modify the store
-    let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: T) => {
+    let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: TAction) => {
         try {
             getGlobalContext().currentMutator = actionCreator.name;
-            if (target(actionMessage) as any) {
-                throw new Error('Mutators cannot return a value and cannot be async.');
-            }
+            target(actionMessage);
         } finally {
             getGlobalContext().currentMutator = null;
         }
