@@ -59,13 +59,4 @@ describe('simpleSubscribers', () => {
         // Assert
         expect(callback).toHaveBeenCalledWith(1, 2, 3);
     });
-
-    it('throws if the target function is async', () => {
-        // Arrange
-        let callback = async () => {};
-        let actionCreator = mutatorAction('testMutator', callback);
-
-        // Act / Assert
-        expect(actionCreator).toThrow();
-    });
 });

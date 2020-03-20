@@ -1,5 +1,2 @@
-interface SimpleAction {
-    (...args: any[]): void;
-}
-
+type SimpleAction<T> = void extends T ? (...args: any[]) => T : never;
 export default SimpleAction;

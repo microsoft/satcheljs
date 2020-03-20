@@ -7,10 +7,10 @@ import { getPrivateActionType, getPrivateActionId } from './actionCreator';
 import { subscribe } from './dispatcher';
 import { getGlobalContext } from './globalContext';
 
-export default function mutator<T extends ActionMessage>(
+export default function mutator<T extends ActionMessage, U>(
     actionCreator: ActionCreator<T>,
-    target: MutatorFunction<T>
-): MutatorFunction<T> {
+    target: MutatorFunction<T, U>
+): MutatorFunction<T, U> {
     let actionId = getPrivateActionId(actionCreator);
     if (!actionId) {
         throw new Error('Mutators can only subscribe to action creators.');
@@ -20,9 +20,7 @@ export default function mutator<T extends ActionMessage>(
     let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: T) => {
         try {
             getGlobalContext().currentMutator = actionCreator.name;
-            if (target(actionMessage) as any) {
-                throw new Error('Mutators cannot return a value and cannot be async.');
-            }
+            target(actionMessage);
         } finally {
             getGlobalContext().currentMutator = null;
         }
