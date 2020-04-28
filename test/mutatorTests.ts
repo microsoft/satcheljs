@@ -66,10 +66,10 @@ describe('mutator', () => {
         // Arrange
         let actionCreator: any = {
             __SATCHELJS_ACTION_ID: 'testAction',
-            __SATCHELJS_ACTION_TYPE: 'testName',
+            __SATCHELJS_ACTION_TYPE: 'testActionType',
         };
         let callback = () => {
-            expect(mockGlobalContext.currentMutator).toBe('testName');
+            expect(mockGlobalContext.currentMutator).toBe('testActionType');
         };
         mutator(actionCreator, callback);
 
