@@ -17,9 +17,10 @@ export default function mutator<TAction extends ActionMessage, TReturn>(
     }
 
     // Wrap the callback in a MobX action so it can modify the store
-    let wrappedTarget = action(getPrivateActionType(actionCreator), (actionMessage: TAction) => {
+    const actionType = getPrivateActionType(actionCreator);
+    let wrappedTarget = action(actionType, (actionMessage: TAction) => {
         try {
-            getGlobalContext().currentMutator = actionCreator.name;
+            getGlobalContext().currentMutator = actionType;
             target(actionMessage);
         } finally {
             getGlobalContext().currentMutator = null;
