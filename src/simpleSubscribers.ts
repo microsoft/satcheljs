@@ -3,10 +3,10 @@ import { action } from './actionCreator';
 import mutator from './mutator';
 
 export function createSimpleSubscriber(decorator: Function) {
-    return function simpleSubscriber<TReturn>(
+    return function simpleSubscriber<TFunction extends (...args: any) => any>(
         actionType: string,
-        target: SimpleAction<TReturn>
-    ): SimpleAction<TReturn> {
+        target: TFunction
+    ): SimpleAction<TFunction> {
         // Create the action creator
         let simpleActionCreator = action(actionType, function simpleActionCreator() {
             return {
@@ -20,7 +20,7 @@ export function createSimpleSubscriber(decorator: Function) {
         });
 
         // Return a function that dispatches that action
-        return (simpleActionCreator as any) as SimpleAction<TReturn>;
+        return (simpleActionCreator as any) as SimpleAction<TFunction>;
     };
 }
 

@@ -43,7 +43,7 @@ describe('satcheljs', () => {
         let arg1Value;
         let arg2Value;
 
-        let testMutatorAction = mutatorAction<void>('testMutatorAction', function testMutatorAction(
+        let testMutatorAction = mutatorAction('testMutatorAction', function testMutatorAction(
             arg1: string,
             arg2: number
         ) {
