@@ -7,6 +7,14 @@ import ActionFunction from './legacy/ActionFunction';
 
 const schemaVersion = 3;
 
+const globalObject = ((typeof globalThis !== 'undefined'
+    ? globalThis
+    : typeof window !== 'undefined'
+    ? window
+    : global) as unknown) as {
+    __satchelGlobalContext: GlobalContext;
+};
+
 // Interfaces for Global Context
 export interface GlobalContext {
     schemaVersion: number;
@@ -27,13 +35,9 @@ export interface GlobalContext {
     legacyTestMode: boolean;
 }
 
-declare var global: {
-    __satchelGlobalContext: GlobalContext;
-};
-
 // A reset global context function to be used INTERNALLY by SatchelJS tests and for initialization ONLY
 export function __resetGlobalContext() {
-    global.__satchelGlobalContext = {
+    globalObject.__satchelGlobalContext = {
         schemaVersion: schemaVersion,
         rootStore: observable.map({}),
         nextActionId: 0,
@@ -47,17 +51,17 @@ export function __resetGlobalContext() {
 }
 
 export function ensureGlobalContextSchemaVersion() {
-    if (schemaVersion != global.__satchelGlobalContext.schemaVersion) {
+    if (schemaVersion != globalObject.__satchelGlobalContext.schemaVersion) {
         throw new Error('Detected incompatible SatchelJS versions loaded.');
     }
 }
 
 export function getGlobalContext() {
-    return global.__satchelGlobalContext;
+    return globalObject.__satchelGlobalContext;
 }
 
 // Side Effects: actually initialize the global context if it is undefined
-if (!global.__satchelGlobalContext) {
+if (!globalObject.__satchelGlobalContext) {
     __resetGlobalContext();
 } else {
     ensureGlobalContextSchemaVersion();
