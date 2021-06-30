@@ -20,6 +20,10 @@
         "test": "run-s lint build test:unit",
         "test:start": "jest --watch"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/microsoft/satcheljs.git"
+  },
     "devDependencies": {
         "@types/enzyme": "~2.5.38",
         "@types/jasmine": "~2.5.53",
