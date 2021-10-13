@@ -1,4 +1,5 @@
 import 'jasmine';
+import { JSDOM } from 'jsdom';
 
 import * as React from 'react';
 
@@ -11,9 +12,14 @@ import reactive from '../../../src/legacy/react/reactive';
 
 import { __resetGlobalContext } from '../../../src/globalContext';
 
-let sequenceOfEvents: any[];
-
 describe('reactive decorator', () => {
+    beforeAll(() => {
+        // https://github.com/enzymejs/enzyme/issues/75
+        let dom = new JSDOM('<!doctype html><html><body></body></html>');
+        (global as any).window = dom.window;
+        (global as any).document = dom.window.document;
+    });
+
     beforeEach(function() {
         __resetGlobalContext();
     });
@@ -32,11 +38,7 @@ describe('reactive decorator', () => {
                 render() {
                     let { foo } = this.props;
                     renderSpy();
-                    return (
-                        <div className="testClass">
-                            {foo}
-                        </div>
-                    );
+                    return <div className="testClass">{foo}</div>;
                 }
             }
         );
@@ -60,11 +62,7 @@ describe('reactive decorator', () => {
             class extends React.Component<any, any> {
                 componentWillMount() {}
                 render() {
-                    return (
-                        <div>
-                            {store.foo}
-                        </div>
-                    );
+                    return <div>{store.foo}</div>;
                 }
             }
         );
@@ -89,11 +87,7 @@ describe('reactive decorator', () => {
                     let { foo, hello } = this.props;
                     expect(foo).toBe(store.foo);
                     expect(hello).toBe('world');
-                    return (
-                        <div className="testClass">
-                            {foo}
-                        </div>
-                    );
+                    return <div className="testClass">{foo}</div>;
                 }
             }
         );
@@ -114,11 +108,7 @@ describe('reactive decorator', () => {
                 let { foo, hello } = this.props;
                 expect(foo).toBe(store.foo);
                 expect(hello).toBe('world');
-                return (
-                    <div>
-                        {foo}
-                    </div>
-                );
+                return <div>{foo}</div>;
             }
         }
 
@@ -140,11 +130,7 @@ describe('reactive decorator', () => {
 
                 expect(foo).toBe('somevalue');
 
-                return (
-                    <div>
-                        {foo}
-                    </div>
-                );
+                return <div>{foo}</div>;
             }
         }
 
@@ -162,11 +148,7 @@ describe('reactive decorator', () => {
         })((props: any) => {
             let { foo, hello } = props;
             expect(foo).toBe('world');
-            return (
-                <div>
-                    {foo}
-                </div>
-            );
+            return <div>{foo}</div>;
         });
 
         TestComponent.nonReactiveStatelessComponent({ foo: 'world' });
@@ -188,11 +170,7 @@ describe('reactive decorator', () => {
             let { foo, hello } = props;
             expect(foo).toBe('value');
             expect(hello).toBe('world');
-            return (
-                <div className="testClass">
-                    {foo}
-                </div>
-            );
+            return <div className="testClass">{foo}</div>;
         });
 
         expect(mount(<Wrapped hello="world" />).find('.testClass').length).toBe(1);
@@ -209,11 +187,7 @@ describe('reactive decorator', () => {
             let { foo, hello } = props;
             expect(foo).toBe(store.foo);
             expect(hello).toBe('world');
-            return (
-                <div>
-                    {foo}
-                </div>
-            );
+            return <div>{foo}</div>;
         });
 
         // Reactive stateless component are converted to classical components by @observer
@@ -231,11 +205,7 @@ describe('reactive decorator', () => {
         })((props: any) => {
             let { foo } = props;
             expect(foo).toBe('value');
-            return (
-                <div>
-                    {foo}
-                </div>
-            );
+            return <div>{foo}</div>;
         });
 
         // Reactive stateless component are converted to classical components by @observer
@@ -253,11 +223,7 @@ describe('reactive decorator', () => {
             render() {
                 let { foo } = this.props;
                 expect(foo).toBe('somevalue');
-                return (
-                    <div>
-                        {foo}
-                    </div>
-                );
+                return <div>{foo}</div>;
             }
         }
 
@@ -283,11 +249,7 @@ describe('reactive decorator', () => {
             render() {
                 let { foo, bar } = this.props;
                 expect(foo).toBe('value');
-                return (
-                    <div>
-                        {foo}
-                    </div>
-                );
+                return <div>{foo}</div>;
             }
         }
     });
