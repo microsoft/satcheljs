@@ -4,4 +4,5 @@ module.exports = {
     },
     testMatch: ['**/*Tests.ts', '**/*Tests.tsx'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+    testRunner: 'jasmine2',
 };
