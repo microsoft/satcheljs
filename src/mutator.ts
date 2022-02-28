@@ -1,5 +1,4 @@
 import { action } from 'mobx';
-
 import ActionCreator from './interfaces/ActionCreator';
 import ActionMessage from './interfaces/ActionMessage';
 import MutatorFunction from './interfaces/MutatorFunction';
@@ -19,11 +18,14 @@ export default function mutator<TAction extends ActionMessage, TReturn>(
     // Wrap the callback in a MobX action so it can modify the store
     const actionType = getPrivateActionType(actionCreator);
     let wrappedTarget = action(actionType, (actionMessage: TAction) => {
+        const globalContext = getGlobalContext();
         try {
-            getGlobalContext().currentMutator = actionType;
+            globalContext.currentMutator = actionType;
             target(actionMessage);
-        } finally {
-            getGlobalContext().currentMutator = null;
+            globalContext.currentMutator = null;
+        } catch (e) {
+            globalContext.currentMutator = null;
+            throw e;
         }
     });
 

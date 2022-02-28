@@ -80,4 +80,27 @@ describe('mutator', () => {
         // Assert
         expect(mockGlobalContext.currentMutator).toBe(null);
     });
+
+    it('sets the currentMutator back to null if error is thrown', () => {
+        // Arrange
+        let actionCreator: any = {
+            __SATCHELJS_ACTION_ID: 'testAction',
+            __SATCHELJS_ACTION_TYPE: 'testActionType',
+        };
+        let callback: any = () => {
+            throw new Error('Error in Mutator');
+        };
+        mutator(actionCreator, callback);
+
+        // Act
+        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
+        try {
+            subscribedCallback();
+        } catch {
+            // no op
+        }
+
+        // Assert
+        expect(mockGlobalContext.currentMutator).toBe(null);
+    });
 });
