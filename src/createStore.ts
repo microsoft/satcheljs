@@ -12,7 +12,7 @@ let createStoreAction = action('createStore', function createStoreAction(
 
     const globalContext = getGlobalContext();
     const newStore = globalContext.createStoresAsClasses
-        ? createClass(globalContext.storeClassPrefix + key, initialState)
+        ? createClass(key, initialState)
         : initialState;
     getRootStore().set(key, newStore);
 });
@@ -24,7 +24,9 @@ export default function createStore<T>(key: string, initialState: T): () => T {
 
 function createClass<T>(name: string, initialState: T): T {
     try {
+        /* tslint:disable:no-function-constructor-with-string-args */
         const Constructor = new Function(`return function ${name}(){ };`)();
+        /* tslint:enable:no-function-constructor-with-string-args */
         return Object.assign(new Constructor(), initialState);
     } catch {
         return initialState;
