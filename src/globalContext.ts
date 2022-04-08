@@ -23,6 +23,8 @@ export interface GlobalContext {
     subscriptions: { [key: string]: Subscriber<ActionMessage, void>[] };
     dispatchWithMiddleware: DispatchFunction;
     currentMutator: string | null;
+    createStoresAsClasses: boolean;
+    storeClassPrefix: string;
 
     // Legacy properties
     legacyInDispatch: number;
@@ -44,6 +46,8 @@ export function __resetGlobalContext() {
         subscriptions: {},
         dispatchWithMiddleware: null,
         currentMutator: null,
+        createStoresAsClasses: false,
+        storeClassPrefix: '',
         legacyInDispatch: 0,
         legacyDispatchWithMiddleware: null,
         legacyTestMode: false,
