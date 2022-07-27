@@ -10,12 +10,13 @@
     },
     "scripts": {
         "precommit": "lint-staged",
-        "clean": "rimraf build lib",
+        "clean": "rimraf build lib lib-esm",
         "lint": "tslint -t stylish --project tsconfig.json",
         "build:source": "tsc -p tsconfig.release.json",
+        "build:source:esm": "tsc -p tsconfig.release-esm.json",
         "watch": "tsc -w -p tsconfig.release.json",
         "test:unit": "jest",
-        "build": "run-s clean build:source",
+        "build": "run-s clean build:source build:source:esm",
         "start": "run-s clean watch",
         "test": "run-s lint build test:unit",
         "test:start": "jest --watch"
@@ -57,9 +58,27 @@
         "react-dom": ">=15.4.0"
     },
     "main": "lib/index.js",
+    "module": "lib-esm/index.js",
     "typings": "lib/index.d.ts",
     "publishConfig": {
         "registry": "https://registry.npmjs.org"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "exports": {
+        ".": {
+            "types": "./lib-esm/index.d.ts",
+            "import": "./lib-esm/index.js",
+            "default": "./lib/index.js"
+        },
+        "./lib/*.js": {
+            "types": "./lib-esm/*.d.ts",
+            "import": "./lib-esm/*.js",
+            "default": "./lib/*.js"
+        },
+        "./lib/*": {
+            "types": "./lib-esm/*.d.ts",
+            "import": "./lib-esm/*.js",
+            "default": "./lib/*.js"
+        }
+    }
 }

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.release.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib-esm",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "jsx": "react"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
