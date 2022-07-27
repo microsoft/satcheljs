@@ -70,6 +70,31 @@
             "import": "./lib-esm/index.js",
             "default": "./lib/index.js"
         },
+        "./lib/legacy": {
+            "types": "./lib-esm/legacy/index.d.ts",
+            "import": "./lib-esm/legacy/index.js",
+            "default": "./lib/legacy/index.js"
+        },
+        "./lib/legacy/promise": {
+            "types": "./lib-esm/legacy/promise/index.d.ts",
+            "import": "./lib-esm/legacy/promise/index.js",
+            "default": "./lib/legacy/promise/index.js"
+        },
+        "./lib/legacy/react": {
+            "types": "./lib-esm/legacy/react/index.d.ts",
+            "import": "./lib-esm/legacy/react/index.js",
+            "default": "./lib/legacy/react/index.js"
+        },
+        "./lib/legacy/stitch": {
+            "types": "./lib-esm/legacy/stitch/index.d.ts",
+            "import": "./lib-esm/legacy/stitch/index.js",
+            "default": "./lib/legacy/stitch/index.js"
+        },
+        "./lib/legacy/trace": {
+            "types": "./lib-esm/legacy/trace/index.d.ts",
+            "import": "./lib-esm/legacy/trace/index.js",
+            "default": "./lib/legacy/trace/index.js"
+        },
         "./lib/*.js": {
             "types": "./lib-esm/*.d.ts",
             "import": "./lib-esm/*.js",
