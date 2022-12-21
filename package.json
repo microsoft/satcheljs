@@ -52,8 +52,8 @@
         "typescript": "^4.3.2"
     },
     "peerDependencies": {
-        "mobx": "^4.4.0",
-        "mobx-react": "^5.2.0",
+        "mobx": ">=4.4.0",
+        "mobx-react": ">=5.2.0",
         "react": ">=15.4.0",
         "react-dom": ">=15.4.0"
     },
