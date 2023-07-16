@@ -14,5 +14,6 @@ let createStoreAction = action('createStore', function createStoreAction(
 
 export default function createStore<T>(key: string, initialState: T): () => T {
     createStoreAction(key, initialState);
-    return () => <T>getRootStore().get(key);
+    const store = <T>getRootStore().get(key);
+    return () => store;
 }
