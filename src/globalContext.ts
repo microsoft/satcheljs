@@ -1,7 +1,7 @@
 import { observable, ObservableMap } from 'mobx';
 import ActionMessage from './interfaces/ActionMessage';
 import DispatchFunction from './interfaces/DispatchFunction';
-import Subscriber from './interfaces/Subscriber';
+import Subscriber from './interfaces/SubscriberFunction';
 import ActionContext from './legacy/ActionContext';
 import ActionFunction from './legacy/ActionFunction';
 

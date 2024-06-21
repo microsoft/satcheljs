@@ -55,7 +55,7 @@ export function getPrivateActionId(target: any) {
     return target.__SATCHELJS_ACTION_ID;
 }
 
-function setPrivateActionId(target: any, actionId: string) {
+export function setPrivateActionId(target: any, actionId: string) {
     target.__SATCHELJS_ACTION_ID = actionId;
 }
 
@@ -63,6 +63,6 @@ export function getPrivateActionType(target: any): string {
     return target.__SATCHELJS_ACTION_TYPE || 'unknown action';
 }
 
-function setActionType(target: any, actionType: string) {
+export function setActionType(target: any, actionType: string) {
     target.__SATCHELJS_ACTION_TYPE = actionType;
 }

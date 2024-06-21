@@ -1,6 +1,6 @@
 import { transaction } from 'mobx';
 import ActionMessage from './interfaces/ActionMessage';
-import Subscriber from './interfaces/Subscriber';
+import Subscriber from './interfaces/SubscriberFunction';
 import { getPrivateActionId } from './actionCreator';
 import { getGlobalContext } from './globalContext';
 
