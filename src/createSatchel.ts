@@ -4,7 +4,9 @@ import {
     getPrivateActionType,
     setActionType,
     setPrivateActionId,
-} from './actionCreator';
+    getPrivateSubscriberRegistered,
+    setPrivateSubscriberRegistered,
+} from './privatePropertyUtils';
 import ActionMessage from './interfaces/ActionMessage';
 import Middleware from './interfaces/Middleware';
 import DispatchFunction from './interfaces/DispatchFunction';
@@ -14,8 +16,6 @@ import ActionFunction from './legacy/ActionFunction';
 import ActionCreator from './interfaces/ActionCreator';
 import { Mutator } from './interfaces/Mutator';
 import { Orchestrator } from './interfaces/Orchestrator';
-
-const schemaVersion = 3;
 
 type LegacySatchelProperties = {
     legacyInDispatch: number;
@@ -29,7 +29,6 @@ type LegacySatchelProperties = {
 };
 
 type SatchelState = {
-    schemaVersion: number;
     rootStore: ObservableMap<any>;
     nextActionId: number;
     subscriptions: { [key: string]: SubscriberFunction<ActionMessage, void>[] };
@@ -53,18 +52,17 @@ export type SatchelInstance = {
         actionType: string,
         target?: TActionCreator
     ) => TActionCreator;
+    createStore: <T>(key: string, initialState: T) => () => T;
     getRootStore: () => ObservableMap<any>;
     hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => boolean;
 } & LegacySatchelProperties;
 
 export type SatchelOptions = {
-    // TODO: Add options here
     middleware?: Array<Middleware>;
 };
 
 function getInitialSatchelState(): SatchelState {
     return {
-        schemaVersion: schemaVersion,
         rootStore: observable.map({}),
         nextActionId: 0,
         subscriptions: {},
@@ -74,14 +72,6 @@ function getInitialSatchelState(): SatchelState {
         legacyTestMode: false,
     };
 }
-
-const setPrivateSubscriberRegistered = (target: any, isRegistered: boolean) => {
-    target.__SATCHELJS_SUBSCRIBER_REGISTERED = isRegistered;
-};
-
-const getPrivateSubscriberRegistered = (target: any): boolean => {
-    return target.__SATCHELJS_SUBSCRIBER_REGISTERED;
-};
 
 export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
     const { middleware = [] } = options;
@@ -94,7 +84,6 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         legacyInDispatch,
         legacyDispatchWithMiddleware,
     } = getInitialSatchelState();
-    // Private functions
     const finalDispatch = (actionMessage: ActionMessage): void | Promise<void> => {
         let actionId = getPrivateActionId(actionMessage);
         let subscribers = subscriptions[actionId];
@@ -232,6 +221,22 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         return !!subscriptions[getPrivateActionId(actionCreator)];
     };
 
+    const createStoreAction = mobxAction('createStore', function createStoreAction(
+        key: string,
+        initialState: any
+    ) {
+        if (getRootStore().get(key)) {
+            throw new Error(`A store named ${key} has already been created.`);
+        }
+
+        getRootStore().set(key, initialState);
+    });
+
+    const createStore = <T>(key: string, initialState: T): (() => T) => {
+        createStoreAction(key, initialState);
+        return () => <T>getRootStore().get(key);
+    };
+
     return {
         register,
         dispatch,
@@ -239,6 +244,7 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         action,
         getRootStore,
         hasSubscribers,
+        createStore,
         // Legacy properties
         legacyInDispatch,
         legacyDispatchWithMiddleware,
