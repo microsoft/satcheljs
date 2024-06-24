@@ -1,35 +1,27 @@
 import 'jasmine';
 import { autorun } from 'mobx';
-import { __resetGlobalContext } from '../src/globalContext';
-import {
-    action,
-    applyMiddleware,
-    createStore,
-    dispatch,
-    mutator,
-    mutatorAction,
-    orchestrator,
-} from '../src/index';
+import { mutator, mutatorAction, orchestrator } from '../src/index';
+import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('satcheljs', () => {
-    beforeEach(function() {
-        __resetGlobalContext();
-    });
-
     it('mutators subscribe to actions', () => {
+        const satchel = createTestSatchel();
         let actualValue;
 
         // Create an action creator
-        let testAction = action('testAction', function testAction(value: string) {
+        let testAction = satchel.action('testAction', function testAction(value: string) {
             return {
                 value: value,
             };
         });
 
         // Create a mutator that subscribes to it
-        mutator<any, void>(testAction, function(actionMessage: any) {
+        const testMutator = mutator<any, void>(testAction, function(actionMessage: any) {
             actualValue = actionMessage.value;
         });
+
+        // Register the mutator
+        satchel.register(testMutator);
 
         // Dispatch the action
         testAction('test');
@@ -40,16 +32,18 @@ describe('satcheljs', () => {
 
     it('mutatorAction dispatches an action and subscribes to it', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let arg1Value;
         let arg2Value;
 
-        let testMutatorAction = mutatorAction('testMutatorAction', function testMutatorAction(
-            arg1: string,
-            arg2: number
-        ) {
-            arg1Value = arg1;
-            arg2Value = arg2;
-        });
+        let testMutatorAction = mutatorAction(
+            satchel,
+            'testMutatorAction',
+            function testMutatorAction(arg1: string, arg2: number) {
+                arg1Value = arg1;
+                arg2Value = arg2;
+            }
+        );
 
         // Act
         testMutatorAction('testValue', 2);
@@ -61,9 +55,10 @@ describe('satcheljs', () => {
 
     it('mutators can modify the store', () => {
         // Arrange
-        let store = createStore('testStore', { testProperty: 'testValue' })();
+        const satchel = createTestSatchel();
+        let store = satchel.createStore('testStore', { testProperty: 'testValue' })();
         autorun(() => store.testProperty); // strict mode only applies if store is observed
-        let modifyStore = action('modifyStore');
+        let modifyStore = satchel.action('modifyStore');
 
         mutator(modifyStore, () => {
             store.testProperty = 'newValue';
@@ -78,9 +73,10 @@ describe('satcheljs', () => {
 
     it('orchestrators cannot modify the store', () => {
         // Arrange
-        let store = createStore('testStore', { testProperty: 'testValue' })();
+        const satchel = createTestSatchel();
+        let store = satchel.createStore('testStore', { testProperty: 'testValue' })();
         autorun(() => store.testProperty); // strict mode only applies if store is observed
-        let modifyStore = action('modifyStore');
+        let modifyStore = satchel.action('modifyStore');
 
         orchestrator(modifyStore, () => {
             store.testProperty = 'newValue';
@@ -94,8 +90,9 @@ describe('satcheljs', () => {
 
     it('all subscribers are handled in one transaction', () => {
         // Arrange
-        let store = createStore('testStore', { testProperty: 0 })();
-        let modifyStore = action('modifyStore');
+        const satchel = createTestSatchel();
+        let store = satchel.createStore('testStore', { testProperty: 0 })();
+        let modifyStore = satchel.action('modifyStore');
 
         mutator(modifyStore, () => {
             store.testProperty++;
@@ -122,13 +119,17 @@ describe('satcheljs', () => {
         let actualValue;
         let expectedValue = { type: 'testMiddleware' };
 
-        applyMiddleware((next, actionMessage) => {
-            actualValue = actionMessage;
-            next(actionMessage);
-        });
+        const middleware = [
+            (next: any, actionMessage: any) => {
+                actualValue = actionMessage;
+                next(actionMessage);
+            },
+        ];
+
+        const satchel = createTestSatchel({ middleware });
 
         // Act
-        dispatch(expectedValue);
+        satchel.dispatch(expectedValue);
 
         // Assert
         expect(actualValue).toBe(expectedValue);
@@ -136,14 +137,16 @@ describe('satcheljs', () => {
 
     it('middleware can handle promises returned from orchestrators', async () => {
         // Arrange
-        let testAction = action('testAction');
-        orchestrator(testAction, () => Promise.resolve(1));
-        orchestrator(testAction, () => Promise.resolve(2));
-
-        let returnedPromise;
-        applyMiddleware((next, actionMessage) => {
-            returnedPromise = next(actionMessage);
-        });
+        let returnedPromise: Promise<Array<number>>;
+        const middleware = [
+            (next: any, actionMessage: any) => {
+                returnedPromise = next(actionMessage);
+            },
+        ];
+        const satchel = createTestSatchel({ middleware });
+        let testAction = satchel.action('testAction');
+        satchel.register(orchestrator(testAction, () => Promise.resolve(1)));
+        satchel.register(orchestrator(testAction, () => Promise.resolve(2)));
 
         // Act
         testAction();

@@ -1,17 +1,14 @@
 import 'jasmine';
-import applyMiddleware from '../src/applyMiddleware';
-import * as dispatcher from '../src/dispatcher';
-import { getGlobalContext, __resetGlobalContext } from '../src/globalContext';
+import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('applyMiddleware', () => {
     it('updates dispatchWithMiddleware to point to the middleware pipeline', () => {
         // Arrange
-        __resetGlobalContext();
         let testMiddleware = jasmine.createSpy('testMiddleware');
+        const satchel = createTestSatchel({ middleware: [testMiddleware] });
 
         // Act
-        applyMiddleware(testMiddleware);
-        getGlobalContext().dispatchWithMiddleware({});
+        satchel.__dispatchWithMiddleware({});
 
         // Assert
         expect(testMiddleware).toHaveBeenCalled();
@@ -19,35 +16,29 @@ describe('applyMiddleware', () => {
 
     it('the action message and next delegate get passed to middleware', () => {
         // Arrange
-        __resetGlobalContext();
-
         let dispatchedActionMessage = {};
         let actualNext;
         let actualActionMessage;
 
-        applyMiddleware((next: any, actionMessage: any) => {
+        const testMiddleware = (next: any, actionMessage: any) => {
             actualNext = next;
             actualActionMessage = actionMessage;
-        });
+        };
+        const satchel = createTestSatchel({ middleware: [testMiddleware] });
 
         // Act
-        getGlobalContext().dispatchWithMiddleware(dispatchedActionMessage);
+        satchel.__dispatchWithMiddleware(dispatchedActionMessage);
 
         // Assert
         expect(actualActionMessage).toBe(dispatchedActionMessage);
-        expect(actualNext).toBe(dispatcher.finalDispatch);
+        expect(actualNext).toBe(satchel.__finalDispatch);
     });
 
     it('middleware and finalDispatch get called in order', () => {
         // Arrange
-        __resetGlobalContext();
         let sequence: string[] = [];
 
-        spyOn(dispatcher, 'finalDispatch').and.callFake(() => {
-            sequence.push('finalDispatch');
-        });
-
-        applyMiddleware(
+        const middleware = [
             (next: any, actionMessage: any) => {
                 sequence.push('middleware1');
                 next(actionMessage);
@@ -55,11 +46,16 @@ describe('applyMiddleware', () => {
             (next: any, actionMessage: any) => {
                 sequence.push('middleware2');
                 next(actionMessage);
-            }
-        );
+            },
+        ];
+        const satchel = createTestSatchel({ middleware });
+
+        spyOn(satchel, '__finalDispatch').and.callFake(() => {
+            sequence.push('finalDispatch');
+        });
 
         // Act
-        getGlobalContext().dispatchWithMiddleware({});
+        satchel.__dispatchWithMiddleware({});
 
         // Assert
         expect(sequence).toEqual(['middleware1', 'middleware2', 'finalDispatch']);

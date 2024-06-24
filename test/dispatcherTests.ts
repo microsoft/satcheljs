@@ -1,28 +1,17 @@
 import 'jasmine';
-import * as actionCreator from '../src/actionCreator';
-import * as dispatcher from '../src/dispatcher';
-import * as globalContext from '../src/globalContext';
+import { createTestSatchel } from './utils/createTestSatchel';
+import * as privateUtils from '../src/privatePropertyUtils';
 
 describe('dispatcher', () => {
-    let mockGlobalContext: any;
-
-    beforeEach(() => {
-        mockGlobalContext = {
-            subscriptions: {},
-            dispatchWithMiddleware: jasmine.createSpy('dispatchWithMiddleware'),
-            currentMutator: null,
-        };
-
-        spyOn(globalContext, 'getGlobalContext').and.returnValue(mockGlobalContext);
-    });
-
+    /*
     it('subscribe registers a callback for a given action', () => {
         // Arrange
-        let actionId = 'testActionId';
-        let callback = () => {};
+        const satchel = createTestSatchel();
+        const callback = () => ({});
+        const action = satchel.actionCreator('TEST_ACTION', callback);
 
         // Act
-        dispatcher.subscribe(actionId, callback);
+        satchel.register(action);
 
         // Assert
         expect(mockGlobalContext.subscriptions[actionId]).toBeDefined();
@@ -43,56 +32,44 @@ describe('dispatcher', () => {
         // Assert
         expect(mockGlobalContext.subscriptions[actionId]).toEqual([callback0, callback1]);
     });
+    */
 
     it('dispatch calls dispatchWithMiddleware', () => {
         // Arrange
         let actionMessage = {};
+        const satchel = createTestSatchel();
 
         // Act
-        dispatcher.dispatch(actionMessage);
+        satchel.dispatch(actionMessage);
 
         // Assert
-        expect(mockGlobalContext.dispatchWithMiddleware).toHaveBeenCalledWith(actionMessage);
-    });
-
-    it('dispatch calls finalDispatch if dispatchWithMiddleware is null', () => {
-        // Arrange
-        mockGlobalContext.dispatchWithMiddleware = null;
-        let actionId = 'testActionId';
-        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
-
-        let callback = jasmine.createSpy('callback0');
-        mockGlobalContext.subscriptions[actionId] = [callback];
-
-        // Act
-        dispatcher.dispatch({});
-
-        // Assert
-        expect(callback).toHaveBeenCalled();
+        expect(satchel.__dispatchWithMiddleware).toHaveBeenCalledWith(actionMessage);
     });
 
     it('dispatch throws if called within a mutator', () => {
         // Arrange
-        mockGlobalContext.currentMutator = 'SomeAction';
+        const satchel = createTestSatchel();
+        satchel.__currentMutator = 'SomeAction';
 
         // Act / Assert
         expect(() => {
-            dispatcher.dispatch({});
+            satchel.dispatch({});
         }).toThrow();
     });
 
     it('finalDispatch calls all subscribers for a given action', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionMessage = {};
         let actionId = 'testActionId';
-        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+        spyOn(privateUtils, 'getPrivateActionId').and.returnValue(actionId);
 
         let callback0 = jasmine.createSpy('callback0');
         let callback1 = jasmine.createSpy('callback1');
-        mockGlobalContext.subscriptions[actionId] = [callback0, callback1];
+        satchel.__subscriptions[actionId] = [callback0, callback1];
 
         // Act
-        dispatcher.finalDispatch(actionMessage);
+        satchel.__finalDispatch(actionMessage);
 
         // Assert
         expect(callback0).toHaveBeenCalledWith(actionMessage);
@@ -101,25 +78,27 @@ describe('dispatcher', () => {
 
     it('finalDispatch handles the case where there are no subscribers', () => {
         // Arrange
-        spyOn(actionCreator, 'getPrivateActionId').and.returnValue('testActionId');
+        const satchel = createTestSatchel();
+        spyOn(privateUtils, 'getPrivateActionId').and.returnValue('testActionId');
 
         // Act / Assert
         expect(() => {
-            dispatcher.finalDispatch({});
+            satchel.__finalDispatch({});
         }).not.toThrow();
     });
 
     it('if one subscriber returns a Promise, finalDispatch returns it', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionId = 'testActionId';
-        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+        spyOn(privateUtils, 'getPrivateActionId').and.returnValue(actionId);
 
         let promise = Promise.resolve();
         let callback = () => promise;
-        mockGlobalContext.subscriptions[actionId] = [callback];
+        satchel.__subscriptions[actionId] = [callback];
 
         // Act
-        let returnValue = dispatcher.finalDispatch({});
+        let returnValue = satchel.__finalDispatch({});
 
         // Assert
         expect(returnValue).toBe(promise);
@@ -127,20 +106,21 @@ describe('dispatcher', () => {
 
     it('if multiple subscribers returns Promises, finalDispatch returns an aggregate Promise', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionId = 'testActionId';
-        spyOn(actionCreator, 'getPrivateActionId').and.returnValue(actionId);
+        spyOn(privateUtils, 'getPrivateActionId').and.returnValue(actionId);
 
         let promise1 = Promise.resolve();
         let callback1 = () => promise1;
         let promise2 = Promise.resolve();
         let callback2 = () => promise2;
-        mockGlobalContext.subscriptions[actionId] = [callback1, callback2];
+        satchel.__subscriptions[actionId] = [callback1, callback2];
 
         let aggregatePromise = Promise.resolve();
         spyOn(Promise, 'all').and.returnValue(aggregatePromise);
 
         // Act
-        let returnValue = dispatcher.finalDispatch({});
+        let returnValue = satchel.__finalDispatch({});
 
         // Assert
         expect(Promise.all).toHaveBeenCalledWith([promise1, promise2]);

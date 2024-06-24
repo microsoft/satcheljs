@@ -1,16 +1,16 @@
 import 'jasmine';
-import { createSimpleSubscriber, mutatorAction } from '../src/simpleSubscribers';
-import { __resetGlobalContext } from '../src/globalContext';
-import * as actionCreator from '../src/actionCreator';
+import { createSimpleSubscriber } from '../src/simpleSubscribers';
+import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('simpleSubscribers', () => {
     let actionCreatorSpy: jasmine.Spy;
     let decoratorSpy: jasmine.Spy;
-    let simpleSubscriber: Function;
+    let simpleSubscriber: ReturnType<typeof createSimpleSubscriber>;
+    let satchel: ReturnType<typeof createTestSatchel>;
 
     beforeEach(() => {
-        __resetGlobalContext();
-        actionCreatorSpy = spyOn(actionCreator, 'action').and.callThrough();
+        satchel = createTestSatchel();
+        actionCreatorSpy = spyOn(satchel, 'action').and.callThrough();
         decoratorSpy = jasmine.createSpy('decoratorSpy');
         simpleSubscriber = createSimpleSubscriber(decoratorSpy);
     });
@@ -20,7 +20,7 @@ describe('simpleSubscribers', () => {
         let actionId = 'testSubscriber';
 
         // Act
-        let returnValue = simpleSubscriber(actionId, () => {});
+        let returnValue = simpleSubscriber(satchel, actionId, () => {});
 
         // Assert
         expect(actionCreatorSpy).toHaveBeenCalled();
@@ -30,7 +30,7 @@ describe('simpleSubscribers', () => {
 
     it('includes arguments in the action message', () => {
         // Act
-        let returnValue: Function = simpleSubscriber('testSubscriber', () => {});
+        let returnValue: Function = simpleSubscriber(satchel, 'testSubscriber', () => {});
         let createdAction = returnValue(1, 2, 3);
 
         // Assert
@@ -39,7 +39,7 @@ describe('simpleSubscribers', () => {
 
     it('subscribes a callback to the action', () => {
         // Act
-        simpleSubscriber('testSubscriber', () => {});
+        simpleSubscriber(satchel, 'testSubscriber', () => {});
 
         // Assert
         expect(decoratorSpy).toHaveBeenCalled();
@@ -52,7 +52,7 @@ describe('simpleSubscribers', () => {
         let actionMessage = { args: [1, 2, 3] };
 
         // Act
-        simpleSubscriber('testSubscriber', callback);
+        simpleSubscriber(satchel, 'testSubscriber', callback);
         let decoratorCallback = decoratorSpy.calls.argsFor(0)[1];
         decoratorCallback(actionMessage);
 

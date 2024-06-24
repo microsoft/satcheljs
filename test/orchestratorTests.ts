@@ -1,6 +1,6 @@
 import 'jasmine';
 import orchestrator from '../src/orchestrator';
-import * as dispatcher from '../src/dispatcher';
+import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('orchestrator', () => {
     it('throws if the action creator does not have an action ID', () => {
@@ -15,25 +15,29 @@ describe('orchestrator', () => {
 
     it('subscribes the target function to the action', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let callback = () => {};
         let actionId = 'testAction';
         let actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
-        spyOn(dispatcher, 'subscribe');
 
         // Act
-        orchestrator(actionCreator, callback);
+        const testOrchestator = orchestrator(actionCreator, callback);
+        satchel.register(testOrchestator);
 
         // Assert
-        expect(dispatcher.subscribe).toHaveBeenCalledWith(actionId, callback);
+        expect(satchel.__subscriptions[actionId]).toBeDefined();
+        expect(satchel.__subscriptions[actionId][0]).toBe(callback);
     });
 
     it('returns the target function', () => {
         // Arrange
         let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
         let callback = () => {};
+        const satchel = createTestSatchel();
+        const testOrchestator = orchestrator(actionCreator, callback);
 
         // Act
-        let returnValue = orchestrator(actionCreator, callback);
+        const returnValue = satchel.register(testOrchestator);
 
         // Assert
         expect(returnValue).toBe(callback);

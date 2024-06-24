@@ -11,29 +11,16 @@ import ActionMessage from './interfaces/ActionMessage';
 import Middleware from './interfaces/Middleware';
 import DispatchFunction from './interfaces/DispatchFunction';
 import SubscriberFunction from './interfaces/SubscriberFunction';
-import ActionContext from './legacy/ActionContext';
-import ActionFunction from './legacy/ActionFunction';
 import ActionCreator from './interfaces/ActionCreator';
 import { Mutator } from './interfaces/Mutator';
 import { Orchestrator } from './interfaces/Orchestrator';
-
-type LegacySatchelProperties = {
-    legacyInDispatch: number;
-    legacyDispatchWithMiddleware: (
-        action: ActionFunction,
-        actionType: string,
-        args: IArguments,
-        actionContext: ActionContext
-    ) => Promise<any> | void;
-    legacyTestMode: boolean;
-};
 
 type SatchelState = {
     rootStore: ObservableMap<any>;
     nextActionId: number;
     subscriptions: { [key: string]: SubscriberFunction<ActionMessage, void>[] };
     currentMutator: string | null;
-} & LegacySatchelProperties;
+};
 
 export type SatchelInstance = {
     /**
@@ -43,10 +30,12 @@ export type SatchelInstance = {
         subscriber: Mutator<TAction, TReturn> | Orchestrator<TAction>
     ) => SubscriberFunction<TAction, TReturn>;
     dispatch: (actionMessage: ActionMessage) => void;
-    createActionCreator: <T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
+    actionCreator: <
+        T extends ActionMessage = {},
+        TActionCreator extends ActionCreator<T> = () => T
+    >(
         actionType: string,
-        target: TActionCreator,
-        shouldDispatch: boolean
+        target?: TActionCreator
     ) => TActionCreator;
     action: <T extends ActionMessage = {}, TActionCreator extends ActionCreator<T> = () => T>(
         actionType: string,
@@ -55,7 +44,15 @@ export type SatchelInstance = {
     createStore: <T>(key: string, initialState: T) => () => T;
     getRootStore: () => ObservableMap<any>;
     hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => boolean;
-} & LegacySatchelProperties;
+};
+
+export type PrivateSatchelFunctions = {
+    __createActionId: () => string;
+    __dispatchWithMiddleware: DispatchFunction;
+    __finalDispatch: DispatchFunction;
+    __subscriptions: { [key: string]: SubscriberFunction<ActionMessage, void>[] };
+    __currentMutator: string | null;
+};
 
 export type SatchelOptions = {
     middleware?: Array<Middleware>;
@@ -67,24 +64,15 @@ function getInitialSatchelState(): SatchelState {
         nextActionId: 0,
         subscriptions: {},
         currentMutator: null,
-        legacyInDispatch: 0,
-        legacyDispatchWithMiddleware: null,
-        legacyTestMode: false,
     };
 }
 
 export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
     const { middleware = [] } = options;
-    let {
-        subscriptions,
-        currentMutator,
-        nextActionId,
-        rootStore,
-        legacyTestMode,
-        legacyInDispatch,
-        legacyDispatchWithMiddleware,
-    } = getInitialSatchelState();
-    const finalDispatch = (actionMessage: ActionMessage): void | Promise<void> => {
+    let { subscriptions, currentMutator, nextActionId, rootStore } = getInitialSatchelState();
+    const finalDispatch: DispatchFunction = (
+        actionMessage: ActionMessage
+    ): void | Promise<void> => {
         let actionId = getPrivateActionId(actionMessage);
         let subscribers = subscriptions[actionId];
 
@@ -104,7 +92,7 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         }
     };
 
-    const dispatchWithMiddleware: DispatchFunction = middleware.reduce(
+    const dispatchWithMiddleware: DispatchFunction = middleware.reduceRight(
         (next: DispatchFunction, m: Middleware) => m.bind(null, next),
         finalDispatch
     );
@@ -203,6 +191,16 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         return decoratedTarget;
     };
 
+    const actionCreator = <
+        T extends ActionMessage = {},
+        TActionCreator extends ActionCreator<T> = () => T
+    >(
+        actionType: string,
+        target?: TActionCreator
+    ): TActionCreator => {
+        return createActionCreator(actionType, target, false);
+    };
+
     const action = <
         T extends ActionMessage = {},
         TActionCreator extends ActionCreator<T> = () => T
@@ -237,17 +235,21 @@ export function createSatchel(options: SatchelOptions = {}): SatchelInstance {
         return () => <T>getRootStore().get(key);
     };
 
-    return {
+    const satchelInstance: SatchelInstance & PrivateSatchelFunctions = {
         register,
         dispatch,
-        createActionCreator,
+        actionCreator,
         action,
         getRootStore,
         hasSubscribers,
         createStore,
-        // Legacy properties
-        legacyInDispatch,
-        legacyDispatchWithMiddleware,
-        legacyTestMode,
+        // Private functions used only for testing
+        __createActionId: createActionId,
+        __dispatchWithMiddleware: dispatchWithMiddleware,
+        __finalDispatch: finalDispatch,
+        __subscriptions: subscriptions,
+        __currentMutator: currentMutator,
     };
+
+    return satchelInstance;
 }
