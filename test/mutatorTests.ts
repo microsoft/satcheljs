@@ -2,15 +2,32 @@ import 'jasmine';
 import mutator from '../src/mutator';
 import * as mobx from 'mobx';
 import { createTestSatchel } from './utils/createTestSatchel';
+import { getPrivateSubscriberRegistered } from '../src/privatePropertyUtils';
 
 describe('mutator', () => {
+    it('returns a object describing the mutator', () => {
+        // Arrange
+        const callback = () => {};
+        const actionId = 'testAction';
+        const actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
+
+        // Act
+        const testOrchestator = mutator(actionCreator, callback);
+
+        // Assert
+        expect(testOrchestator.type).toBe('mutator');
+        expect(testOrchestator.actionCreator).toBe(actionCreator);
+        expect(testOrchestator.target).toBe(callback);
+        expect(getPrivateSubscriberRegistered(testOrchestator)).toBe(false);
+    });
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionCreator: any = {};
 
         // Act / Assert
         expect(() => {
-            mutator(actionCreator, () => {});
+            satchel.register(mutator(actionCreator, () => {}));
         }).toThrow();
     });
 
@@ -70,8 +87,7 @@ describe('mutator', () => {
         const testMutator = mutator(actionCreator, callback);
 
         // Act
-        let subscribedCallback = (satchel.register as jasmine.Spy).calls.argsFor(0)[1];
-        subscribedCallback(testMutator);
+        satchel.register(testMutator);
 
         // Assert
         expect(satchel.__currentMutator).toBe(null);
@@ -90,9 +106,8 @@ describe('mutator', () => {
         const testMutator = mutator(actionCreator, callback);
 
         // Act
-        let subscribedCallback = (satchel.register as jasmine.Spy).calls.argsFor(0)[1];
         try {
-            subscribedCallback(testMutator);
+            satchel.register(testMutator);
         } catch {
             // no op
         }

@@ -1,6 +1,7 @@
 import 'jasmine';
 import { createSimpleSubscriber } from '../src/simpleSubscribers';
 import { createTestSatchel } from './utils/createTestSatchel';
+import * as mutator from '../src/mutator';
 
 describe('simpleSubscribers', () => {
     let actionCreatorSpy: jasmine.Spy;
@@ -11,7 +12,7 @@ describe('simpleSubscribers', () => {
     beforeEach(() => {
         satchel = createTestSatchel();
         actionCreatorSpy = spyOn(satchel, 'action').and.callThrough();
-        decoratorSpy = jasmine.createSpy('decoratorSpy');
+        decoratorSpy = spyOn(mutator, 'default').and.callThrough();
         simpleSubscriber = createSimpleSubscriber(decoratorSpy);
     });
 

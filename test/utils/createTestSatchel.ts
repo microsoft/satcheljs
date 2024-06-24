@@ -1,10 +1,4 @@
-import {
-    createSatchel,
-    SatchelInstance,
-    SatchelOptions,
-    PrivateSatchelFunctions,
-} from '../../src/createSatchel';
+import { createSatchelInternal } from '../../src/createSatchel';
 
-type TestSatchelFunction = (options?: SatchelOptions) => SatchelInstance & PrivateSatchelFunctions;
-
-export const createTestSatchel = createSatchel as TestSatchelFunction;
+// Decorator for the internal createSatchel function
+export const createTestSatchel = createSatchelInternal;

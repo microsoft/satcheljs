@@ -12,6 +12,7 @@ export { Orchestrator } from './interfaces/Orchestrator';
 export { default as mutator } from './mutator';
 import { default as orchestrator } from './orchestrator';
 export { mutatorAction } from './simpleSubscribers';
+export { createSatchel, SatchelInstance } from './createSatchel';
 export { useStrict };
 
 // exporting an alias for orchestrator called "flow"

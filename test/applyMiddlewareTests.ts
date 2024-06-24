@@ -1,4 +1,5 @@
 import 'jasmine';
+import { createSatchel, createSatchelInternal, SatchelInstance } from '../src/createSatchel';
 import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('applyMiddleware', () => {
@@ -48,11 +49,13 @@ describe('applyMiddleware', () => {
                 next(actionMessage);
             },
         ];
-        const satchel = createTestSatchel({ middleware });
 
-        spyOn(satchel, '__finalDispatch').and.callFake(() => {
-            sequence.push('finalDispatch');
-        });
+        const satchel = createTestSatchel(
+            { middleware },
+            jasmine.createSpy('finalDispatch').and.callFake(() => {
+                sequence.push('finalDispatch');
+            })
+        );
 
         // Act
         satchel.__dispatchWithMiddleware({});

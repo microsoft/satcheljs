@@ -60,9 +60,10 @@ describe('satcheljs', () => {
         autorun(() => store.testProperty); // strict mode only applies if store is observed
         let modifyStore = satchel.action('modifyStore');
 
-        mutator(modifyStore, () => {
+        let testMutator = mutator(modifyStore, () => {
             store.testProperty = 'newValue';
         });
+        satchel.register(testMutator);
 
         // Act
         modifyStore();
@@ -78,9 +79,10 @@ describe('satcheljs', () => {
         autorun(() => store.testProperty); // strict mode only applies if store is observed
         let modifyStore = satchel.action('modifyStore');
 
-        orchestrator(modifyStore, () => {
+        let testOrchestator = orchestrator(modifyStore, () => {
             store.testProperty = 'newValue';
         });
+        satchel.register(testOrchestator);
 
         // Act / Assert
         expect(() => {
@@ -94,13 +96,15 @@ describe('satcheljs', () => {
         let store = satchel.createStore('testStore', { testProperty: 0 })();
         let modifyStore = satchel.action('modifyStore');
 
-        mutator(modifyStore, () => {
+        const testMutator1 = mutator(modifyStore, () => {
             store.testProperty++;
         });
 
-        mutator(modifyStore, () => {
+        const testMutator2 = mutator(modifyStore, () => {
             store.testProperty++;
         });
+        satchel.register(testMutator1);
+        satchel.register(testMutator2);
 
         let values: number[] = [];
         autorun(() => {

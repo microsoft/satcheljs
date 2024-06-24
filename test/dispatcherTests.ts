@@ -2,7 +2,7 @@ import 'jasmine';
 import { createTestSatchel } from './utils/createTestSatchel';
 import * as privateUtils from '../src/privatePropertyUtils';
 
-describe('dispatcher', () => {
+describe('dispatch', () => {
     /*
     it('subscribe registers a callback for a given action', () => {
         // Arrange
@@ -38,6 +38,7 @@ describe('dispatcher', () => {
         // Arrange
         let actionMessage = {};
         const satchel = createTestSatchel();
+        spyOn(satchel, '__dispatchWithMiddleware');
 
         // Act
         satchel.dispatch(actionMessage);

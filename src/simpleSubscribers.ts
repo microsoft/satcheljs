@@ -1,8 +1,20 @@
 import SimpleAction from './interfaces/SimpleAction';
 import mutator from './mutator';
 import { SatchelInstance } from './createSatchel';
+import { Mutator } from './interfaces/Mutator';
+import { Orchestrator } from './interfaces/Orchestrator';
+import ActionMessage from './interfaces/ActionMessage';
 
-export function createSimpleSubscriber(decorator: Function) {
+type Decorator<TAction extends ActionMessage, TReturn = void> = (
+    actionCreator: () => {
+        args: IArguments;
+    },
+    callback: (actionMessage: any) => any
+) => Mutator<TAction, TReturn> | Orchestrator<TAction>;
+
+export function createSimpleSubscriber<TAction extends ActionMessage, TReturn = void>(
+    decorator: Decorator<TAction, TReturn>
+) {
     return function simpleSubscriber<TFunction extends (...args: any) => any>(
         satchelInstance: SatchelInstance,
         actionType: string,
