@@ -21,7 +21,3 @@ export const setPrivateSubscriberRegistered = (target: any, isRegistered: boolea
 export const getPrivateSubscriberRegistered = (target: any): boolean => {
     return target.__SATCHELJS_SUBSCRIBER_REGISTERED;
 };
-
-export const setPrivateFunction = (property: string, target: any, func: any) => {
-    target[property] = func;
-};

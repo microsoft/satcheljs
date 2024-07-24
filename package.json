@@ -1,6 +1,6 @@
 {
     "name": "satcheljs",
-    "version": "5.0.0",
+    "version": "5.0.0-beta.1",
     "description": "Store implementation for functional reactive flux.",
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -40,7 +40,7 @@
         "mobx": "^4.4.0",
         "mobx-react": "^5.2.0",
         "npm-run-all": "^4.0.2",
-        "prettier": "^1.19.1",
+        "prettier": "^3.3.3",
         "react": "15.4.2",
         "react-addons-test-utils": "~15.4.0",
         "react-dom": "15.4.2",

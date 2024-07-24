@@ -1,4 +1,4 @@
-import { observable, ObservableMap, transaction, action as mobxAction, IAction } from 'mobx';
+import { observable, ObservableMap, transaction, action as mobxAction } from 'mobx';
 import {
     getPrivateActionId,
     getPrivateActionType,
@@ -7,112 +7,25 @@ import {
     getPrivateSubscriberRegistered,
     setPrivateSubscriberRegistered,
 } from './privatePropertyUtils';
-import ActionMessage from './interfaces/ActionMessage';
-import Middleware from './interfaces/Middleware';
-import DispatchFunction from './interfaces/DispatchFunction';
-import SubscriberFunction from './interfaces/SubscriberFunction';
-import ActionCreator from './interfaces/ActionCreator';
-import { Mutator } from './interfaces/Mutator';
-import { Subscriber } from './interfaces/Subscriber';
-
-type SatchelState = {
-    __rootStore: ObservableMap<any>;
-    __nextActionId: number;
-    __subscriptions: { [key: string]: SubscriberFunction<ActionMessage, void>[] };
-    __currentMutator: string | null;
-};
-
-export type SatchelInstance = {
-    /**
-     * Resolves the target of the subscriber and registers it with the dispatcher.
-     */
-    register: <TAction extends ActionMessage, TReturn = void>(
-        subscriber: Subscriber<TAction, TReturn>
-    ) => SubscriberFunction<TAction, TReturn>;
-    /**
-     * Dispatches the action message
-     * @param actionMessage {ActionMessage} The action message to dispatch
-     * @returns {void}
-     */
-    dispatch: (actionMessage: ActionMessage) => void;
-    /**
-     * Decorates a function as an action creator.
-     * @template T (type parameter) An interface describing the shape of the action message to create.
-     * @param actionType {string}:A string which identifies the type of the action.
-     * @param target {((...) => T)=} A function which creates and returns an action message
-     * @returns {ActionCreator<T>} An action creator
-     */
-    actionCreator: <
-        T extends ActionMessage = {},
-        TActionCreator extends ActionCreator<T> = () => T
-    >(
-        actionType: string,
-        target?: TActionCreator
-    ) => TActionCreator;
-    /**
-     * Decorates a function as an action creator which also dispatches the action message after creating it.
-     *
-     * @template T (type parameter) An interface describing the shape of the action message to create.
-     * @param actionType {string}:A string which identifies the type of the action.
-     * @param target {((...) => T)=} A function which creates and returns an action message
-     * @returns {ActionCreator<T>} An action creator
-     */
-    action: <T extends ActionMessage = {}, TActionCreator extends ActionCreator<T> = () => T>(
-        actionType: string,
-        target?: TActionCreator
-    ) => TActionCreator;
-    /**
-     * Creates a Satchel store and returns a selector to it.
-     *
-     * @template T (type parameter) An interface describing the shape of the store.
-     * @param name {string} A unique identifier for the store.
-     * @param initialState {T} The initial state of the store.
-     * @returns {() => T} A selector to the store.
-     */
-    createStore: <T>(key: string, initialState: T) => () => T;
-    /**
-     * Returns Satchel's root store object of the satchel instance.
-     * @returns {ObservableMap<any>} The root store object
-     */
-    getRootStore: () => ObservableMap<any>;
-    /**
-     * Returns whether the action creator has any subscribers.
-     * @returns {boolean} True if the action creator has subscribers, false otherwise.
-     */
-    hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => boolean;
-};
-
-export type SatchelPrivateInstanceFunctions = {
-    __createActionId: () => string;
-    __dispatchWithMiddleware: DispatchFunction;
-    __finalDispatch: DispatchFunction;
-    __createStoreAction: (key: string, initialState: any) => void;
-    __createActionCreator: <T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
-        actionType: string,
-        target: TActionCreator,
-        shouldDispatch: boolean
-    ) => TActionCreator;
-    __wrapMutatorTarget: <TAction extends ActionMessage, TReturn>(
-        mutator: Mutator<TAction, TReturn>
-    ) => ((actionMessage: TAction) => void) & IAction;
-};
-
-export type SatchelInternalInstance = SatchelInstance &
-    SatchelPrivateInstanceFunctions &
-    SatchelState;
-
-export type SatchelOptions = {
-    middleware?: Array<Middleware>;
-};
+import type ActionMessage from './interfaces/ActionMessage';
+import type Middleware from './interfaces/Middleware';
+import type DispatchFunction from './interfaces/DispatchFunction';
+import type SubscriberFunction from './interfaces/SubscriberFunction';
+import type ActionCreator from './interfaces/ActionCreator';
+import type Mutator from './interfaces/Mutator';
+import type Subscriber from './interfaces/Subscriber';
+import type SatchelOptions from './interfaces/SatchelOptions';
+import type SatchelInternal from './interfaces/SatchelInternal';
+import type Satchel from './interfaces/Satchel';
 
 export function createSatchelInternal(
     options: SatchelOptions = {},
     // This is only used for testing purposes
     finalDispatch?: DispatchFunction
-): SatchelInternalInstance {
+): SatchelInternal {
     const { middleware = [] } = options;
 
-    const satchel: SatchelInternalInstance = {
+    const satchel: SatchelInternal = {
         // State
         __subscriptions: {},
         __nextActionId: 0,
@@ -158,7 +71,7 @@ export function createSatchelInternal(
         },
         actionCreator: <
             T extends ActionMessage = {},
-            TActionCreator extends ActionCreator<T> = () => T
+            TActionCreator extends ActionCreator<T> = () => T,
         >(
             actionType: string,
             target?: TActionCreator
@@ -187,7 +100,7 @@ export function createSatchelInternal(
         },
         __finalDispatch:
             finalDispatch ??
-            ((actionMessage: ActionMessage): void | Promise<void> => {
+            ((actionMessage) => {
                 let actionId = getPrivateActionId(actionMessage);
                 let subscribers = satchel.__subscriptions[actionId];
 
@@ -223,16 +136,16 @@ export function createSatchelInternal(
                 }
             });
         },
-        __createStoreAction: mobxAction('createStore', function createStoreAction(
-            key: string,
-            initialState: any
-        ) {
-            if (satchel.getRootStore().get(key)) {
-                throw new Error(`A store named ${key} has already been created.`);
-            }
+        __createStoreAction: mobxAction(
+            'createStore',
+            function createStoreAction(key: string, initialState: any) {
+                if (satchel.getRootStore().get(key)) {
+                    throw new Error(`A store named ${key} has already been created.`);
+                }
 
-            satchel.getRootStore().set(key, initialState);
-        }),
+                satchel.getRootStore().set(key, initialState);
+            }
+        ),
         __createActionCreator: <T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
             actionType: string,
             target: TActionCreator,
@@ -279,4 +192,4 @@ export function createSatchelInternal(
 }
 
 // Exclude the private functions from the public API
-export const createSatchel: (options?: SatchelOptions) => SatchelInstance = createSatchelInternal;
+export const createSatchel: (options?: SatchelOptions) => Satchel = createSatchelInternal;

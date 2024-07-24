@@ -1,9 +1,10 @@
 import ActionCreator from './ActionCreator';
-import ActionMessage from './ActionMessage';
-import OrchestratorFunction from './OrchestratorFunction';
+import type ActionMessage from './ActionMessage';
+import type OrchestratorFunction from './OrchestratorFunction';
 
-export type Orchestrator<T extends ActionMessage> = {
+type Orchestrator<T extends ActionMessage> = {
     type: 'orchestrator';
     actionCreator: ActionCreator<T>;
     target: OrchestratorFunction<T>;
 };
+export default Orchestrator;

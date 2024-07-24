@@ -1,7 +1,7 @@
-import ActionCreator from './interfaces/ActionCreator';
-import ActionMessage from './interfaces/ActionMessage';
-import MutatorFunction from './interfaces/MutatorFunction';
-import { Mutator } from './interfaces/Mutator';
+import type ActionCreator from './interfaces/ActionCreator';
+import type ActionMessage from './interfaces/ActionMessage';
+import type MutatorFunction from './interfaces/MutatorFunction';
+import type Mutator from './interfaces/Mutator';
 import { setPrivateSubscriberRegistered } from './privatePropertyUtils';
 
 export default function mutator<TAction extends ActionMessage, TReturn>(

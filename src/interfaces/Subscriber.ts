@@ -1,7 +1,9 @@
-import ActionMessage from './ActionMessage';
-import { Mutator } from './Mutator';
-import { Orchestrator } from './Orchestrator';
+import type ActionMessage from './ActionMessage';
+import type Mutator from './Mutator';
+import type Orchestrator from './Orchestrator';
 
-export type Subscriber<TAction extends ActionMessage, TReturn = void> =
+type Subscriber<TAction extends ActionMessage, TReturn = void> =
     | Mutator<TAction, TReturn>
     | Orchestrator<TAction>;
+
+export default Subscriber;
