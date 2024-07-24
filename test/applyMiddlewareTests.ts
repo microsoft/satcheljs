@@ -1,5 +1,4 @@
 import 'jasmine';
-import { createSatchel, createSatchelInternal, SatchelInstance } from '../src/createSatchel';
 import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('applyMiddleware', () => {
