@@ -5,6 +5,7 @@ import type Mutator from './Mutator';
 import type MutatorFunction from './MutatorFunction';
 import type Orchestrator from './Orchestrator';
 import type OrchestratorFunction from './OrchestratorFunction';
+import SatchelState from './SatchelState';
 
 type Satchel = {
     /**
@@ -68,5 +69,14 @@ type Satchel = {
      * @returns {boolean} True if the action creator has subscribers, false otherwise.
      */
     hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => boolean;
+
+    /**
+     * Utility function to get the current mutator being executed.
+     */
+    getCurrentMutator: () => SatchelState['__currentMutator'];
+    /**
+     * Utility function to get the current subscriptions.
+     */
+    getSubscriptions: () => SatchelState['__subscriptions'];
 };
 export default Satchel;

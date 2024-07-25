@@ -100,6 +100,12 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             satchel.__createStoreAction(key, initialState);
             return () => <T>satchel.getRootStore().get(key);
         },
+        getSubscriptions: () => {
+            return satchel.__subscriptions;
+        },
+        getCurrentMutator: () => {
+            return satchel.__currentMutator;
+        },
         // Private functions
         __createActionId: (): string => {
             return (satchel.__nextActionId++).toString();
