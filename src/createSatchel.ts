@@ -18,11 +18,17 @@ import type SatchelOptions from './interfaces/SatchelOptions';
 import type SatchelInternal from './interfaces/SatchelInternal';
 import type Satchel from './interfaces/Satchel';
 
-export function createSatchelInternal(
-    options: SatchelOptions = {},
-    // This is only used for testing purposes
-    finalDispatch?: DispatchFunction
-): SatchelInternal {
+export function createDispatchWithMiddleware(
+    middleware: Middleware[],
+    finalDispatch: DispatchFunction
+) {
+    return middleware.reduceRight(
+        (next: DispatchFunction, m: Middleware) => m.bind(null, next),
+        finalDispatch
+    );
+}
+
+export function createSatchelInternal(options: SatchelOptions = {}): SatchelInternal {
     const { middleware = [] } = options;
 
     const satchel: SatchelInternal = {
@@ -98,27 +104,25 @@ export function createSatchelInternal(
         __createActionId: (): string => {
             return (satchel.__nextActionId++).toString();
         },
-        __finalDispatch:
-            finalDispatch ??
-            ((actionMessage) => {
-                let actionId = getPrivateActionId(actionMessage);
-                let subscribers = satchel.__subscriptions[actionId];
+        __finalDispatch: (actionMessage) => {
+            let actionId = getPrivateActionId(actionMessage);
+            let subscribers = satchel.__subscriptions[actionId];
 
-                if (subscribers) {
-                    let promises: Promise<any>[] = [];
+            if (subscribers) {
+                let promises: Promise<any>[] = [];
 
-                    for (const subscriber of subscribers) {
-                        let returnValue = subscriber(actionMessage);
-                        if (returnValue) {
-                            promises.push(returnValue);
-                        }
-                    }
-
-                    if (promises.length) {
-                        return promises.length == 1 ? promises[0] : Promise.all(promises);
+                for (const subscriber of subscribers) {
+                    let returnValue = subscriber(actionMessage);
+                    if (returnValue) {
+                        promises.push(returnValue);
                     }
                 }
-            }),
+
+                if (promises.length) {
+                    return promises.length == 1 ? promises[0] : Promise.all(promises);
+                }
+            }
+        },
         __wrapMutatorTarget: <TAction extends ActionMessage, TReturn>({
             actionCreator,
             target,
@@ -183,8 +187,8 @@ export function createSatchelInternal(
         __dispatchWithMiddleware: undefined as DispatchFunction,
     };
 
-    satchel.__dispatchWithMiddleware = middleware.reduceRight(
-        (next: DispatchFunction, m: Middleware) => m.bind(null, next),
+    satchel.__dispatchWithMiddleware = createDispatchWithMiddleware(
+        middleware,
         satchel.__finalDispatch
     );
 

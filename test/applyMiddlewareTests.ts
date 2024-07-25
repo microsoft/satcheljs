@@ -1,4 +1,6 @@
 import 'jasmine';
+import { DispatchFunction, Middleware } from '../src';
+import { createDispatchWithMiddleware } from '../src/createSatchel';
 import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('applyMiddleware', () => {
@@ -34,30 +36,28 @@ describe('applyMiddleware', () => {
         expect(actualNext).toBe(satchel.__finalDispatch);
     });
 
-    it('middleware and finalDispatch get called in order', () => {
+    it('createDispatchWithMiddleware creates a function that calls middleware and finalDispatch in order', () => {
         // Arrange
         let sequence: string[] = [];
-
         const middleware = [
-            (next: any, actionMessage: any) => {
+            (next: DispatchFunction, actionMessage: any) => {
                 sequence.push('middleware1');
                 next(actionMessage);
             },
-            (next: any, actionMessage: any) => {
+            (next: DispatchFunction, actionMessage: any) => {
                 sequence.push('middleware2');
                 next(actionMessage);
             },
         ];
 
-        const satchel = createTestSatchel(
-            { middleware },
-            jasmine.createSpy('finalDispatch').and.callFake(() => {
-                sequence.push('finalDispatch');
-            })
-        );
+        const finalDispatch = (_actionMessage: any) => {
+            sequence.push('finalDispatch');
+        };
+
+        const testDispatchWithMiddleware = createDispatchWithMiddleware(middleware, finalDispatch);
 
         // Act
-        satchel.__dispatchWithMiddleware({});
+        testDispatchWithMiddleware({});
 
         // Assert
         expect(sequence).toEqual(['middleware1', 'middleware2', 'finalDispatch']);
