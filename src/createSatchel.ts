@@ -17,6 +17,7 @@ import type Subscriber from './interfaces/Subscriber';
 import type SatchelOptions from './interfaces/SatchelOptions';
 import type SatchelInternal from './interfaces/SatchelInternal';
 import type Satchel from './interfaces/Satchel';
+import type MutatorActionTarget from './interfaces/MutatorActionTarget';
 import mutator from './mutator';
 
 type ActionMessageWithArgs<T extends any[]> = ActionMessage & { args: T };
@@ -93,17 +94,22 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
         ): TActionCreator => {
             return satchel.__createActionCreator(actionType, target, true);
         },
-        mutatorAction: <TArgs extends any[]>(
+        mutatorAction: <TFunction extends ActionCreator<any>>(
             actionType: string,
-            target: (...args: TArgs) => void
-        ): ((...args: TArgs) => void) => {
-            const simpleActionCreator = satchel.action(actionType, (...args: TArgs) => {
-                return {
-                    args,
-                };
-            });
+            target: MutatorActionTarget<TFunction>
+        ) => {
+            const simpleActionCreator = satchel.action(
+                actionType,
+                (...args: Parameters<TFunction>) => {
+                    return {
+                        args,
+                    };
+                }
+            );
 
-            const mutatorTarget = (actionMessage: ActionMessageWithArgs<TArgs>): void => {
+            const mutatorTarget = (
+                actionMessage: ActionMessageWithArgs<Parameters<TFunction>>
+            ): void => {
                 return target(...actionMessage.args);
             };
 

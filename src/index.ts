@@ -12,7 +12,6 @@ export { default as Mutator } from './interfaces/Mutator';
 export { default as Orchestrator } from './interfaces/Orchestrator';
 export { default as mutator } from './mutator';
 import { default as orchestrator } from './orchestrator';
-export { mutatorAction } from './simpleSubscribers';
 export { createSatchel } from './createSatchel';
 export { useStrict };
 

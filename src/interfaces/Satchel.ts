@@ -5,8 +5,8 @@ import type Mutator from './Mutator';
 import type MutatorFunction from './MutatorFunction';
 import type Orchestrator from './Orchestrator';
 import type OrchestratorFunction from './OrchestratorFunction';
-import SatchelState from './SatchelState';
-import SimpleAction from './SimpleAction';
+import type SatchelState from './SatchelState';
+import type MutatorActionTarget from './MutatorActionTarget';
 
 type Satchel = {
     /**
@@ -52,10 +52,21 @@ type Satchel = {
         target?: TActionCreator
     ) => TActionCreator;
 
-    mutatorAction: <TArgs extends any[]>(
+    /**
+     * Decorates a function as a mutator action.
+     *
+     * - mutatorAction encapsulates action creation, dispatch, and registering the mutator in one simple function call.
+     * - Use mutatorAction as a convenience when an action only needs to trigger one specific mutator.
+     * - Because the action creator is not exposed, no other mutators or orchestrators can subscribe to it. If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
+     *
+     * @param actionType {string}:A string which identifies the type of the action.
+     * @param target {(...args: TArgs) => void} A function to register as a mutator.
+     * @returns {(...args: TArgs) => void} The mutator function.
+     */
+    mutatorAction: <TFunction extends ActionCreator<any>>(
         actionType: string,
-        target: (...args: TArgs) => void
-    ) => (...args: TArgs) => void;
+        target: MutatorActionTarget<TFunction>
+    ) => (...args: Parameters<TFunction>) => void;
 
     /**
      * Creates a Satchel store and returns a selector to it.
