@@ -6,6 +6,7 @@ import type MutatorFunction from './MutatorFunction';
 import type Orchestrator from './Orchestrator';
 import type OrchestratorFunction from './OrchestratorFunction';
 import SatchelState from './SatchelState';
+import SimpleAction from './SimpleAction';
 
 type Satchel = {
     /**
@@ -50,6 +51,12 @@ type Satchel = {
         actionType: string,
         target?: TActionCreator
     ) => TActionCreator;
+
+    mutatorAction: <TArgs extends any[]>(
+        actionType: string,
+        target: (...args: TArgs) => void
+    ) => (...args: TArgs) => void;
+
     /**
      * Creates a Satchel store and returns a selector to it.
      *

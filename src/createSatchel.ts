@@ -17,6 +17,9 @@ import type Subscriber from './interfaces/Subscriber';
 import type SatchelOptions from './interfaces/SatchelOptions';
 import type SatchelInternal from './interfaces/SatchelInternal';
 import type Satchel from './interfaces/Satchel';
+import mutator from './mutator';
+
+type ActionMessageWithArgs<T extends any[]> = ActionMessage & { args: T };
 
 export function createDispatchWithMiddleware(
     middleware: Middleware[],
@@ -89,6 +92,26 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             target?: TActionCreator
         ): TActionCreator => {
             return satchel.__createActionCreator(actionType, target, true);
+        },
+        mutatorAction: <TArgs extends any[]>(
+            actionType: string,
+            target: (...args: TArgs) => void
+        ): ((...args: TArgs) => void) => {
+            const simpleActionCreator = satchel.action(actionType, (...args: TArgs) => {
+                return {
+                    args,
+                };
+            });
+
+            const mutatorTarget = (actionMessage: ActionMessageWithArgs<TArgs>): void => {
+                return target(...actionMessage.args);
+            };
+
+            const simpleMutator = mutator(simpleActionCreator, mutatorTarget);
+
+            satchel.register(simpleMutator);
+
+            return simpleActionCreator;
         },
         getRootStore: (): ObservableMap<any> => {
             return satchel.__rootStore;

@@ -1,6 +1,6 @@
 import 'jasmine';
 import { autorun } from 'mobx';
-import { mutator, mutatorAction, orchestrator } from '../src/index';
+import { mutator, orchestrator } from '../src/index';
 import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('satcheljs', () => {
@@ -16,7 +16,7 @@ describe('satcheljs', () => {
         });
 
         // Create a mutator that subscribes to it
-        const testMutator = mutator<any, void>(testAction, function(actionMessage: any) {
+        const testMutator = mutator<any, void>(testAction, function (actionMessage: any) {
             actualValue = actionMessage.value;
         });
 
@@ -36,8 +36,7 @@ describe('satcheljs', () => {
         let arg1Value;
         let arg2Value;
 
-        let testMutatorAction = mutatorAction(
-            satchel,
+        let testMutatorAction = satchel.mutatorAction(
             'testMutatorAction',
             function testMutatorAction(arg1: string, arg2: number) {
                 arg1Value = arg1;

@@ -1,5 +1,5 @@
 import 'jasmine';
-import { DispatchFunction, Middleware } from '../src';
+import { DispatchFunction } from '../src';
 import { createDispatchWithMiddleware } from '../src/createSatchel';
 import { createTestSatchel } from './utils/createTestSatchel';
 
@@ -50,7 +50,7 @@ describe('applyMiddleware', () => {
             },
         ];
 
-        const finalDispatch = (_actionMessage: any) => {
+        const finalDispatch = () => {
             sequence.push('finalDispatch');
         };
 
