@@ -1,50 +1,61 @@
 import 'jasmine';
 import mutator from '../src/mutator';
-import * as dispatcher from '../src/dispatcher';
-import * as globalContext from '../src/globalContext';
 import * as mobx from 'mobx';
+import { createTestSatchel } from './utils/createTestSatchel';
+import { getPrivateSubscriberRegistered } from '../src/privatePropertyUtils';
 
 describe('mutator', () => {
-    let mockGlobalContext: any;
+    it('returns a object describing the mutator', () => {
+        // Arrange
+        const callback = () => {};
+        const actionId = 'testAction';
+        const actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
 
-    beforeEach(() => {
-        mockGlobalContext = { currentMutator: null };
-        spyOn(globalContext, 'getGlobalContext').and.returnValue(mockGlobalContext);
-        spyOn(dispatcher, 'subscribe');
+        // Act
+        const testOrchestator = mutator(actionCreator, callback);
+
+        // Assert
+        expect(testOrchestator.type).toBe('mutator');
+        expect(testOrchestator.actionCreator).toBe(actionCreator);
+        expect(testOrchestator.target).toBe(callback);
+        expect(getPrivateSubscriberRegistered(testOrchestator)).toBe(false);
     });
-
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionCreator: any = {};
 
         // Act / Assert
         expect(() => {
-            mutator(actionCreator, () => {});
+            satchel.register(mutator(actionCreator, () => {}));
         }).toThrow();
     });
 
     it('subscribes the target function to the action', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionId = 'testAction';
         let actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
 
         // Act
-        mutator(actionCreator, () => {});
+        const testMutator = mutator(actionCreator, () => {});
+        satchel.register(testMutator);
 
         // Assert
-        expect(dispatcher.subscribe).toHaveBeenCalled();
-        expect((<jasmine.Spy>dispatcher.subscribe).calls.argsFor(0)[0]).toBe(actionId);
+        expect(satchel.__subscriptions[actionId]).toBeDefined();
     });
 
     it('wraps the subscribed callback in a MobX action', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let callback = () => {};
         let wrappedCallback = () => {};
         let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
         spyOn(mobx, 'action').and.returnValue(wrappedCallback);
 
         // Act
-        mutator(actionCreator, callback);
+        const testMutator = mutator(actionCreator, callback);
+        satchel.register(testMutator);
 
         // Assert
         expect(mobx.action).toHaveBeenCalled();
@@ -52,11 +63,12 @@ describe('mutator', () => {
 
     it('returns the target function', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
         let callback = () => {};
 
         // Act
-        let returnValue = mutator(actionCreator, callback);
+        let returnValue = satchel.register(mutator(actionCreator, callback));
 
         // Assert
         expect(returnValue).toBe(callback);
@@ -64,25 +76,26 @@ describe('mutator', () => {
 
     it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionCreator: any = {
             __SATCHELJS_ACTION_ID: 'testAction',
             __SATCHELJS_ACTION_TYPE: 'testActionType',
         };
         let callback = () => {
-            expect(mockGlobalContext.currentMutator).toBe('testActionType');
+            expect(satchel.__currentMutator).toBe('testActionType');
         };
-        mutator(actionCreator, callback);
+        const testMutator = mutator(actionCreator, callback);
 
         // Act
-        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
-        subscribedCallback();
+        satchel.register(testMutator);
 
         // Assert
-        expect(mockGlobalContext.currentMutator).toBe(null);
+        expect(satchel.__currentMutator).toBe(null);
     });
 
     it('sets the currentMutator back to null if error is thrown', () => {
         // Arrange
+        const satchel = createTestSatchel();
         let actionCreator: any = {
             __SATCHELJS_ACTION_ID: 'testAction',
             __SATCHELJS_ACTION_TYPE: 'testActionType',
@@ -90,17 +103,16 @@ describe('mutator', () => {
         let callback: any = () => {
             throw new Error('Error in Mutator');
         };
-        mutator(actionCreator, callback);
+        const testMutator = mutator(actionCreator, callback);
 
         // Act
-        let subscribedCallback = (dispatcher.subscribe as jasmine.Spy).calls.argsFor(0)[1];
         try {
-            subscribedCallback();
+            satchel.register(testMutator);
         } catch {
             // no op
         }
 
         // Assert
-        expect(mockGlobalContext.currentMutator).toBe(null);
+        expect(satchel.__currentMutator).toBe(null);
     });
 });

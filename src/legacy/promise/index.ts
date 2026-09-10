@@ -1,1 +1,0 @@
-export { promiseMiddleware } from './promiseMiddleware';

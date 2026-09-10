@@ -1,18 +1,16 @@
 import 'jasmine';
-import { createSimpleSubscriber, mutatorAction } from '../src/simpleSubscribers';
-import { __resetGlobalContext } from '../src/globalContext';
-import * as actionCreator from '../src/actionCreator';
+import { createTestSatchel } from './utils/createTestSatchel';
+import * as mutator from '../src/mutator';
 
-describe('simpleSubscribers', () => {
+describe('mutatorAction', () => {
     let actionCreatorSpy: jasmine.Spy;
     let decoratorSpy: jasmine.Spy;
-    let simpleSubscriber: Function;
+    let satchel: ReturnType<typeof createTestSatchel>;
 
     beforeEach(() => {
-        __resetGlobalContext();
-        actionCreatorSpy = spyOn(actionCreator, 'action').and.callThrough();
-        decoratorSpy = jasmine.createSpy('decoratorSpy');
-        simpleSubscriber = createSimpleSubscriber(decoratorSpy);
+        satchel = createTestSatchel();
+        actionCreatorSpy = spyOn(satchel, 'action').and.callThrough();
+        decoratorSpy = spyOn(mutator, 'default').and.callThrough();
     });
 
     it('creates and returns a bound action creator', () => {
@@ -20,7 +18,7 @@ describe('simpleSubscribers', () => {
         let actionId = 'testSubscriber';
 
         // Act
-        let returnValue = simpleSubscriber(actionId, () => {});
+        let returnValue = satchel.mutatorAction(actionId, () => {});
 
         // Assert
         expect(actionCreatorSpy).toHaveBeenCalled();
@@ -30,7 +28,7 @@ describe('simpleSubscribers', () => {
 
     it('includes arguments in the action message', () => {
         // Act
-        let returnValue: Function = simpleSubscriber('testSubscriber', () => {});
+        let returnValue: Function = satchel.mutatorAction('testSubscriber', () => {});
         let createdAction = returnValue(1, 2, 3);
 
         // Assert
@@ -39,7 +37,7 @@ describe('simpleSubscribers', () => {
 
     it('subscribes a callback to the action', () => {
         // Act
-        simpleSubscriber('testSubscriber', () => {});
+        satchel.mutatorAction('testSubscriber', () => {});
 
         // Assert
         expect(decoratorSpy).toHaveBeenCalled();
@@ -52,7 +50,7 @@ describe('simpleSubscribers', () => {
         let actionMessage = { args: [1, 2, 3] };
 
         // Act
-        simpleSubscriber('testSubscriber', callback);
+        satchel.mutatorAction('testSubscriber', callback);
         let decoratorCallback = decoratorSpy.calls.argsFor(0)[1];
         decoratorCallback(actionMessage);
 

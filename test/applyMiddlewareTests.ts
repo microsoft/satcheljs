@@ -1,17 +1,16 @@
 import 'jasmine';
-import applyMiddleware from '../src/applyMiddleware';
-import * as dispatcher from '../src/dispatcher';
-import { getGlobalContext, __resetGlobalContext } from '../src/globalContext';
+import { DispatchFunction } from '../src';
+import { createDispatchWithMiddleware } from '../src/createSatchel';
+import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('applyMiddleware', () => {
     it('updates dispatchWithMiddleware to point to the middleware pipeline', () => {
         // Arrange
-        __resetGlobalContext();
         let testMiddleware = jasmine.createSpy('testMiddleware');
+        const satchel = createTestSatchel({ middleware: [testMiddleware] });
 
         // Act
-        applyMiddleware(testMiddleware);
-        getGlobalContext().dispatchWithMiddleware({});
+        satchel.__dispatchWithMiddleware({});
 
         // Assert
         expect(testMiddleware).toHaveBeenCalled();
@@ -19,47 +18,46 @@ describe('applyMiddleware', () => {
 
     it('the action message and next delegate get passed to middleware', () => {
         // Arrange
-        __resetGlobalContext();
-
         let dispatchedActionMessage = {};
         let actualNext;
         let actualActionMessage;
 
-        applyMiddleware((next: any, actionMessage: any) => {
+        const testMiddleware = (next: any, actionMessage: any) => {
             actualNext = next;
             actualActionMessage = actionMessage;
-        });
+        };
+        const satchel = createTestSatchel({ middleware: [testMiddleware] });
 
         // Act
-        getGlobalContext().dispatchWithMiddleware(dispatchedActionMessage);
+        satchel.__dispatchWithMiddleware(dispatchedActionMessage);
 
         // Assert
         expect(actualActionMessage).toBe(dispatchedActionMessage);
-        expect(actualNext).toBe(dispatcher.finalDispatch);
+        expect(actualNext).toBe(satchel.__finalDispatch);
     });
 
-    it('middleware and finalDispatch get called in order', () => {
+    it('createDispatchWithMiddleware creates a function that calls middleware and finalDispatch in order', () => {
         // Arrange
-        __resetGlobalContext();
         let sequence: string[] = [];
-
-        spyOn(dispatcher, 'finalDispatch').and.callFake(() => {
-            sequence.push('finalDispatch');
-        });
-
-        applyMiddleware(
-            (next: any, actionMessage: any) => {
+        const middleware = [
+            (next: DispatchFunction, actionMessage: any) => {
                 sequence.push('middleware1');
                 next(actionMessage);
             },
-            (next: any, actionMessage: any) => {
+            (next: DispatchFunction, actionMessage: any) => {
                 sequence.push('middleware2');
                 next(actionMessage);
-            }
-        );
+            },
+        ];
+
+        const finalDispatch = () => {
+            sequence.push('finalDispatch');
+        };
+
+        const testDispatchWithMiddleware = createDispatchWithMiddleware(middleware, finalDispatch);
 
         // Act
-        getGlobalContext().dispatchWithMiddleware({});
+        testDispatchWithMiddleware({});
 
         // Assert
         expect(sequence).toEqual(['middleware1', 'middleware2', 'finalDispatch']);
