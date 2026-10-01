@@ -1,6 +1,10 @@
 import 'jasmine';
 import { createTestSatchel } from './utils/createTestSatchel';
-import { getPrivateActionType, getPrivateActionId } from '../src/privatePropertyUtils';
+import {
+    getPrivateActionType,
+    getPrivateActionId,
+    getPrivateSatchelOwner,
+} from '../src/privatePropertyUtils';
 
 describe('actionCreator', () => {
     it('returns the created action message', () => {
@@ -91,6 +95,20 @@ describe('actionCreator', () => {
 
         // Assert
         expect(getPrivateActionType(testAction)).toBe('testAction');
+    });
+
+    it('stamps the action creator and action message with a non-enumerable satchel owner', () => {
+        // Arrange
+        const satchel = createTestSatchel();
+        const testAction = satchel.actionCreator('testAction', () => ({ value: 1 }));
+
+        // Act
+        const actionMessage = testAction();
+
+        // Assert
+        expect(getPrivateSatchelOwner(testAction)).toBe(satchel.__ownerToken);
+        expect(getPrivateSatchelOwner(actionMessage)).toBe(satchel.__ownerToken);
+        expect(Object.keys(actionMessage)).not.toContain('__SATCHELJS_OWNER');
     });
 });
 

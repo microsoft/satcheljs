@@ -2,10 +2,10 @@ import { observable, ObservableMap, transaction, action as mobxAction } from 'mo
 import {
     getPrivateActionId,
     getPrivateActionType,
-    setActionType,
+    getPrivateSatchelOwner,
     setPrivateActionId,
-    getPrivateSubscriberRegistered,
-    setPrivateSubscriberRegistered,
+    setPrivateActionType,
+    setPrivateSatchelOwner,
 } from './privatePropertyUtils';
 import type ActionMessage from './interfaces/ActionMessage';
 import type Middleware from './interfaces/Middleware';
@@ -16,9 +16,11 @@ import type Mutator from './interfaces/Mutator';
 import type Subscriber from './interfaces/Subscriber';
 import type SatchelOptions from './interfaces/SatchelOptions';
 import type SatchelInternal from './interfaces/SatchelInternal';
+import type SatchelState from './interfaces/SatchelState';
 import type Satchel from './interfaces/Satchel';
 import type MutatorActionTarget from './interfaces/MutatorActionTarget';
 import mutator from './mutator';
+import useStrict from './useStrict';
 
 type ActionMessageWithArgs<T extends any[]> = ActionMessage & { args: T };
 
@@ -35,18 +37,23 @@ export function createDispatchWithMiddleware(
 export function createSatchelInternal(options: SatchelOptions = {}): SatchelInternal {
     const { middleware = [] } = options;
 
+    // Default to MobX strict mode so that only mutators can modify the store
+    useStrict(true);
+
     const satchel: SatchelInternal = {
         // State
         __subscriptions: {},
         __nextActionId: 0,
         __rootStore: observable.map({}),
         __currentMutator: null,
+        __ownerToken: {},
+        __registeredSubscribers: new WeakMap(),
         // Public functions
         register: <TAction extends ActionMessage, TReturn = void>(
             subscriber: Subscriber<TAction, TReturn>
         ): SubscriberFunction<TAction, TReturn> => {
-            if (getPrivateSubscriberRegistered(subscriber)) {
-                // If the subscriber is already registered, no-op.
+            if (satchel.__registeredSubscribers.has(subscriber)) {
+                // If the subscriber is already registered with this satchel, no-op.
                 return subscriber.target;
             }
 
@@ -54,6 +61,8 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             if (!actionId) {
                 throw new Error(`A ${subscriber.type} can only subscribe to action creators.`);
             }
+
+            satchel.__assertOwnedBySatchel(subscriber.actionCreator);
 
             const wrappedTarget =
                 subscriber.type == 'mutator'
@@ -65,8 +74,7 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             }
 
             satchel.__subscriptions[actionId].push(wrappedTarget);
-            // Mark the subscriber as registered
-            setPrivateSubscriberRegistered(subscriber, true);
+            satchel.__registeredSubscribers.set(subscriber, true);
 
             return subscriber.target;
         },
@@ -76,6 +84,8 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
                     `Mutator (${satchel.__currentMutator}) may not dispatch action (${actionMessage.type})`
                 );
             }
+
+            satchel.__assertOwnedBySatchel(actionMessage);
 
             transaction(satchel.__dispatchWithMiddleware.bind(null, actionMessage));
         },
@@ -123,6 +133,11 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             return satchel.__rootStore;
         },
         hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => {
+            const owner = getPrivateSatchelOwner(actionCreator);
+            if (owner && owner !== satchel.__ownerToken) {
+                return false;
+            }
+
             return !!satchel.__subscriptions[getPrivateActionId(actionCreator)];
         },
         createStore: <T>(key: string, initialState: T): (() => T) => {
@@ -130,12 +145,27 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
             return () => <T>satchel.getRootStore().get(key);
         },
         getSubscriptions: () => {
-            return satchel.__subscriptions;
+            // Return a copy so consumers can't mutate the internal subscriptions
+            const subscriptions: SatchelState['__subscriptions'] = {};
+            for (const actionId of Object.keys(satchel.__subscriptions)) {
+                subscriptions[actionId] = satchel.__subscriptions[actionId].slice();
+            }
+            return subscriptions;
         },
         getCurrentMutator: () => {
             return satchel.__currentMutator;
         },
         // Private functions
+        __assertOwnedBySatchel: (target: ActionCreator<ActionMessage> | ActionMessage) => {
+            // Objects without an owner (e.g. plain action messages or test mocks) are allowed
+            const owner = getPrivateSatchelOwner(target);
+            if (owner && owner !== satchel.__ownerToken) {
+                const actionType = (target as ActionMessage).type || getPrivateActionType(target);
+                throw new Error(
+                    `Action (${actionType}) was created by a different satchel instance.`
+                );
+            }
+        },
         __createActionId: (): string => {
             return (satchel.__nextActionId++).toString();
         },
@@ -204,6 +234,7 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
                 // Stamp the action message with the type and the private ID
                 actionMessage.type = actionType;
                 setPrivateActionId(actionMessage, actionId);
+                setPrivateSatchelOwner(actionMessage, satchel.__ownerToken);
 
                 // Dispatch if necessary
                 if (shouldDispatch) {
@@ -215,7 +246,8 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
 
             // Stamp the action creator function with the private ID
             setPrivateActionId(decoratedTarget, actionId);
-            setActionType(decoratedTarget, actionType);
+            setPrivateActionType(decoratedTarget, actionType);
+            setPrivateSatchelOwner(decoratedTarget, satchel.__ownerToken);
             return decoratedTarget;
         },
         // This gets initialized below since we need __finalDispatch to be defined
@@ -230,5 +262,25 @@ export function createSatchelInternal(options: SatchelOptions = {}): SatchelInte
     return satchel;
 }
 
-// Exclude the private functions from the public API
-export const createSatchel: (options?: SatchelOptions) => Satchel = createSatchelInternal;
+/**
+ * Creates a new, isolated satchel instance.
+ * @param options {SatchelOptions} Options such as the middleware to apply to dispatched actions.
+ * @returns {Satchel} The satchel instance.
+ */
+export function createSatchel(options?: SatchelOptions): Satchel {
+    const satchel = createSatchelInternal(options);
+
+    // Only expose the public API so the internal state can't be accessed or modified
+    return {
+        register: satchel.register,
+        dispatch: satchel.dispatch,
+        actionCreator: satchel.actionCreator,
+        action: satchel.action,
+        mutatorAction: satchel.mutatorAction,
+        createStore: satchel.createStore,
+        getRootStore: satchel.getRootStore,
+        hasSubscribers: satchel.hasSubscribers,
+        getCurrentMutator: satchel.getCurrentMutator,
+        getSubscriptions: satchel.getSubscriptions,
+    };
+}

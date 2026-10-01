@@ -1,6 +1,5 @@
 import 'jasmine';
 import orchestrator from '../src/orchestrator';
-import { getPrivateSubscriberRegistered } from '../src/privatePropertyUtils';
 import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('orchestrator', () => {
@@ -14,11 +13,13 @@ describe('orchestrator', () => {
         const testOrchestator = orchestrator(actionCreator, callback);
 
         // Assert
-        expect(testOrchestator.type).toBe('orchestrator');
-        expect(testOrchestator.actionCreator).toBe(actionCreator);
-        expect(testOrchestator.target).toBe(callback);
-        expect(getPrivateSubscriberRegistered(testOrchestator)).toBe(false);
+        expect(testOrchestator).toEqual({
+            type: 'orchestrator',
+            actionCreator,
+            target: callback,
+        });
     });
+
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
         const satchel = createTestSatchel();
@@ -44,7 +45,7 @@ describe('orchestrator', () => {
         // Assert
         expect(satchel.__subscriptions[actionId]).toBeDefined();
         expect(satchel.__subscriptions[actionId][0]).toBe(callback);
-        expect(getPrivateSubscriberRegistered(testOrchestator)).toBe(true);
+        expect(satchel.__registeredSubscribers.has(testOrchestator)).toBe(true);
     });
 
     it('returns the target function', () => {

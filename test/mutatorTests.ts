@@ -2,7 +2,6 @@ import 'jasmine';
 import mutator from '../src/mutator';
 import * as mobx from 'mobx';
 import { createTestSatchel } from './utils/createTestSatchel';
-import { getPrivateSubscriberRegistered } from '../src/privatePropertyUtils';
 
 describe('mutator', () => {
     it('returns a object describing the mutator', () => {
@@ -12,14 +11,16 @@ describe('mutator', () => {
         const actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
 
         // Act
-        const testOrchestator = mutator(actionCreator, callback);
+        const testMutator = mutator(actionCreator, callback);
 
         // Assert
-        expect(testOrchestator.type).toBe('mutator');
-        expect(testOrchestator.actionCreator).toBe(actionCreator);
-        expect(testOrchestator.target).toBe(callback);
-        expect(getPrivateSubscriberRegistered(testOrchestator)).toBe(false);
+        expect(testMutator).toEqual({
+            type: 'mutator',
+            actionCreator,
+            target: callback,
+        });
     });
+
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
         const satchel = createTestSatchel();
@@ -77,42 +78,32 @@ describe('mutator', () => {
     it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
         const satchel = createTestSatchel();
-        let actionCreator: any = {
-            __SATCHELJS_ACTION_ID: 'testAction',
-            __SATCHELJS_ACTION_TYPE: 'testActionType',
-        };
-        let callback = () => {
-            expect(satchel.__currentMutator).toBe('testActionType');
-        };
-        const testMutator = mutator(actionCreator, callback);
-
-        // Act
+        const testAction = satchel.action('testActionType');
+        let currentMutatorDuringCallback: string | null = null;
+        const testMutator = mutator(testAction, () => {
+            currentMutatorDuringCallback = satchel.getCurrentMutator();
+        });
         satchel.register(testMutator);
 
+        // Act
+        testAction();
+
         // Assert
-        expect(satchel.__currentMutator).toBe(null);
+        expect(currentMutatorDuringCallback).toBe('testActionType');
+        expect(satchel.getCurrentMutator()).toBe(null);
     });
 
     it('sets the currentMutator back to null if error is thrown', () => {
         // Arrange
         const satchel = createTestSatchel();
-        let actionCreator: any = {
-            __SATCHELJS_ACTION_ID: 'testAction',
-            __SATCHELJS_ACTION_TYPE: 'testActionType',
-        };
-        let callback: any = () => {
+        const testAction = satchel.action('testActionType');
+        const testMutator = mutator(testAction, (): void => {
             throw new Error('Error in Mutator');
-        };
-        const testMutator = mutator(actionCreator, callback);
+        });
+        satchel.register(testMutator);
 
-        // Act
-        try {
-            satchel.register(testMutator);
-        } catch {
-            // no op
-        }
-
-        // Assert
-        expect(satchel.__currentMutator).toBe(null);
+        // Act / Assert
+        expect(() => testAction()).toThrowError('Error in Mutator');
+        expect(satchel.getCurrentMutator()).toBe(null);
     });
 });

@@ -5,6 +5,7 @@ import type DispatchFunction from './DispatchFunction';
 import type Mutator from './Mutator';
 
 type SatchelInternalFunctions = {
+    __assertOwnedBySatchel: (target: ActionCreator<ActionMessage> | ActionMessage) => void;
     __createActionId: () => string;
     __dispatchWithMiddleware: DispatchFunction;
     __finalDispatch: DispatchFunction;

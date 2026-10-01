@@ -44,8 +44,18 @@ The following examples assume you're developing in Typescript.
 ```typescript
 import { createSatchel } from 'satcheljs';
 
-export const mySatchel = createSatchel(options);
+export const mySatchel = createSatchel({
+    // Optional middleware that runs for every dispatched action
+    middleware: [],
+});
 ```
+
+Each satchel instance is completely isolated: it has its own stores, subscribers, and middleware.
+Action creators can only be used with the satchel that created them.
+In practice an application should only create one satchel.
+
+Creating a satchel enables MobX strict mode, so that only mutators can modify the store.
+Call `useStrict(false)` after creating the satchel to opt out.
 
 ### Create a store with some initial state
 
@@ -103,10 +113,11 @@ import { mySatchel } from './mySatchel';
 const todoMutator = mutator(addTodo, (actionMessage) => {
     getStore().todos.push({
         id: Math.random(),
-        text: actionMessage.text
+        text: actionMessage.text,
     });
-};
+});
 
+// Mutators don't do anything until they're registered with a satchel
 export function initializeMutators() {
     mySatchel.register(todoMutator);
 }
@@ -121,12 +132,12 @@ Side effects might include making a server call or even dispatching further acti
 The following example shows how an orchestrator can persist a value to a server before updating the store.
 
 ```typescript
-import { action, orchestrator } from 'satcheljs';
+import { orchestrator } from 'satcheljs';
 import { mySatchel } from './mySatchel';
 
 let requestAddTodo = mySatchel.action('REQUEST_ADD_TODO', (text: string) => ({ text: text }));
 
-const requestAddTodoOrchestrator = orchestrator(requestAddTodo, async actionMessage => {
+const requestAddTodoOrchestrator = orchestrator(requestAddTodo, async (actionMessage) => {
     await addTodoOnServer(actionMessage.text);
     addTodo(actionMessage.text);
 });
@@ -146,16 +157,43 @@ The `addTodo` mutator above could be implemented as follows:
 ```typescript
 import { mySatchel } from './mySatchel';
 
-let addTodo = mutatorAction(mySatchel, 'ADD_TODO', function addTodo(text: string) {
+let addTodo = mySatchel.mutatorAction('ADD_TODO', function addTodo(text: string) {
     getStore().todos.push({
         id: Math.random(),
-        text: actionMessage.text,
+        text: text,
     });
 });
 ```
 
+Unlike `mutator`, `mutatorAction` registers the mutator with the satchel immediately.
+
 This is a succinct and easy way to write mutators, but it comes with a restriction:
 the action creator is not exposed, so no _other_ mutators or orchestrators can subscribe to it.
 If an action needs multiple handlers then it must use the full pattern with action creators and handlers implemented separately.
+
+### Middleware
+
+Middleware is passed to `createSatchel` and is called for every dispatched action, in order.
+Each middleware receives the next dispatch function in the pipeline and the action message.
+
+```typescript
+import { createSatchel, Middleware } from 'satcheljs';
+
+const logger: Middleware = (next, actionMessage) => {
+    console.log('Dispatching', actionMessage.type);
+    return next(actionMessage);
+};
+
+export const mySatchel = createSatchel({ middleware: [logger] });
+```
+
+Use `mySatchel.hasSubscribers(actionCreator)` to check whether any mutators or orchestrators are registered for an action.
+
+## Migrating from v4
+
+-   Create a satchel with `createSatchel` instead of relying on global state. `applyMiddleware` is replaced by the `middleware` option.
+-   `action`, `actionCreator`, `dispatch`, `mutatorAction`, `createStore`, and `getRootStore` are now methods on the satchel instance.
+-   `mutator` and `orchestrator` no longer register themselves as a side effect; register them with `satchel.register(...)`.
+-   The legacy APIs (`satcheljs/lib/legacy`, including `createUndo`, `select`, `stitch`, `trace`, the promise middleware and `reactive`) have been removed.
 
 ## License - MIT

@@ -10,7 +10,10 @@ import type MutatorActionTarget from './MutatorActionTarget';
 
 type Satchel = {
     /**
-     * Resolves the target of the subscriber and registers it with the dispatcher.
+     * Registers a subscriber (mutator or orchestrator) with this satchel.
+     * Registering the same subscriber with the same satchel more than once is a no-op.
+     * Throws if the subscriber's action creator was created by a different satchel instance.
+     * @returns The subscriber's target function.
      */
     register<TAction extends ActionMessage, TReturn = void>(
         subscriber: Mutator<TAction, TReturn>
@@ -20,7 +23,8 @@ type Satchel = {
     ): OrchestratorFunction<TAction>;
 
     /**
-     * Dispatches the action message
+     * Dispatches the action message.
+     * Throws if called from within a mutator or if the action message was created by a different satchel instance.
      * @param actionMessage {ActionMessage} The action message to dispatch
      * @returns {void}
      */
@@ -61,7 +65,7 @@ type Satchel = {
      *
      * @param actionType {string}:A string which identifies the type of the action.
      * @param target {(...args: TArgs) => void} A function to register as a mutator.
-     * @returns {(...args: TArgs) => void} The mutator function.
+     * @returns {(...args: TArgs) => void} A function that creates and dispatches the action with the given arguments.
      */
     mutatorAction: <TFunction extends ActionCreator<any>>(
         actionType: string,
@@ -83,17 +87,18 @@ type Satchel = {
      */
     getRootStore: () => ObservableMap<any>;
     /**
-     * Returns whether the action creator has any subscribers.
+     * Returns whether the action creator has any subscribers registered with this satchel.
      * @returns {boolean} True if the action creator has subscribers, false otherwise.
      */
     hasSubscribers: (actionCreator: ActionCreator<ActionMessage>) => boolean;
 
     /**
-     * Utility function to get the current mutator being executed.
+     * Utility function to get the action type of the mutator currently being executed, or null if no mutator is executing.
      */
     getCurrentMutator: () => SatchelState['__currentMutator'];
     /**
-     * Utility function to get the current subscriptions.
+     * Utility function to get a snapshot of the current subscriptions, keyed by action ID.
+     * The returned object is a copy; modifying it does not affect the satchel.
      */
     getSubscriptions: () => SatchelState['__subscriptions'];
 };

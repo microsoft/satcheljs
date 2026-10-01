@@ -3,37 +3,6 @@ import { createTestSatchel } from './utils/createTestSatchel';
 import * as privateUtils from '../src/privatePropertyUtils';
 
 describe('dispatch', () => {
-    /*
-    it('subscribe registers a callback for a given action', () => {
-        // Arrange
-        const satchel = createTestSatchel();
-        const callback = () => ({});
-        const action = satchel.actionCreator('TEST_ACTION', callback);
-
-        // Act
-        satchel.register(action);
-
-        // Assert
-        expect(mockGlobalContext.subscriptions[actionId]).toBeDefined();
-        expect(mockGlobalContext.subscriptions[actionId].length).toBe(1);
-        expect(mockGlobalContext.subscriptions[actionId][0]).toBe(callback);
-    });
-
-    it('subscribe can register multiple callbacks', () => {
-        // Arrange
-        let actionId = 'testActionId';
-        let callback0 = () => {};
-        let callback1 = () => {};
-
-        // Act
-        dispatcher.subscribe(actionId, callback0);
-        dispatcher.subscribe(actionId, callback1);
-
-        // Assert
-        expect(mockGlobalContext.subscriptions[actionId]).toEqual([callback0, callback1]);
-    });
-    */
-
     it('dispatch calls dispatchWithMiddleware', () => {
         // Arrange
         let actionMessage = {};
@@ -56,6 +25,20 @@ describe('dispatch', () => {
         expect(() => {
             satchel.dispatch({});
         }).toThrow();
+    });
+
+    it('dispatch throws if the action message was created by a different satchel', () => {
+        // Arrange
+        const satchel1 = createTestSatchel();
+        const satchel2 = createTestSatchel();
+        const actionMessage = satchel1.actionCreator('testAction')();
+        spyOn(satchel2, '__dispatchWithMiddleware');
+
+        // Act / Assert
+        expect(() => satchel2.dispatch(actionMessage)).toThrowError(
+            'Action (testAction) was created by a different satchel instance.'
+        );
+        expect(satchel2.__dispatchWithMiddleware).not.toHaveBeenCalled();
     });
 
     it('finalDispatch calls all subscribers for a given action', () => {
