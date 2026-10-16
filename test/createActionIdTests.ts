@@ -1,14 +1,13 @@
 import 'jasmine';
-import { createTestSatchel } from './utils/createTestSatchel';
+import createActionId from '../src/createActionId';
 
 describe('createActionId', () => {
     it('returns the next incremental ID for each call', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const firstId = Number(createActionId());
 
         // Act / Assert
-        expect(satchel.__createActionId()).toBe('0');
-        expect(satchel.__createActionId()).toBe('1');
-        expect(satchel.__createActionId()).toBe('2');
+        expect(createActionId()).toBe(String(firstId + 1));
+        expect(createActionId()).toBe(String(firstId + 2));
     });
 });

@@ -1,16 +1,14 @@
 import 'jasmine';
-import { createTestSatchel } from './utils/createTestSatchel';
-import {
-    getPrivateActionType,
-    getPrivateActionId,
-    getPrivateSatchelOwner,
-} from '../src/privatePropertyUtils';
+import { createActionCreatorFactory, createActionFactory } from '../src/actionCreator';
+import * as createActionId from '../src/createActionId';
+import createSatchelState from '../src/createSatchelState';
+import { getPrivateActionType, getPrivateActionId } from '../src/privatePropertyUtils';
 
 describe('actionCreator', () => {
     it('returns the created action message', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction', (arg0, arg1) => {
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction', (arg0, arg1) => {
             return {
                 arg0,
                 arg1,
@@ -27,8 +25,8 @@ describe('actionCreator', () => {
 
     it('returns a default action message if no factory is provided', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction');
 
         // Act
         let actionMessage = testAction();
@@ -39,10 +37,10 @@ describe('actionCreator', () => {
 
     it('stamps the action message with the type and private action ID', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        spyOn(satchel, '__createActionId').and.returnValue('id0');
+        spyOn(createActionId, 'default').and.returnValue('id0');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         let actionType = 'testAction';
-        const testAction = satchel.actionCreator(actionType);
+        const testAction = actionCreator(actionType);
 
         // Act
         let actionMessage = testAction();
@@ -52,23 +50,26 @@ describe('actionCreator', () => {
         expect(getPrivateActionId(actionMessage)).toBe('id0');
     });
 
-    it('does not dispatch the action message', () => {
+    it('does not add private properties to the action message', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction');
-        spyOn(satchel, 'dispatch');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction', () => ({ value: 1 }));
 
         // Act
-        testAction();
+        const actionMessage = testAction();
 
         // Assert
-        expect(satchel.dispatch).not.toHaveBeenCalled();
+        expect(Object.getOwnPropertyNames(actionMessage).sort()).toEqual(['type', 'value']);
+        expect(JSON.parse(JSON.stringify(actionMessage))).toEqual({
+            type: 'testAction',
+            value: 1,
+        });
     });
 
     it('throws if the action message already has a type', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction', () => {
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction', () => {
             return { type: 'testAction' };
         });
 
@@ -78,11 +79,11 @@ describe('actionCreator', () => {
 
     it('gets stamped with the private action ID', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        spyOn(satchel, '__createActionId').and.returnValue('id1');
+        spyOn(createActionId, 'default').and.returnValue('id1');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
 
         // Act
-        const testAction = satchel.actionCreator('testAction');
+        const testAction = actionCreator('testAction');
 
         // Assert
         expect(getPrivateActionId(testAction)).toBe('id1');
@@ -90,25 +91,36 @@ describe('actionCreator', () => {
 
     it('gets stamped with the action type', () => {
         // Act
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction');
 
         // Assert
         expect(getPrivateActionType(testAction)).toBe('testAction');
     });
 
-    it('stamps the action creator and action message with a non-enumerable satchel owner', () => {
+    it('reserves an empty subscription entry for the action', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction', () => ({ value: 1 }));
+        const state = createSatchelState();
+        const actionCreator = createActionCreatorFactory(state);
 
         // Act
-        const actionMessage = testAction();
+        const testAction = actionCreator('testAction');
 
         // Assert
-        expect(getPrivateSatchelOwner(testAction)).toBe(satchel.__ownerToken);
-        expect(getPrivateSatchelOwner(actionMessage)).toBe(satchel.__ownerToken);
-        expect(Object.keys(actionMessage)).not.toContain('__SATCHELJS_OWNER');
+        expect(state.subscriptions.get(getPrivateActionId(testAction))).toEqual([]);
+    });
+
+    it('creates unique action IDs across satchel instances', () => {
+        // Arrange
+        const actionCreator1 = createActionCreatorFactory(createSatchelState());
+        const actionCreator2 = createActionCreatorFactory(createSatchelState());
+
+        // Act
+        const testAction1 = actionCreator1('testAction');
+        const testAction2 = actionCreator2('testAction');
+
+        // Assert
+        expect(getPrivateActionId(testAction1)).not.toBe(getPrivateActionId(testAction2));
     });
 });
 
@@ -116,14 +128,14 @@ describe('action', () => {
     it('dispatches the action message', () => {
         // Arrange
         let actionMessage = {};
-        const satchel = createTestSatchel();
-        const testAction = satchel.action('testAction', () => actionMessage);
-        spyOn(satchel, 'dispatch');
+        const dispatch = jasmine.createSpy('dispatch');
+        const action = createActionFactory(createSatchelState(), dispatch);
+        const testAction = action('testAction', () => actionMessage);
 
         // Act
         testAction();
 
         // Assert
-        expect(satchel.dispatch).toHaveBeenCalledWith(actionMessage);
+        expect(dispatch).toHaveBeenCalledWith(actionMessage);
     });
 });

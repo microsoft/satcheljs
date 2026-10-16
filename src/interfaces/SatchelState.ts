@@ -4,17 +4,15 @@ import type Subscriber from './Subscriber';
 import type SubscriberFunction from './SubscriberFunction';
 
 type SatchelState = {
-    __rootStore: ObservableMap<any>;
-    __nextActionId: number;
-    __subscriptions: { [key: string]: SubscriberFunction<ActionMessage, any>[] };
-    __currentMutator: string | null;
+    rootStore: ObservableMap<any>;
     /**
-     * Unique token identifying this satchel instance. Action creators and action messages are
-     * stamped with it so they can't be used with a different satchel instance.
+     * Subscribers keyed by action ID. An entry is reserved for every action created by this
+     * satchel (even before it has subscribers), so membership also indicates ownership.
      */
-    __ownerToken: object;
+    subscriptions: Map<string, SubscriberFunction<ActionMessage, any>[]>;
+    currentMutator: string | null;
     // WeakMap rather than WeakSet for ES5 (IE11) compatibility
-    __registeredSubscribers: WeakMap<Subscriber<any, any>, true>;
+    registeredSubscribers: WeakMap<Subscriber<any, any>, true>;
 };
 
 export default SatchelState;

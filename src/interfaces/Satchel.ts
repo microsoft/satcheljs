@@ -1,26 +1,18 @@
 import type { ObservableMap } from 'mobx';
 import type ActionCreator from './ActionCreator';
 import type ActionMessage from './ActionMessage';
-import type Mutator from './Mutator';
-import type MutatorFunction from './MutatorFunction';
-import type Orchestrator from './Orchestrator';
-import type OrchestratorFunction from './OrchestratorFunction';
-import type SatchelState from './SatchelState';
 import type MutatorActionTarget from './MutatorActionTarget';
+import type Subscriber from './Subscriber';
 
 type Satchel = {
     /**
      * Registers a subscriber (mutator or orchestrator) with this satchel.
      * Registering the same subscriber with the same satchel more than once is a no-op.
      * Throws if the subscriber's action creator was created by a different satchel instance.
-     * @returns The subscriber's target function.
      */
-    register<TAction extends ActionMessage, TReturn = void>(
-        subscriber: Mutator<TAction, TReturn>
-    ): MutatorFunction<TAction, TReturn>;
-    register<TAction extends ActionMessage>(
-        subscriber: Orchestrator<TAction>
-    ): OrchestratorFunction<TAction>;
+    register: <TAction extends ActionMessage, TReturn = void>(
+        subscriber: Subscriber<TAction, TReturn>
+    ) => void;
 
     /**
      * Dispatches the action message.
@@ -95,11 +87,6 @@ type Satchel = {
     /**
      * Utility function to get the action type of the mutator currently being executed, or null if no mutator is executing.
      */
-    getCurrentMutator: () => SatchelState['__currentMutator'];
-    /**
-     * Utility function to get a snapshot of the current subscriptions, keyed by action ID.
-     * The returned object is a copy; modifying it does not affect the satchel.
-     */
-    getSubscriptions: () => SatchelState['__subscriptions'];
+    getCurrentMutator: () => string | null;
 };
 export default Satchel;

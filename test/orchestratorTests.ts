@@ -1,13 +1,15 @@
 import 'jasmine';
+import { createActionCreatorFactory } from '../src/actionCreator';
+import createSatchelState from '../src/createSatchelState';
 import orchestrator from '../src/orchestrator';
-import { createTestSatchel } from './utils/createTestSatchel';
+import { getPrivateActionId } from '../src/privatePropertyUtils';
+import { createRegister } from '../src/register';
 
 describe('orchestrator', () => {
     it('returns a object describing the orchestrator', () => {
         // Arrange
         const callback = () => {};
-        const actionId = 'testAction';
-        const actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
+        const actionCreator: any = () => {};
 
         // Act
         const testOrchestator = orchestrator(actionCreator, callback);
@@ -22,43 +24,28 @@ describe('orchestrator', () => {
 
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const register = createRegister(createSatchelState());
         let actionCreator: any = {};
 
         // Act / Assert
         expect(() => {
-            satchel.register(orchestrator(actionCreator, () => {}));
+            register(orchestrator(actionCreator, () => {}));
         }).toThrow();
     });
 
     it('subscribes the target function to the action', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const state = createSatchelState();
+        const actionCreator = createActionCreatorFactory(state)('testAction');
         let callback = () => {};
-        let actionId = 'testAction';
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
 
         // Act
         const testOrchestator = orchestrator(actionCreator, callback);
-        satchel.register(testOrchestator);
+        createRegister(state)(testOrchestator);
 
         // Assert
-        expect(satchel.__subscriptions[actionId]).toBeDefined();
-        expect(satchel.__subscriptions[actionId][0]).toBe(callback);
-        expect(satchel.__registeredSubscribers.has(testOrchestator)).toBe(true);
-    });
-
-    it('returns the target function', () => {
-        // Arrange
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
-        let callback = () => {};
-        const satchel = createTestSatchel();
-        const testOrchestator = orchestrator(actionCreator, callback);
-
-        // Act
-        const returnValue = satchel.register(testOrchestator);
-
-        // Assert
-        expect(returnValue).toBe(callback);
+        const subscribers = state.subscriptions.get(getPrivateActionId(actionCreator));
+        expect(subscribers).toEqual([callback]);
+        expect(state.registeredSubscribers.has(testOrchestator)).toBe(true);
     });
 });

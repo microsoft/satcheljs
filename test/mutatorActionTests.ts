@@ -1,16 +1,21 @@
 import 'jasmine';
-import { createTestSatchel } from './utils/createTestSatchel';
+import { createActionFactory } from '../src/actionCreator';
+import createSatchelState from '../src/createSatchelState';
 import * as mutator from '../src/mutator';
+import { createMutatorActionFactory } from '../src/mutatorAction';
 
 describe('mutatorAction', () => {
-    let actionCreatorSpy: jasmine.Spy;
+    let actionSpy: jasmine.Spy;
+    let registerSpy: jasmine.Spy;
     let decoratorSpy: jasmine.Spy;
-    let satchel: ReturnType<typeof createTestSatchel>;
+    let mutatorAction: ReturnType<typeof createMutatorActionFactory>;
 
     beforeEach(() => {
-        satchel = createTestSatchel();
-        actionCreatorSpy = spyOn(satchel, 'action').and.callThrough();
+        const action = createActionFactory(createSatchelState(), () => {});
+        actionSpy = jasmine.createSpy('action').and.callFake(action);
+        registerSpy = jasmine.createSpy('register');
         decoratorSpy = spyOn(mutator, 'default').and.callThrough();
+        mutatorAction = createMutatorActionFactory(actionSpy as any, registerSpy);
     });
 
     it('creates and returns a bound action creator', () => {
@@ -18,17 +23,17 @@ describe('mutatorAction', () => {
         let actionId = 'testSubscriber';
 
         // Act
-        let returnValue = satchel.mutatorAction(actionId, () => {});
+        let returnValue = mutatorAction(actionId, () => {});
 
         // Assert
-        expect(actionCreatorSpy).toHaveBeenCalled();
-        expect(actionCreatorSpy.calls.argsFor(0)[0]).toBe(actionId);
-        expect(returnValue).toBe(actionCreatorSpy.calls.first().returnValue);
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.calls.argsFor(0)[0]).toBe(actionId);
+        expect(returnValue).toBe(actionSpy.calls.first().returnValue);
     });
 
     it('includes arguments in the action message', () => {
         // Act
-        let returnValue: Function = satchel.mutatorAction('testSubscriber', () => {});
+        let returnValue: Function = mutatorAction('testSubscriber', () => {});
         let createdAction = returnValue(1, 2, 3);
 
         // Assert
@@ -37,11 +42,12 @@ describe('mutatorAction', () => {
 
     it('subscribes a callback to the action', () => {
         // Act
-        satchel.mutatorAction('testSubscriber', () => {});
+        mutatorAction('testSubscriber', () => {});
 
         // Assert
         expect(decoratorSpy).toHaveBeenCalled();
-        expect(decoratorSpy.calls.argsFor(0)[0]).toBe(actionCreatorSpy.calls.first().returnValue);
+        expect(decoratorSpy.calls.argsFor(0)[0]).toBe(actionSpy.calls.first().returnValue);
+        expect(registerSpy).toHaveBeenCalledWith(decoratorSpy.calls.first().returnValue);
     });
 
     it('passes arguments to the callback', () => {
@@ -50,7 +56,7 @@ describe('mutatorAction', () => {
         let actionMessage = { args: [1, 2, 3] };
 
         // Act
-        satchel.mutatorAction('testSubscriber', callback);
+        mutatorAction('testSubscriber', callback);
         let decoratorCallback = decoratorSpy.calls.argsFor(0)[1];
         decoratorCallback(actionMessage);
 

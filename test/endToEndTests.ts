@@ -1,11 +1,11 @@
 import 'jasmine';
 import { autorun } from 'mobx';
 import { mutator, orchestrator } from '../src/index';
-import { createTestSatchel } from './utils/createTestSatchel';
+import { createSatchel } from '../src/createSatchel';
 
 describe('satcheljs', () => {
     it('mutators subscribe to actions', () => {
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         let actualValue;
 
         // Create an action creator
@@ -32,7 +32,7 @@ describe('satcheljs', () => {
 
     it('mutatorAction dispatches an action and subscribes to it', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         let arg1Value;
         let arg2Value;
 
@@ -54,7 +54,7 @@ describe('satcheljs', () => {
 
     it('mutators can modify the store', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         let store = satchel.createStore('testStore', { testProperty: 'testValue' })();
         autorun(() => store.testProperty); // strict mode only applies if store is observed
         let modifyStore = satchel.action('modifyStore');
@@ -73,7 +73,7 @@ describe('satcheljs', () => {
 
     it('orchestrators cannot modify the store', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         let store = satchel.createStore('testStore', { testProperty: 'testValue' })();
         autorun(() => store.testProperty); // strict mode only applies if store is observed
         let modifyStore = satchel.action('modifyStore');
@@ -91,7 +91,7 @@ describe('satcheljs', () => {
 
     it('all subscribers are handled in one transaction', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         let store = satchel.createStore('testStore', { testProperty: 0 })();
         let modifyStore = satchel.action('modifyStore');
 
@@ -129,7 +129,7 @@ describe('satcheljs', () => {
             },
         ];
 
-        const satchel = createTestSatchel({ middleware });
+        const satchel = createSatchel({ middleware });
 
         // Act
         satchel.dispatch(expectedValue);
@@ -146,7 +146,7 @@ describe('satcheljs', () => {
                 returnedPromise = next(actionMessage);
             },
         ];
-        const satchel = createTestSatchel({ middleware });
+        const satchel = createSatchel({ middleware });
         let testAction = satchel.action('testAction');
         satchel.register(orchestrator(testAction, () => Promise.resolve(1)));
         satchel.register(orchestrator(testAction, () => Promise.resolve(2)));

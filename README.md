@@ -193,7 +193,7 @@ Use `mySatchel.hasSubscribers(actionCreator)` to check whether any mutators or o
 
 -   Create a satchel with `createSatchel` instead of relying on global state. `applyMiddleware` is replaced by the `middleware` option.
 -   `action`, `actionCreator`, `dispatch`, `mutatorAction`, `createStore`, and `getRootStore` are now methods on the satchel instance.
--   `mutator` and `orchestrator` no longer register themselves as a side effect; register them with `satchel.register(...)`.
+-   `mutator` and `orchestrator` no longer register themselves as a side effect; register them with `satchel.register(...)`. `register` does not return a value.
 -   The legacy APIs (`satcheljs/lib/legacy`, including `createUndo`, `select`, `stitch`, `trace`, the promise middleware and `reactive`) have been removed.
 
 ## License - MIT

@@ -1,14 +1,17 @@
 import 'jasmine';
-import mutator from '../src/mutator';
 import * as mobx from 'mobx';
-import { createTestSatchel } from './utils/createTestSatchel';
+import { createActionCreatorFactory } from '../src/actionCreator';
+import { createSatchel } from '../src/createSatchel';
+import createSatchelState from '../src/createSatchelState';
+import mutator from '../src/mutator';
+import { getPrivateActionId } from '../src/privatePropertyUtils';
+import { createRegister } from '../src/register';
 
 describe('mutator', () => {
     it('returns a object describing the mutator', () => {
         // Arrange
         const callback = () => {};
-        const actionId = 'testAction';
-        const actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
+        const actionCreator: any = () => {};
 
         // Act
         const testMutator = mutator(actionCreator, callback);
@@ -23,61 +26,48 @@ describe('mutator', () => {
 
     it('throws if the action creator does not have an action ID', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const register = createRegister(createSatchelState());
         let actionCreator: any = {};
 
         // Act / Assert
         expect(() => {
-            satchel.register(mutator(actionCreator, () => {}));
+            register(mutator(actionCreator, () => {}));
         }).toThrow();
     });
 
     it('subscribes the target function to the action', () => {
         // Arrange
-        const satchel = createTestSatchel();
-        let actionId = 'testAction';
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: actionId };
+        const state = createSatchelState();
+        const actionCreator = createActionCreatorFactory(state)('testAction');
 
         // Act
         const testMutator = mutator(actionCreator, () => {});
-        satchel.register(testMutator);
+        createRegister(state)(testMutator);
 
         // Assert
-        expect(satchel.__subscriptions[actionId]).toBeDefined();
+        expect(state.subscriptions.get(getPrivateActionId(actionCreator)).length).toBe(1);
     });
 
     it('wraps the subscribed callback in a MobX action', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const state = createSatchelState();
+        const actionCreator = createActionCreatorFactory(state)('testAction');
         let callback = () => {};
         let wrappedCallback = () => {};
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
         spyOn(mobx, 'action').and.returnValue(wrappedCallback);
 
         // Act
         const testMutator = mutator(actionCreator, callback);
-        satchel.register(testMutator);
+        createRegister(state)(testMutator);
 
         // Assert
         expect(mobx.action).toHaveBeenCalled();
-    });
-
-    it('returns the target function', () => {
-        // Arrange
-        const satchel = createTestSatchel();
-        let actionCreator: any = { __SATCHELJS_ACTION_ID: 'testAction' };
-        let callback = () => {};
-
-        // Act
-        let returnValue = satchel.register(mutator(actionCreator, callback));
-
-        // Assert
-        expect(returnValue).toBe(callback);
+        expect(state.subscriptions.get(getPrivateActionId(actionCreator))[0]).toBe(wrappedCallback);
     });
 
     it('sets the currentMutator to actionMessage type for the duration of the mutator callback', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         const testAction = satchel.action('testActionType');
         let currentMutatorDuringCallback: string | null = null;
         const testMutator = mutator(testAction, () => {
@@ -95,7 +85,7 @@ describe('mutator', () => {
 
     it('sets the currentMutator back to null if error is thrown', () => {
         // Arrange
-        const satchel = createTestSatchel();
+        const satchel = createSatchel();
         const testAction = satchel.action('testActionType');
         const testMutator = mutator(testAction, (): void => {
             throw new Error('Error in Mutator');

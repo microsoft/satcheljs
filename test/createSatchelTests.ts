@@ -3,7 +3,6 @@ import { autorun } from 'mobx';
 import { createSatchel } from '../src/createSatchel';
 import { mutator, orchestrator } from '../src/index';
 import { getPrivateActionId } from '../src/privatePropertyUtils';
-import { createTestSatchel } from './utils/createTestSatchel';
 
 describe('createSatchel', () => {
     it('only exposes the public API', () => {
@@ -18,7 +17,6 @@ describe('createSatchel', () => {
             'dispatch',
             'getCurrentMutator',
             'getRootStore',
-            'getSubscriptions',
             'hasSubscribers',
             'mutatorAction',
             'register',
@@ -56,8 +54,8 @@ describe('createSatchel', () => {
             })
         );
 
-        // The action IDs collide across satchels, which is what we want to guard against
-        expect(getPrivateActionId(action1)).toBe(getPrivateActionId(action2));
+        // Action IDs are globally unique, so they never collide across satchels
+        expect(getPrivateActionId(action1)).not.toBe(getPrivateActionId(action2));
 
         // Act
         action2();
@@ -99,40 +97,6 @@ describe('hasSubscribers', () => {
 
         // Act / Assert
         expect(satchel2.hasSubscribers(action1)).toBe(false);
-    });
-});
-
-describe('getSubscriptions', () => {
-    it('returns the subscriptions keyed by action ID', () => {
-        // Arrange
-        const satchel = createSatchel();
-        const testAction = satchel.actionCreator('testAction');
-        const callback = () => {};
-        satchel.register(orchestrator(testAction, callback));
-
-        // Act
-        const subscriptions = satchel.getSubscriptions();
-
-        // Assert
-        expect(subscriptions).toEqual({ [getPrivateActionId(testAction)]: [callback] });
-    });
-
-    it('returns a copy that does not affect the satchel when modified', () => {
-        // Arrange
-        const satchel = createTestSatchel();
-        const testAction = satchel.actionCreator('testAction');
-        satchel.register(orchestrator(testAction, () => {}));
-        const actionId = getPrivateActionId(testAction);
-        const otherActionId = 'otherAction';
-
-        // Act
-        const subscriptions = satchel.getSubscriptions();
-        subscriptions[actionId].push(() => {});
-        subscriptions[otherActionId] = [];
-
-        // Assert
-        expect(satchel.__subscriptions[actionId].length).toBe(1);
-        expect(satchel.__subscriptions[otherActionId]).toBeUndefined();
     });
 });
 
