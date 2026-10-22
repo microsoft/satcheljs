@@ -3,13 +3,6 @@ name: Publish
 on:
     release:
         types: [created]
-    workflow_dispatch:
-        inputs:
-            dry-run:
-                description: 'Prepare the package without publishing to npm'
-                type: boolean
-                required: true
-                default: true
 
 jobs:
     build_and_publish:
@@ -24,14 +17,10 @@ jobs:
             - run: yarn
             - run: yarn build
             - run: yarn test
+            # Defer auth config until publishing so Yarn does not require NODE_AUTH_TOKEN.
             - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
               with:
                   registry-url: 'https://registry.npmjs.org'
-            - run: npm publish --dry-run
-              if: github.event_name == 'workflow_dispatch' && inputs.dry-run
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             - run: npm publish
-              if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && !inputs.dry-run)
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
