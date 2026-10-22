@@ -1,46 +1,62 @@
 import { transaction } from 'mobx';
-import ActionMessage from './interfaces/ActionMessage';
-import Subscriber from './interfaces/Subscriber';
-import { getPrivateActionId } from './actionCreator';
-import { getGlobalContext } from './globalContext';
+import assertOwnedBySatchel from './assertOwnedBySatchel';
+import type ActionMessage from './interfaces/ActionMessage';
+import type DispatchFunction from './interfaces/DispatchFunction';
+import type Middleware from './interfaces/Middleware';
+import type SatchelState from './interfaces/SatchelState';
+import { getPrivateActionId } from './privatePropertyUtils';
 
-export function subscribe(actionId: string, callback: Subscriber<any, any>) {
-    let subscriptions = getGlobalContext().subscriptions;
-    if (!subscriptions[actionId]) {
-        subscriptions[actionId] = [];
-    }
-
-    subscriptions[actionId].push(callback);
+export function createDispatchWithMiddleware(
+    middleware: Middleware[],
+    finalDispatch: DispatchFunction
+): DispatchFunction {
+    return middleware.reduceRight(
+        (next: DispatchFunction, m: Middleware) => m.bind(null, next),
+        finalDispatch
+    );
 }
 
-export function dispatch(actionMessage: ActionMessage) {
-    const currentMutator = getGlobalContext().currentMutator;
-    if (currentMutator) {
-        throw new Error(
-            `Mutator (${currentMutator}) may not dispatch action (${actionMessage.type})`
-        );
-    }
+export function createFinalDispatch(state: SatchelState): DispatchFunction {
+    return (actionMessage: ActionMessage) => {
+        const subscribers = state.subscriptions.get(getPrivateActionId(actionMessage));
 
-    let dispatchWithMiddleware = getGlobalContext().dispatchWithMiddleware || finalDispatch;
-    transaction(dispatchWithMiddleware.bind(null, actionMessage));
-}
+        if (subscribers) {
+            const promises: Promise<any>[] = [];
 
-export function finalDispatch(actionMessage: ActionMessage): void | Promise<void> {
-    let actionId = getPrivateActionId(actionMessage);
-    let subscribers = getGlobalContext().subscriptions[actionId];
+            for (const subscriber of subscribers) {
+                const returnValue = subscriber(actionMessage);
+                if (returnValue) {
+                    promises.push(returnValue);
+                }
+            }
 
-    if (subscribers) {
-        let promises: Promise<any>[] = [];
-
-        for (const subscriber of subscribers) {
-            let returnValue = subscriber(actionMessage);
-            if (returnValue) {
-                promises.push(returnValue);
+            if (promises.length) {
+                return promises.length == 1 ? promises[0] : Promise.all(promises);
             }
         }
+    };
+}
 
-        if (promises.length) {
-            return promises.length == 1 ? promises[0] : Promise.all(promises);
+export function createDispatch(
+    state: SatchelState,
+    middleware: Middleware[]
+): (actionMessage: ActionMessage) => void {
+    const dispatchWithMiddleware = createDispatchWithMiddleware(
+        middleware,
+        createFinalDispatch(state)
+    );
+
+    return (actionMessage: ActionMessage): void => {
+        if (state.currentMutator) {
+            throw new Error(
+                `Mutator (${state.currentMutator}) may not dispatch action (${actionMessage.type})`
+            );
         }
-    }
+
+        assertOwnedBySatchel(state, actionMessage);
+
+        transaction(() => {
+            dispatchWithMiddleware(actionMessage);
+        });
+    };
 }

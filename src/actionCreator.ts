@@ -1,34 +1,24 @@
-import ActionMessage from './interfaces/ActionMessage';
-import ActionCreator from './interfaces/ActionCreator';
-import { dispatch } from './dispatcher';
 import createActionId from './createActionId';
-
-export function actionCreator<
-    T extends ActionMessage = {},
-    TActionCreator extends ActionCreator<T> = () => T
->(actionType: string, target?: TActionCreator): TActionCreator {
-    return createActionCreator(actionType, target, false);
-}
-
-export function action<
-    T extends ActionMessage = {},
-    TActionCreator extends ActionCreator<T> = () => T
->(actionType: string, target?: TActionCreator): TActionCreator {
-    return createActionCreator(actionType, target, true);
-}
+import type ActionCreator from './interfaces/ActionCreator';
+import type ActionMessage from './interfaces/ActionMessage';
+import type SatchelState from './interfaces/SatchelState';
+import { setPrivateActionId, setPrivateActionType } from './privatePropertyUtils';
 
 function createActionCreator<T extends ActionMessage, TActionCreator extends ActionCreator<T>>(
+    state: SatchelState,
     actionType: string,
-    target: TActionCreator,
-    shouldDispatch: boolean
+    target: TActionCreator | undefined,
+    dispatch: ((actionMessage: ActionMessage) => void) | undefined
 ): TActionCreator {
-    let actionId = createActionId();
+    const actionId = createActionId();
 
-    let decoratedTarget = function createAction(...args: any[]) {
+    // Reserve an entry so the satchel can recognize the actions it created
+    state.subscriptions.set(actionId, []);
+
+    const decoratedTarget = function createAction(...args: any[]) {
         // Create the action message
-        let actionMessage: ActionMessage = target ? target.apply(null, args) : {};
+        const actionMessage: ActionMessage = target ? target.apply(null, args) : {};
 
-        // Stamp the action type
         if (actionMessage.type) {
             throw new Error('Action creators should not include the type property.');
         }
@@ -38,7 +28,7 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
         setPrivateActionId(actionMessage, actionId);
 
         // Dispatch if necessary
-        if (shouldDispatch) {
+        if (dispatch) {
             dispatch(actionMessage);
         }
 
@@ -47,22 +37,27 @@ function createActionCreator<T extends ActionMessage, TActionCreator extends Act
 
     // Stamp the action creator function with the private ID
     setPrivateActionId(decoratedTarget, actionId);
-    setActionType(decoratedTarget, actionType);
+    setPrivateActionType(decoratedTarget, actionType);
     return decoratedTarget;
 }
 
-export function getPrivateActionId(target: any) {
-    return target.__SATCHELJS_ACTION_ID;
+export function createActionCreatorFactory(state: SatchelState) {
+    return function actionCreator<
+        T extends ActionMessage = {},
+        TActionCreator extends ActionCreator<T> = () => T,
+    >(actionType: string, target?: TActionCreator): TActionCreator {
+        return createActionCreator(state, actionType, target, undefined);
+    };
 }
 
-function setPrivateActionId(target: any, actionId: string) {
-    target.__SATCHELJS_ACTION_ID = actionId;
-}
-
-export function getPrivateActionType(target: any): string {
-    return target.__SATCHELJS_ACTION_TYPE || 'unknown action';
-}
-
-function setActionType(target: any, actionType: string) {
-    target.__SATCHELJS_ACTION_TYPE = actionType;
+export function createActionFactory(
+    state: SatchelState,
+    dispatch: (actionMessage: ActionMessage) => void
+) {
+    return function action<
+        T extends ActionMessage = {},
+        TActionCreator extends ActionCreator<T> = () => T,
+    >(actionType: string, target?: TActionCreator): TActionCreator {
+        return createActionCreator(state, actionType, target, dispatch);
+    };
 }

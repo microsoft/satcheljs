@@ -1,5 +1,6 @@
-import { getGlobalContext } from './globalContext';
+// Global rather than per-satchel so that action IDs never collide across satchel instances
+let nextActionId = 0;
 
 export default function createActionId(): string {
-    return (getGlobalContext().nextActionId++).toString();
+    return (nextActionId++).toString();
 }

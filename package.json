@@ -1,6 +1,6 @@
 {
     "name": "satcheljs",
-    "version": "4.3.1",
+    "version": "5.0.0-beta.1",
     "description": "Store implementation for functional reactive flux.",
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -40,7 +40,7 @@
         "mobx": "^4.4.0",
         "mobx-react": "^5.2.0",
         "npm-run-all": "^4.0.2",
-        "prettier": "^1.19.1",
+        "prettier": "^3.3.3",
         "react": "15.4.2",
         "react-addons-test-utils": "~15.4.0",
         "react-dom": "15.4.2",
@@ -64,36 +64,12 @@
         "registry": "https://registry.npmjs.org"
     },
     "license": "MIT",
+    "sideEffects": false,
     "exports": {
         ".": {
             "types": "./lib-esm/index.d.ts",
             "import": "./lib-esm/index.js",
             "default": "./lib/index.js"
-        },
-        "./lib/legacy": {
-            "types": "./lib-esm/legacy/index.d.ts",
-            "import": "./lib-esm/legacy/index.js",
-            "default": "./lib/legacy/index.js"
-        },
-        "./lib/legacy/promise": {
-            "types": "./lib-esm/legacy/promise/index.d.ts",
-            "import": "./lib-esm/legacy/promise/index.js",
-            "default": "./lib/legacy/promise/index.js"
-        },
-        "./lib/legacy/react": {
-            "types": "./lib-esm/legacy/react/index.d.ts",
-            "import": "./lib-esm/legacy/react/index.js",
-            "default": "./lib/legacy/react/index.js"
-        },
-        "./lib/legacy/stitch": {
-            "types": "./lib-esm/legacy/stitch/index.d.ts",
-            "import": "./lib-esm/legacy/stitch/index.js",
-            "default": "./lib/legacy/stitch/index.js"
-        },
-        "./lib/legacy/trace": {
-            "types": "./lib-esm/legacy/trace/index.d.ts",
-            "import": "./lib-esm/legacy/trace/index.js",
-            "default": "./lib/legacy/trace/index.js"
         },
         "./lib/*.js": {
             "types": "./lib-esm/*.d.ts",

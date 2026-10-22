@@ -1,15 +1,13 @@
 import 'jasmine';
 import createActionId from '../src/createActionId';
-import { __resetGlobalContext } from '../src/globalContext';
 
 describe('createActionId', () => {
     it('returns the next incremental ID for each call', () => {
         // Arrange
-        __resetGlobalContext();
+        const firstId = Number(createActionId());
 
         // Act / Assert
-        expect(createActionId()).toBe('0');
-        expect(createActionId()).toBe('1');
-        expect(createActionId()).toBe('2');
+        expect(createActionId()).toBe(String(firstId + 1));
+        expect(createActionId()).toBe(String(firstId + 2));
     });
 });

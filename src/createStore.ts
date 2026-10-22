@@ -1,18 +1,20 @@
-import { action } from 'mobx';
-import getRootStore from './getRootStore';
+import { action as mobxAction } from 'mobx';
+import type SatchelState from './interfaces/SatchelState';
 
-let createStoreAction = action('createStore', function createStoreAction(
-    key: string,
-    initialState: any
-) {
-    if (getRootStore().get(key)) {
-        throw new Error(`A store named ${key} has already been created.`);
-    }
+export function createStoreFactory(state: SatchelState) {
+    const createStoreAction = mobxAction(
+        'createStore',
+        function createStoreAction(key: string, initialState: any) {
+            if (state.rootStore.get(key)) {
+                throw new Error(`A store named ${key} has already been created.`);
+            }
 
-    getRootStore().set(key, initialState);
-});
+            state.rootStore.set(key, initialState);
+        }
+    );
 
-export default function createStore<T>(key: string, initialState: T): () => T {
-    createStoreAction(key, initialState);
-    return () => <T>getRootStore().get(key);
+    return function createStore<T>(key: string, initialState: T): () => T {
+        createStoreAction(key, initialState);
+        return () => <T>state.rootStore.get(key);
+    };
 }

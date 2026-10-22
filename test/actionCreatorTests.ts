@@ -1,16 +1,13 @@
 import 'jasmine';
-import {
-    action,
-    actionCreator,
-    getPrivateActionType,
-    getPrivateActionId,
-} from '../src/actionCreator';
+import { createActionCreatorFactory, createActionFactory } from '../src/actionCreator';
 import * as createActionId from '../src/createActionId';
-import * as dispatcher from '../src/dispatcher';
+import createSatchelState from '../src/createSatchelState';
+import { getPrivateActionType, getPrivateActionId } from '../src/privatePropertyUtils';
 
 describe('actionCreator', () => {
     it('returns the created action message', () => {
         // Arrange
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         const testAction = actionCreator('testAction', (arg0, arg1) => {
             return {
                 arg0,
@@ -28,6 +25,7 @@ describe('actionCreator', () => {
 
     it('returns a default action message if no factory is provided', () => {
         // Arrange
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         const testAction = actionCreator('testAction');
 
         // Act
@@ -40,6 +38,7 @@ describe('actionCreator', () => {
     it('stamps the action message with the type and private action ID', () => {
         // Arrange
         spyOn(createActionId, 'default').and.returnValue('id0');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         let actionType = 'testAction';
         const testAction = actionCreator(actionType);
 
@@ -51,20 +50,25 @@ describe('actionCreator', () => {
         expect(getPrivateActionId(actionMessage)).toBe('id0');
     });
 
-    it('does not dispatch the action message', () => {
+    it('does not add private properties to the action message', () => {
         // Arrange
-        const testAction = actionCreator('testAction');
-        spyOn(dispatcher, 'dispatch');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
+        const testAction = actionCreator('testAction', () => ({ value: 1 }));
 
         // Act
-        testAction();
+        const actionMessage = testAction();
 
         // Assert
-        expect(dispatcher.dispatch).not.toHaveBeenCalled();
+        expect(Object.getOwnPropertyNames(actionMessage).sort()).toEqual(['type', 'value']);
+        expect(JSON.parse(JSON.stringify(actionMessage))).toEqual({
+            type: 'testAction',
+            value: 1,
+        });
     });
 
     it('throws if the action message already has a type', () => {
         // Arrange
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         const testAction = actionCreator('testAction', () => {
             return { type: 'testAction' };
         });
@@ -76,6 +80,7 @@ describe('actionCreator', () => {
     it('gets stamped with the private action ID', () => {
         // Arrange
         spyOn(createActionId, 'default').and.returnValue('id1');
+        const actionCreator = createActionCreatorFactory(createSatchelState());
 
         // Act
         const testAction = actionCreator('testAction');
@@ -86,10 +91,36 @@ describe('actionCreator', () => {
 
     it('gets stamped with the action type', () => {
         // Act
+        const actionCreator = createActionCreatorFactory(createSatchelState());
         const testAction = actionCreator('testAction');
 
         // Assert
         expect(getPrivateActionType(testAction)).toBe('testAction');
+    });
+
+    it('reserves an empty subscription entry for the action', () => {
+        // Arrange
+        const state = createSatchelState();
+        const actionCreator = createActionCreatorFactory(state);
+
+        // Act
+        const testAction = actionCreator('testAction');
+
+        // Assert
+        expect(state.subscriptions.get(getPrivateActionId(testAction))).toEqual([]);
+    });
+
+    it('creates unique action IDs across satchel instances', () => {
+        // Arrange
+        const actionCreator1 = createActionCreatorFactory(createSatchelState());
+        const actionCreator2 = createActionCreatorFactory(createSatchelState());
+
+        // Act
+        const testAction1 = actionCreator1('testAction');
+        const testAction2 = actionCreator2('testAction');
+
+        // Assert
+        expect(getPrivateActionId(testAction1)).not.toBe(getPrivateActionId(testAction2));
     });
 });
 
@@ -97,13 +128,14 @@ describe('action', () => {
     it('dispatches the action message', () => {
         // Arrange
         let actionMessage = {};
+        const dispatch = jasmine.createSpy('dispatch');
+        const action = createActionFactory(createSatchelState(), dispatch);
         const testAction = action('testAction', () => actionMessage);
-        spyOn(dispatcher, 'dispatch');
 
         // Act
         testAction();
 
         // Assert
-        expect(dispatcher.dispatch).toHaveBeenCalledWith(actionMessage);
+        expect(dispatch).toHaveBeenCalledWith(actionMessage);
     });
 });
